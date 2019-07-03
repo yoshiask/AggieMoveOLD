@@ -10,6 +10,6 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock Text="MTA Transit" Margin="20" FontSize="30" Height="40" VerticalAlignment="Top" />
         <ComboBox x:Name="AgenciesBox" Margin="10,60,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="AgenciesBox_SelectionChanged" />
-        <ListView x:Name="RoutesBox" Margin="0,110,0,0" />
+        <ListView x:Name="RoutesBox" Margin="0,110,0,0" SelectionChanged="RoutesBox_SelectionChanged" />
     </Grid>
 </Page>

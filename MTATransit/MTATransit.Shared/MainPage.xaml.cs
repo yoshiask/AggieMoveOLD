@@ -25,9 +25,7 @@ namespace MTATransit
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        // Initialize the service that we're requesting from
-        INextBusApi api = RestService.For<INextBusApi>("http://webservices.nextbus.com/service/");
-
+        string agency;
 
         public MainPage()
         {
@@ -40,9 +38,8 @@ namespace MTATransit
 
         public async void Load()
         {
-            
             // Get a list of the agencies this api serves
-            var agencies = (await api.GetAgencies()).Items;
+            var agencies = (await Common.NextBusApi.GetAgencies()).Items;
             foreach (Agency ag in agencies)
             {
                 AgenciesBox.Items.Add(new ComboBoxItem()
@@ -54,6 +51,7 @@ namespace MTATransit
 
         public async void LoadRoutes(string title)
         {
+            var api = Common.NextBusApi;
             RoutesBox.Items.Clear();
 
             var agencies = (await api.GetAgencies()).Items;
@@ -74,7 +72,20 @@ namespace MTATransit
 
         private void AgenciesBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
-            LoadRoutes(((ComboBoxItem)AgenciesBox.SelectedItem).Content.ToString());
+            agency = ((ComboBoxItem)AgenciesBox.SelectedItem).Content.ToString();
+            LoadRoutes(agency);
+        }
+
+        private async void RoutesBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            var ag = await NextBusApiHelper.GetAgencyByTitle(agency);
+            var rt = await NextBusApiHelper.GetRouteByTitle(ag.Tag, ((ListViewItem)RoutesBox.SelectedItem).Content.ToString());
+            string[] pars = { ag.Tag, rt.Tag };
+
+            Frame.Navigate(
+                typeof(MTATransit.Shared.Pages.RouteDetailsView),
+                pars
+            );
         }
     }
 }

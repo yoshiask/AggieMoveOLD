@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MTATransit.Shared.API.NextBus;
+using Refit;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Windows.UI;
@@ -8,6 +10,9 @@ namespace MTATransit.Shared
 {
     public static class Common
     {
+        // Initialize the service that we're requesting from
+        public static INextBusApi NextBusApi = RestService.For<INextBusApi>("http://webservices.nextbus.com/service/");
+
         /// <summary>
         /// Creates Color from HEX code
         /// </summary>

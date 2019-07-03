@@ -37,6 +37,9 @@ namespace MTATransit.Shared.API.NextBus
 
         [JsonProperty(PropertyName = "oppositeColor")]
         public string ForegroundColor { get; set; }
+
+        [JsonProperty(PropertyName = "stop")]
+        public List<Stop> Stops { get; set; }
     }
 
     public class Routes

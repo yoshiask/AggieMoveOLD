@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MTATransit.Shared.API.NextBus
 {
-    interface INextBusApi
+    public interface INextBusApi
     {
         [Get("/publicJSONFeed?command=agencyList")]
         Task<Agencies> GetAgencies();
