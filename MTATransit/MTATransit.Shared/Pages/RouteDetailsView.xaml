@@ -5,10 +5,27 @@
     xmlns:local="using:MTATransit.Shared.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid x:Name="MainGrid">
-        <ListView x:Name="StopsBox"/>
-    </Grid>
+    <Windows10FallCreatorsUpdate:NavigationView
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200">
+        <Grid x:Name="MainGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="PageHeader" Margin="10,20,20,20" FontSize="30" Height="40" VerticalAlignment="Top" Grid.Row="0" Text="Page Header" FontWeight="Bold" />
+            <ListView x:Name="PredictionBox" Grid.Row="1" Grid.RowSpan="1"/>
+        </Grid>
+
+        <NavigationView.MenuItems>
+            <NavigationViewItem Icon="Street" Content="Explore" Tag="Explore your options" />
+            <NavigationViewItem Icon="Map" Content="Discover" Tag="Discover the hotspots in your area" />
+            <NavigationViewItem Icon="Directions" Content="Navigate" Tag="Navigate to your destination" />
+        </NavigationView.MenuItems>
+    </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

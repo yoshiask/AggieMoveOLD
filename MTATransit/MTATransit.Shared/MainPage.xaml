@@ -5,11 +5,30 @@
     xmlns:local="using:MTATransit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Text="MTA Transit" Margin="20" FontSize="30" Height="40" VerticalAlignment="Top" />
-        <ComboBox x:Name="AgenciesBox" Margin="10,60,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="AgenciesBox_SelectionChanged" />
-        <ListView x:Name="RoutesBox" Margin="0,110,0,0" SelectionChanged="RoutesBox_SelectionChanged" />
-    </Grid>
+    <Windows10FallCreatorsUpdate:NavigationView
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200">
+        <Grid x:Name="MainGrid">
+            <RichTextBlock Margin="20" FontSize="30" Height="40" VerticalAlignment="Top" IsTextSelectionEnabled="False" >
+                <Paragraph Foreground="Black" FontSize="32">
+                    <Run FontWeight="Bold" FontFamily="Segoe UI" Foreground="#FFFFC107" Text="LA"/>
+                    <Run FontFamily="Century Gothic" FontWeight="SemiBold" Foreground="#FFF44336" Text="Move"/>
+                </Paragraph>
+            </RichTextBlock>
+            <ComboBox x:Name="AgenciesBox" Margin="10,70,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="AgenciesBox_SelectionChanged" PlaceholderText="Select an Agency" />
+            <ComboBox x:Name="RoutesBox" Margin="10,120,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="RoutesBox_SelectionChanged" PlaceholderText="Select a Route" IsEnabled="False" />
+            <ListBox x:Name="RoutesList" Margin="10,170,10,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="RoutesList_SelectionChanged" />
+        </Grid>
+
+        <NavigationView.MenuItems>
+            <NavigationViewItem Icon="Street" Content="Explore" Tag="Explore your options" />
+            <NavigationViewItem Icon="Map" Content="Discover" Tag="Discover the hotspots in your area" />
+            <NavigationViewItem Icon="Directions" Content="Navigate" Tag="Navigate to your destination" />
+        </NavigationView.MenuItems>
+
+    </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

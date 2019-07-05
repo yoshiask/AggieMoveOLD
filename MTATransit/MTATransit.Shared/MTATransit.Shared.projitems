@@ -15,15 +15,24 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\GeocodeReponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\IArcGISApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\Location.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\SpatialReference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\Suggestion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\Agency.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\IMTAApi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\Run.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Agency.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Direction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\INextBusApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Message.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\NextBusApiHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Prediction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Stop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Vehicle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>

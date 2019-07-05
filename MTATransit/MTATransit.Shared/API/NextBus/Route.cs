@@ -40,6 +40,16 @@ namespace MTATransit.Shared.API.NextBus
 
         [JsonProperty(PropertyName = "stop")]
         public List<Stop> Stops { get; set; }
+
+        /// <summary>
+        /// Either <see cref="Direction"/> or a list of <see cref="Direction"/>s
+        /// </summary>
+        [JsonProperty(PropertyName = "direction")]
+        public object Directions { get; set; }
+        
+
+        [JsonProperty(PropertyName = "message")]
+        public Message Message { get; set; }
     }
 
     public class Routes

@@ -1,4 +1,5 @@
 ﻿using MTATransit.Shared.API.NextBus;
+using MTATransit.Shared.API.ArcGIS;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace MTATransit.Shared
     {
         // Initialize the service that we're requesting from
         public static INextBusApi NextBusApi = RestService.For<INextBusApi>("http://webservices.nextbus.com/service/");
+        public static IArcGISApi ArcGISApi = RestService.For<IArcGISApi>("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/");
+        public static string ArcGISUrl = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/";
 
         /// <summary>
         /// Creates Color from HEX code
