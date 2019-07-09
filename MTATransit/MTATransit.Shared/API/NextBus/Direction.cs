@@ -26,4 +26,9 @@ namespace MTATransit.Shared.API.NextBus
         [JsonProperty(PropertyName = "stop")]
         public List<Stop> Stops { get; set; }
     }
+
+    public enum CardinalDirections
+    {
+        North, South, East, West
+    }
 }

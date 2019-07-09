@@ -10,6 +10,7 @@
     mc:Ignorable="d">
 
     <Windows10FallCreatorsUpdate:NavigationView
+        x:Name="NavView" SelectionChanged="NavView_SelectionChanged"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
         Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200">
         <Grid x:Name="MainGrid">
@@ -24,11 +25,11 @@
             <ListBox x:Name="RoutesList" Margin="10,170,10,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="RoutesList_SelectionChanged" />
         </Grid>
 
-        <NavigationView.MenuItems>
+        <!--NavigationView.MenuItems>
             <NavigationViewItem Icon="Street" Content="Explore" Tag="Explore your options" />
             <NavigationViewItem Icon="Map" Content="Discover" Tag="Discover the hotspots in your area" />
             <NavigationViewItem Icon="Directions" Content="Navigate" Tag="Navigate to your destination" />
-        </NavigationView.MenuItems>
+        </NavigationView.MenuItems!-->
 
     </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

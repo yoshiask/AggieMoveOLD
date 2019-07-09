@@ -6,10 +6,10 @@ namespace MTATransit.Shared.API.ArcGIS
 {
     public interface IArcGISApi
     {
-        [Get("/suggest?text={text}&f=pjson")]
+        [Get("/suggest?text={text}&f=json")]
         Task<Suggestions> GetSuggestions(string text);
 
-        [Get("/addressCandidates?SingleLine={text}&magicKey={key}&f=pjson")]
+        [Get("/addressCandidates?SingleLine={text}&magicKey={key}&f=json")]
         Task<GeocodeResponse> Geocode(string text, string key);
     }
 }

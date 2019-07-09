@@ -27,7 +27,7 @@ namespace MTATransit.Shared.API.NextBus
         /// The current speed of the vehicle, in Km/hr
         /// </summary>
         [JsonProperty(PropertyName = "speedKmHr")]
-        public string Speed { get; set; }
+        public int Speed { get; set; }
 
         [JsonProperty(PropertyName = "dirTag")]
         public string Tag { get; set; }
@@ -38,8 +38,8 @@ namespace MTATransit.Shared.API.NextBus
         [JsonProperty(PropertyName = "heading")]
         public string Heading { get; set; }
 
-        [JsonProperty(PropertyName = "secSinceReport")]
-        public string SecondsSinceLastReport { get; set; }
+        [JsonProperty(PropertyName = "secsSinceReport")]
+        public int SecondsSinceLastReport { get; set; }
     }
 
     public class VehicleLocationsResponse
@@ -49,6 +49,15 @@ namespace MTATransit.Shared.API.NextBus
 
         [JsonProperty(PropertyName = "lastTime")]
         public LocTime LastTime { get; set; }
+
+        [JsonProperty(PropertyName = "copyright")]
+        public string Copyright { get; set; }
+    }
+
+    public class VehicleLocationResponse
+    {
+        [JsonProperty(PropertyName = "vehicle")]
+        public Vehicle Item { get; set; }
 
         [JsonProperty(PropertyName = "copyright")]
         public string Copyright { get; set; }

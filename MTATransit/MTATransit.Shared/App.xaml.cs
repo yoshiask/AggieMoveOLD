@@ -45,7 +45,12 @@ namespace MTATransit
                // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            Frame rootFrame = Windows.UI.Xaml.Window.Current.Content as Frame;
+            // Initialize the ArcGIS environment
+            /*Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.SetLicense(
+                "LICENSEKEYGOESHERE"
+            );*/
+
+            Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active

@@ -72,6 +72,9 @@ namespace MTATransit.Shared.API.NextBus
         [JsonProperty(PropertyName = "predictions")]
         public object Predictions { get; set; }
 
+        [JsonProperty(PropertyName = "Error")]
+        public Error Error { get; set; }
+
         [JsonProperty(PropertyName = "copyright")]
         public string Copyright { get; set; }
     }

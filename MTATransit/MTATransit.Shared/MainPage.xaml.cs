@@ -1,9 +1,11 @@
 ﻿using MTATransit.Shared;
-using MTATransit.Shared.API.NextBus;
+using MTATransit.Shared.API;
 using MTATransit.Shared.Pages;
+using NextBus.NET.Models;
 using Refit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -15,6 +17,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -27,37 +30,34 @@ namespace MTATransit
     public sealed partial class MainPage : Page
     {
         string agency;
+        List<Stop> stops = new List<Stop>();
 
         public MainPage()
         {
             this.InitializeComponent();
             Load();
 
-            /*var test = new PredictionResponse()
+            foreach (Tuple<Type, NavigationViewItem> info in Common.Pages.Values)
             {
-                Copyright = "All data copyright Los Angeles Metro 2019.",
-                Predictions = new Predictions()
+                var menuItem = new NavigationViewItem
                 {
-                    AgencyTitle = "Los Angeles Metro",
-                    RouteTag = "910",
-                    RouteTitle = "910 Metro Silver Line",
-                    Direction = new Predictions.DirectionInfo() {
-                        Title = "North to Silver Line-El Monte Sta Via Downtown",
-                    },
-                    StopTitle = "El Monte Busway / Alameda - Union Statio",
-                    StopTag = "70"
-                }
-            };
-            System.Diagnostics.Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(test));*/
+                    Icon = info.Item2.Icon,
+                    Content = info.Item2.Content,
+                    Tag = info.Item2.Tag
+                };
 
-            // TODO: Change minimum UWP requirement to b. 16299 so
-            //  GIS and MasterDetailsView are available
+                NavView.MenuItems.Add(menuItem);
+
+                // If the menu item we're adding goes to this page, then select it
+                if (info.Item1 == GetType())
+                    NavView.SelectedItem = menuItem;
+            }
         }
 
         public async void Load()
         {
             // Get a list of the agencies this api serves
-            var agencies = (await Common.NextBusApi.GetAgencies()).Items;
+            List<Agency> agencies = (await Common.NextBusApi.GetAgencies()).ToList();
             foreach (Agency ag in agencies)
             {
                 AgenciesBox.Items.Add(new ComboBoxItem()
@@ -72,37 +72,48 @@ namespace MTATransit
             var api = Common.NextBusApi;
             RoutesBox.Items.Clear();
 
-            var agencies = (await api.GetAgencies()).Items;
+            var agencies = (await api.GetAgencies()).ToList();
             var ag = agencies.Find(x => x.Title == title);
+
             // Now load the available routes
-            var routes = (await api.GetRoutes(ag.Tag)).Items;
+            var routes = (await api.GetRoutesForAgency(ag.Tag));
             foreach (Route rt in routes)
             {
-                var info = (await api.GetRouteInfo(ag.Tag, rt.Tag)).Route;
                 RoutesBox.Items.Add(new ComboBoxItem()
                 {
-                    Content = info.Title,
-                    Background = Common.BrushFromHex(info.Color),
-                    Foreground = Common.BrushFromHex(info.ForegroundColor),
+                    Name = rt.Tag,
+                    Content = rt.Title,
                 });
+            }
+
+            // Now get the routeConfig for colors
+            for (int i = 0; i < RoutesBox.Items.Count; ++i)
+            {
+                var item = RoutesBox.Items[i] as ComboBoxItem;
+                var info = await api.GetRouteConfig(ag.Tag, item.Name);
+                item.Background = Common.BrushFromHex(info.Color);
+                item.Foreground = Common.BrushFromHex(info.OppositeColor);
             }
         }
 
         public async void LoadRouteInfo(string agency, string route)
         {
             var api = Common.NextBusApi;
-            var info = await api.GetRouteInfo(agency, route);
+            var info = await api.GetRouteConfig(agency, route);
 
-            RoutesList.Background = Common.BrushFromHex(info.Route.Color);
+            RoutesList.Background = Common.BrushFromHex(info.Color);
             RoutesList.Items.Clear();
+            stops.Clear();
 
-            foreach (Stop st in info.Route.Stops)
+            foreach (Stop st in info.Stops)
             {
-                RoutesList.Items.Add(new ListBoxItem()
+                stops.Add(st);
+                RoutesList.Items.Add(new ListViewItem()
                 {
                     Name = st.Tag,
                     Content = st.Title,
-                    Foreground = Common.BrushFromHex(info.Route.ForegroundColor),
+                    Foreground = Common.BrushFromHex(info.OppositeColor),
+                    IsHitTestVisible = false,
                 });
             }
         }
@@ -132,9 +143,26 @@ namespace MTATransit
 
             object[] pars =
             {
-                ag, rt, ((ListBoxItem)RoutesList.SelectedItem).Name
+                ag, rt, stops[RoutesList.SelectedIndex]
             };
             Frame.Navigate(typeof(RouteDetailsView), pars);
+        }
+
+        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            var item = (NavigationViewItem)args.SelectedItem;
+            var name = item.Content as string;
+
+            if (name == null || name == "Settings")
+                return;
+
+            Type newPage = Common.Pages[item.Content as string].Item1;
+
+            if (GetType() == newPage)
+                return;
+
+            if (newPage.DeclaringType == typeof(Page))
+                Frame.Navigate(newPage);            
         }
     }
 }

@@ -15,7 +15,7 @@ namespace MTATransit.Shared.API.NextBus
         public string Tag { get; set; }
     }
 
-    public class Agencies
+    public class AgencyResponse
     {
         [JsonProperty(PropertyName = "agency")]
         public List<Agency> Items { get; set; }

@@ -1,20 +1,35 @@
-﻿using MTATransit.Shared.API.NextBus;
-using MTATransit.Shared.API.ArcGIS;
+﻿using MTATransit.Shared.API.ArcGIS;
+using MTATransit.Shared.API.MTA;
 using Refit;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls;
+using NextBus.NET;
 
 namespace MTATransit.Shared
 {
     public static class Common
     {
-        // Initialize the service that we're requesting from
-        public static INextBusApi NextBusApi = RestService.For<INextBusApi>("http://webservices.nextbus.com/service/");
-        public static IArcGISApi ArcGISApi = RestService.For<IArcGISApi>("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/");
-        public static string ArcGISUrl = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/";
+        // Initialize the services that we're requesting from
+        public static NextBusClient NextBusApi = new NextBusClient();
+        public static API.NextBus.INextBusApi OldNextBusApi {
+            get {
+                return RestService.For<Shared.API.NextBus.INextBusApi>("http://webservices.nextbus.com/service/");
+            }
+        }
+        public static IArcGISApi ArcGISApi {
+            get {
+                return RestService.For<IArcGISApi>("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/");
+            }
+        }
+        public static IMTAApi MTAApi {
+            get {
+                return RestService.For<IMTAApi>("http://api.metro.net/");
+            }
+        }
 
         /// <summary>
         /// Creates Color from HEX code
@@ -38,5 +53,47 @@ namespace MTATransit.Shared
         {
             return new SolidColorBrush(ColorFromHex(hex));
         }
+
+        public static Dictionary<string, Tuple<Type, NavigationViewItem>> Pages = new Dictionary<string, Tuple<Type, NavigationViewItem>>
+        {
+            {
+                "Explore",
+                new Tuple<Type, NavigationViewItem>(
+                    typeof(MainPage),
+                    new NavigationViewItem()
+                    {
+                        Icon = new SymbolIcon(Symbol.Street),
+                        Content = "Explore",
+                        Tag = "Explore your options"
+                    }
+                )
+            },
+
+            {
+                "Discover",
+                new Tuple<Type, NavigationViewItem>(
+                    typeof(object),
+                    new NavigationViewItem()
+                    {
+                        Icon = new SymbolIcon(Symbol.Map),
+                        Content = "Discover",
+                        Tag = "Discover hotspots in your area"
+                    }
+                )
+            },
+
+            {
+                "Navigate",
+                new Tuple<Type, NavigationViewItem>(
+                    typeof(object),
+                    new NavigationViewItem()
+                    {
+                        Icon = new SymbolIcon(Symbol.Directions),
+                        Content = "Navigate",
+                        Tag = "Navigate to your destination"
+                    }
+                )
+            },
+        };
     }
 }

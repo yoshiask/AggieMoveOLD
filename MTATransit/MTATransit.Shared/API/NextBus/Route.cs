@@ -52,7 +52,7 @@ namespace MTATransit.Shared.API.NextBus
         public Message Message { get; set; }
     }
 
-    public class Routes
+    public class RouteResponse
     {
         [JsonProperty(PropertyName = "route")]
         public List<Route> Items { get; set; }

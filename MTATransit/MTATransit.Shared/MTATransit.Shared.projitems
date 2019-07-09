@@ -20,12 +20,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\Location.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\SpatialReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\Suggestion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\GeoHubLAC\IGeoHubLACApi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\Agency.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\IMTAApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\MTA\MTAHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\Run.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\NagerDate\INagerDateApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\NagerDate\PublicHoliday.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Agency.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Direction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\INextBusApi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Message.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\NextBusApiHelper.cs" />
@@ -41,6 +46,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\RouteDetailsView.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\SettingsPage.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
@@ -48,6 +54,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Pages\RouteDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -68,6 +78,9 @@
   <ItemGroup>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\RouteDetailsView.xaml.cs">
       <DependentUpon>RouteDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
