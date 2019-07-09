@@ -14,8 +14,8 @@
   <mp:PhoneIdentity PhoneProductId="1897f84c-689e-44d3-a8b7-c521a62818ae" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>MTATransit</DisplayName>
-    <PublisherDisplayName>MTATransit</PublisherDisplayName>
+    <DisplayName>LA Move</DisplayName>
+    <PublisherDisplayName>Joshua Askharoun</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -46,5 +46,6 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <DeviceCapability Name="location"/>
   </Capabilities>
 </Package>

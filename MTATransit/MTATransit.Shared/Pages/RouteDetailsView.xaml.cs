@@ -10,6 +10,9 @@ using Esri.ArcGISRuntime.Portal;
 using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Data;
+using Esri.ArcGISRuntime.UI.Controls;
+using Esri.ArcGISRuntime.Symbology;
+using Esri.ArcGISRuntime.UI;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -20,6 +23,8 @@ namespace MTATransit.Shared.Pages
     /// </summary>
     public sealed partial class RouteDetailsView : Page
     {
+        MapView MainMapView = new MapView();
+
         public RouteDetailsView()
         {
             this.InitializeComponent();
@@ -55,11 +60,12 @@ namespace MTATransit.Shared.Pages
         public async void LoadStopInfo(Agency agency, Route route, Stop stop)
         {
             var api = Common.NextBusApi;
-            var predictions = (await api.GetRoutePredictionsByStopId(agency.Tag, stop.StopId.ToString())).ToList(); //await api.GetStopPredictions(agency.Tag, route.Tag, stop.StopId);
+            var predictions = (await api.GetRoutePredictionsByStopTag(agency.Tag, stop.Tag, route.Tag)).ToList();
             var routeInfo = await api.GetRouteConfig(agency.Tag, route.Tag);
 
             MainGrid.Background = Common.BrushFromHex(routeInfo.Color);
             PageHeader.Foreground = Common.BrushFromHex(routeInfo.OppositeColor);
+            var itemTheme = Common.ThemeFromColor(routeInfo.OppositeColor);
 
             var pred = predictions[0];
             PageHeader.Text = pred.StopTitle;
@@ -74,6 +80,7 @@ namespace MTATransit.Shared.Pages
                     {
                         Content = display,
                         Foreground = Common.BrushFromHex(routeInfo.OppositeColor),
+                        RequestedTheme = itemTheme,
                     });
                 }
             }
@@ -88,27 +95,32 @@ namespace MTATransit.Shared.Pages
                 19
             );
             MainMapView.LocationDisplay.IsEnabled = true;
+            MainMapView.LocationDisplay.ShowLocation = true;
 
+            // Create a new graphics layer
+            var MapGraphics = new GraphicsOverlay();
+
+            // Now draw a point where the stop is
+            var stopPoint = new MapPoint(Convert.ToDouble(lat), Convert.ToDouble(lon));
+            var pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle.Circle, System.Drawing.Color.Black, 20);
+            pointSymbol.Outline = new SimpleLineSymbol(SimpleLineSymbolStyle.Solid, System.Drawing.Color.White, 5);
+            var stopGraphic = new Graphic(stopPoint, pointSymbol);
+            MapGraphics.Graphics.Add(stopGraphic);
+
+            // Display all of the Park & Ride Locations
             var parkrideUri = new Uri("https://public.gis.lacounty.gov/public/rest/services/LACounty_Dynamic/LMS_Data_Public/MapServer/187");
             var parkrideLayer = new FeatureLayer(new ServiceFeatureTable(parkrideUri));
             MainMapView.Map.OperationalLayers.Add(parkrideLayer);
+
+            // Now display the map
+            MainMapView.GraphicsOverlays.Add(MapGraphics);
+            MainGrid.Children.Add(MainMapView);
+            Windows.UI.Xaml.Controls.Grid.SetRow(MainMapView, 2);
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            var item = (NavigationViewItem)args.SelectedItem;
-            var name = item.Content as string;
-
-            if (name == null || name == "Settings")
-                return;
-
-            Type newPage = Common.Pages[item.Content as string].Item1;
-
-            if (GetType() == newPage)
-                return;
-
-            if (newPage.DeclaringType == typeof(Page))
-                Frame.Navigate(newPage);
+            Common.NavView_SelectionChanged(this, sender, args);
         }
     }
 }

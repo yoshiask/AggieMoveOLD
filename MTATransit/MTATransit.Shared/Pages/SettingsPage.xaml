@@ -5,10 +5,17 @@
     xmlns:local="using:MTATransit.Shared.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid x:Name="MainGrid">
+    <Windows10FallCreatorsUpdate:NavigationView
+        x:Name="NavView" SelectionChanged="NavView_SelectionChanged"
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200">
+        <Grid x:Name="MainGrid">
 
-    </Grid>
+        </Grid>
+    </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

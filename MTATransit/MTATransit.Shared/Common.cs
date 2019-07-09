@@ -8,6 +8,7 @@ using Windows.UI;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
 using NextBus.NET;
+using Windows.UI.Xaml;
 
 namespace MTATransit.Shared
 {
@@ -54,6 +55,20 @@ namespace MTATransit.Shared
             return new SolidColorBrush(ColorFromHex(hex));
         }
 
+        /// <summary>
+        /// Figures out whether the color is dark or light using luminance
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns></returns>
+        public static ElementTheme ThemeFromColor(string hex)
+        {
+            var color = ColorFromHex(hex);
+            if (color.R * 0.2126 + color.G * 0.7152 + color.B * 0.0722 > 255 / 2)
+                return ElementTheme.Dark;
+            else
+                return ElementTheme.Light;
+        }
+
         public static Dictionary<string, Tuple<Type, NavigationViewItem>> Pages = new Dictionary<string, Tuple<Type, NavigationViewItem>>
         {
             {
@@ -95,5 +110,27 @@ namespace MTATransit.Shared
                 )
             },
         };
+
+        public static void NavView_SelectionChanged(Page page, NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            Frame frame = Window.Current.Content as Frame;
+
+            if (args.IsSettingsSelected)
+            {
+                if (page.GetType() != typeof(Pages.SettingsPage))
+                    frame.Navigate(typeof(Pages.SettingsPage));
+                return;
+            }
+
+            var item = (NavigationViewItem)args.SelectedItem;
+
+            Type newPage = Common.Pages[item.Content as string].Item1;
+
+            if (page.GetType() == newPage)
+                return;
+
+            if (newPage.BaseType == typeof(Page))
+                frame.Navigate(newPage);
+        }
     }
 }

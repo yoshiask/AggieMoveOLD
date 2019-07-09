@@ -76,7 +76,7 @@
     <PackageReference Include="Refit">
       <Version>4.5.6</Version>
     </PackageReference>
-    <PackageReference Include="Uno.UI" Version="1.43.1" />
+    <PackageReference Include="Uno.UI" Version="1.44.1" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.32" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Styles.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\LAMove_Icon.png" />
   </ItemGroup>
   <Import Project="..\MTATransit.Shared\MTATransit.Shared.projitems" Label="Shared" Condition="Exists('..\MTATransit.Shared\MTATransit.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

@@ -22,7 +22,7 @@
             </RichTextBlock>
             <ComboBox x:Name="AgenciesBox" Margin="10,70,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="AgenciesBox_SelectionChanged" PlaceholderText="Select an Agency" />
             <ComboBox x:Name="RoutesBox" Margin="10,120,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="RoutesBox_SelectionChanged" PlaceholderText="Select a Route" IsEnabled="False" />
-            <ListBox x:Name="RoutesList" Margin="10,170,10,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="RoutesList_SelectionChanged" />
+            <ListView x:Name="RoutesList" Margin="10,170,10,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="RoutesList_SelectionChanged" />
         </Grid>
 
         <!--NavigationView.MenuItems>

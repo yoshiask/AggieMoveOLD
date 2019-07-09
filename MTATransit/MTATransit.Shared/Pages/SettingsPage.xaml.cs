@@ -25,6 +25,29 @@ namespace MTATransit.Shared.Pages
         public SettingsPage()
         {
             this.InitializeComponent();
+
+            foreach (Tuple<Type, NavigationViewItem> info in Common.Pages.Values)
+            {
+                var menuItem = new NavigationViewItem
+                {
+                    Icon = info.Item2.Icon,
+                    Content = info.Item2.Content,
+                    Tag = info.Item2.Tag
+                };
+
+                NavView.MenuItems.Add(menuItem);
+
+                // If the menu item we're adding goes to this page, then select it
+                if (info.Item1 == GetType())
+                    NavView.SelectedItem = menuItem;
+            }
+
+            NavView.SelectedItem = NavView.SettingsItem;
+        }
+
+        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            Common.NavView_SelectionChanged(this, sender, args);
         }
     }
 }

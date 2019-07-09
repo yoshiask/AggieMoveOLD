@@ -93,6 +93,7 @@ namespace MTATransit
                 var info = await api.GetRouteConfig(ag.Tag, item.Name);
                 item.Background = Common.BrushFromHex(info.Color);
                 item.Foreground = Common.BrushFromHex(info.OppositeColor);
+                item.RequestedTheme = ElementTheme.Light; //Common.ThemeFromColor(info.OppositeColor);
             }
         }
 
@@ -113,7 +114,7 @@ namespace MTATransit
                     Name = st.Tag,
                     Content = st.Title,
                     Foreground = Common.BrushFromHex(info.OppositeColor),
-                    IsHitTestVisible = false,
+                    RequestedTheme = Common.ThemeFromColor(info.OppositeColor),
                 });
             }
         }
@@ -150,19 +151,7 @@ namespace MTATransit
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            var item = (NavigationViewItem)args.SelectedItem;
-            var name = item.Content as string;
-
-            if (name == null || name == "Settings")
-                return;
-
-            Type newPage = Common.Pages[item.Content as string].Item1;
-
-            if (GetType() == newPage)
-                return;
-
-            if (newPage.DeclaringType == typeof(Page))
-                Frame.Navigate(newPage);            
+            Common.NavView_SelectionChanged(this, sender, args);
         }
     }
 }
