@@ -27,6 +27,9 @@ namespace MTATransit.Shared.API.MTA
             public bool IsStudent;
         }
 
+        /// <summary>
+        /// Fall back on this when offline. Prefer the LA Move API
+        /// </summary>
         public static class FareHelper
         {
             /// <summary>

@@ -29,8 +29,13 @@ namespace MTATransit
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        string agency;
-        List<Stop> stops = new List<Stop>();
+        Agency curAgency;
+        Route curRoute;
+        RouteConfig curRouteConfig;
+        List<Agency> Agencies = new List<Agency>();
+        List<Route> Routes = new List<Route>();
+        List<RouteConfig> RouteConfigs = new List<RouteConfig>();
+        List<Stop> Stops = new List<Stop>();
 
         public MainPage()
         {
@@ -57,8 +62,8 @@ namespace MTATransit
         public async void Load()
         {
             // Get a list of the agencies this api serves
-            List<Agency> agencies = (await Common.NextBusApi.GetAgencies()).ToList();
-            foreach (Agency ag in agencies)
+            Agencies = (await Common.NextBusApi.GetAgencies()).ToList();
+            foreach (Agency ag in Agencies)
             {
                 AgenciesBox.Items.Add(new ComboBoxItem()
                 {
@@ -67,17 +72,14 @@ namespace MTATransit
             }
         }
 
-        public async void LoadRoutes(string title)
+        public async void LoadRoutes(Agency ag)
         {
             var api = Common.NextBusApi;
             RoutesBox.Items.Clear();
 
-            var agencies = (await api.GetAgencies()).ToList();
-            var ag = agencies.Find(x => x.Title == title);
-
             // Now load the available routes
-            var routes = (await api.GetRoutesForAgency(ag.Tag));
-            foreach (Route rt in routes)
+            Routes = (await api.GetRoutesForAgency(ag.Tag)).ToList();
+            foreach (Route rt in Routes)
             {
                 RoutesBox.Items.Add(new ComboBoxItem()
                 {
@@ -86,30 +88,40 @@ namespace MTATransit
                 });
             }
 
+            RouteConfigs.Clear();
             // Now get the routeConfig for colors
             for (int i = 0; i < RoutesBox.Items.Count; ++i)
             {
                 var item = RoutesBox.Items[i] as ComboBoxItem;
+                //System.Threading.Thread.Sleep(100);
+
                 var info = await api.GetRouteConfig(ag.Tag, item.Name);
+                RouteConfigs.Insert(i, info);
                 item.Background = Common.BrushFromHex(info.Color);
                 item.Foreground = Common.BrushFromHex(info.OppositeColor);
-                item.RequestedTheme = ElementTheme.Light; //Common.ThemeFromColor(info.OppositeColor);
+                item.RequestedTheme = ElementTheme.Light;
             }
         }
 
-        public async void LoadRouteInfo(string agency, string route)
+        public async void LoadStops(Route route)
         {
             var api = Common.NextBusApi;
-            var info = await api.GetRouteConfig(agency, route);
+            int i = Routes.IndexOf(route);
 
-            RoutesList.Background = Common.BrushFromHex(info.Color);
-            RoutesList.Items.Clear();
-            stops.Clear();
+            RouteConfig info;
+            if (i >= RouteConfigs.Count)
+                info = await api.GetRouteConfig(curAgency.Tag, route.Tag);
+            else
+                info = RouteConfigs[i];
+
+            StopsBox.Background = Common.BrushFromHex(info.Color);
+            StopsBox.Items.Clear();
+            Stops.Clear();
 
             foreach (Stop st in info.Stops)
             {
-                stops.Add(st);
-                RoutesList.Items.Add(new ListViewItem()
+                Stops.Add(st);
+                StopsBox.Items.Add(new ListViewItem()
                 {
                     Name = st.Tag,
                     Content = st.Title,
@@ -119,32 +131,34 @@ namespace MTATransit
             }
         }
 
-        private void AgenciesBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        private async void AgenciesBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
-            agency = ((ComboBoxItem)AgenciesBox.SelectedItem).Content.ToString();
-            LoadRoutes(agency);
-            RoutesBox.IsEnabled = true;
+            if (Agencies.Count > 0)
+            {
+                curAgency = await NextBusApiHelper.GetAgencyByTitle(((ComboBoxItem)AgenciesBox.SelectedItem).Content.ToString(), Agencies);
+                LoadRoutes(curAgency);
+                RoutesBox.IsEnabled = true;
+            }
         }
 
         private async void RoutesBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             if (RoutesBox.Items.Count > 0)
             {
-                var ag = await NextBusApiHelper.GetAgencyByTitle(agency);
-                var rt = await NextBusApiHelper.GetRouteByTitle(ag.Tag, ((ComboBoxItem)RoutesBox.SelectedItem).Content.ToString());
-                LoadRouteInfo(ag.Tag, rt.Tag);
-                RoutesList.ScrollIntoView(RoutesList.Items[0]);
+                curRoute = await NextBusApiHelper.GetRouteByTitle(curAgency.Tag, ((ComboBoxItem)RoutesBox.SelectedItem).Content.ToString(), Routes);
+                LoadStops(curRoute);
+                StopsBox.ScrollIntoView(StopsBox.Items[0]);
             }
         }
 
-        private async void RoutesList_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        private void StopsBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
-            var ag = await NextBusApiHelper.GetAgencyByTitle(agency);
-            var rt = await NextBusApiHelper.GetRouteByTitle(ag.Tag, ((ComboBoxItem)RoutesBox.SelectedItem).Content.ToString());
+            var ag = curAgency;
+            var rt = curRoute;
 
             object[] pars =
             {
-                ag, rt, stops[RoutesList.SelectedIndex]
+                ag, rt, Stops[StopsBox.SelectedIndex]
             };
             Frame.Navigate(typeof(RouteDetailsView), pars);
         }
