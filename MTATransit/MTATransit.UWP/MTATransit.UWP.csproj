@@ -16,11 +16,11 @@
 			-->
       <Version>6.2.8</Version>
     </PackageReference>
-    <PackageReference Include="MvvmCross">
-      <Version>6.3.1</Version>
-    </PackageReference>
     <PackageReference Include="NextBus.NET">
       <Version>0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="ReactiveUI.Uno">
+      <Version>9.19.5</Version>
     </PackageReference>
     <PackageReference Include="Refit">
       <Version>4.5.6</Version>
