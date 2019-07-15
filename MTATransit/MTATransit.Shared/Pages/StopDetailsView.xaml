@@ -31,7 +31,11 @@
             <TextBlock x:Name="PageHeader" Margin="10,0,20,0" FontSize="30" Height="40" VerticalAlignment="Center" Text="Page Header" FontWeight="Bold" />
             <ListView x:Name="PredictionBox" Grid.Row="1"/>
 
-            <!--ArcGIS:MapView x:Name="MainMapView" Grid.Row="2"/!-->
+            <ArcGIS:MapView x:Name="MainMapView" Grid.Row="2" GeoViewTapped="MapView_Tapped">
+                <ArcGIS:MapView.GraphicsOverlays>
+                    <ArcGISUI:GraphicsOverlay x:Name="MapGraphics"/>
+                </ArcGIS:MapView.GraphicsOverlays>
+            </ArcGIS:MapView>
         </Grid>
     </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

@@ -1,5 +1,4 @@
 ﻿using MTATransit.Shared.API.ArcGIS;
-using MTATransit.Shared.API.MTA;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,10 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
 using NextBus.NET;
 using Windows.UI.Xaml;
+using System.Threading.Tasks;
+using NextBus.NET.Models;
+using System.Diagnostics;
+using System.Linq;
 
 namespace MTATransit.Shared
 {
@@ -26,9 +29,9 @@ namespace MTATransit.Shared
                 return RestService.For<IArcGISApi>("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/");
             }
         }
-        public static IMTAApi MTAApi {
+        public static API.MTA.IMTAApi MTAApi {
             get {
-                return RestService.For<IMTAApi>("http://api.metro.net/");
+                return RestService.For<API.MTA.IMTAApi>("http://api.metro.net/");
             }
         }
 
@@ -43,6 +46,19 @@ namespace MTATransit.Shared
             byte g = (byte)(Convert.ToUInt32(hex.Substring(2, 2), 16));
             byte b = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
             return Color.FromArgb(255, r, g, b);
+        }
+
+        /// <summary>
+        /// Creates Color from HEX code
+        /// </summary>
+        /// <param name="hex">HEX code string</param>
+        public static System.Drawing.Color DrawingColorFromHex(string hex)
+        {
+            hex = hex.Replace("#", string.Empty);
+            byte r = (byte)(Convert.ToUInt32(hex.Substring(0, 2), 16));
+            byte g = (byte)(Convert.ToUInt32(hex.Substring(2, 2), 16));
+            byte b = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
+            return System.Drawing.Color.FromArgb(255, r, g, b);
         }
 
         /// <summary>
@@ -158,6 +174,92 @@ namespace MTATransit.Shared
             public static bool IsWithinRadius(double lat, double lon, double x, double y, double radius)
             {
                 return GetDistance(lat, lon, x, y) <= radius;
+            }
+        }
+    }
+
+    public class SafeNextBus
+    {
+        public static async Task<List<Agency>> GetAgencies()
+        {
+            try
+            {
+                return (await Common.NextBusApi.GetAgencies()).ToList();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<RouteConfig> GetRouteConfig(string agencyTag, string routeTag, bool includePaths = false)
+        {
+            try
+            {
+                return await Common.NextBusApi.GetRouteConfig(agencyTag, routeTag, includePaths);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<IEnumerable<RoutePrediction>> GetRoutePredictionsByStopId(string agencyTag, string stopId, string routeTag = null, bool verbose = false)
+        {
+            return await Common.NextBusApi.GetRoutePredictionsByStopId(agencyTag, stopId, routeTag, verbose);
+        }
+
+        public static async Task<IEnumerable<RoutePrediction>> GetRoutePredictionsByStopTag(string agencyTag, string stopTag, string routeTag, bool verbose = false)
+        {
+            try
+            {
+                return await Common.NextBusApi.GetRoutePredictionsByStopTag(agencyTag, stopTag, routeTag, verbose);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<IEnumerable<RoutePrediction>> GetRoutePredictionsForMultipleStops(string agencyTag, Dictionary<string, string[]> routeStoptags, bool useShortTitles = false)
+        {
+            try
+            {
+                return await Common.NextBusApi.GetRoutePredictionsForMultipleStops(agencyTag, routeStoptags, useShortTitles);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<IEnumerable<RouteSchedule>> GetRouteSchedule(string agencyTag, string routeTag)
+        {
+            try
+            {
+                return await Common.NextBusApi.GetRouteSchedule(agencyTag, routeTag);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<IEnumerable<Route>> GetRoutesForAgency(string agencyTag, bool verbose = false)
+        {
+            try
+            {
+                return await Common.NextBusApi.GetRoutesForAgency(agencyTag, verbose);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
             }
         }
     }

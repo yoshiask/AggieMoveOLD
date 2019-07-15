@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="3f0ed2b0-3492-46f7-8485-0ab9ed9c6462"
-    Publisher="CN=com.example"
+    Name="52374YoshiAskharoun.LAMove"
+    Publisher="CN=CD3113F3-18EB-4B8D-9D8A-C6D373E7A464"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="1897f84c-689e-44d3-a8b7-c521a62818ae" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="cc5357cb-4189-4b19-8767-9a6349567c47" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>LA Move</DisplayName>
-    <PublisherDisplayName>Joshua Askharoun</PublisherDisplayName>
+    <PublisherDisplayName>Yoshi Askharoun</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

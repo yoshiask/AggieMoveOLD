@@ -40,7 +40,7 @@ namespace MTATransit
         public MainPage()
         {
             this.InitializeComponent();
-            Load();
+            LoadAgencies();
 
             foreach (Tuple<Type, NavigationViewItem> info in Common.Pages.Values)
             {
@@ -59,10 +59,10 @@ namespace MTATransit
             }
         }
 
-        public async void Load()
+        public async void LoadAgencies()
         {
             // Get a list of the agencies this api serves
-            Agencies = (await Common.NextBusApi.GetAgencies()).ToList();
+            Agencies = await SafeNextBus.GetAgencies();
             foreach (Agency ag in Agencies)
             {
                 AgenciesBox.Items.Add(new ComboBoxItem()
@@ -95,7 +95,8 @@ namespace MTATransit
                 var item = RoutesBox.Items[i] as ComboBoxItem;
                 //System.Threading.Thread.Sleep(100);
 
-                var info = await api.GetRouteConfig(ag.Tag, item.Name);
+                var info = await SafeNextBus.GetRouteConfig(ag.Tag, item.Name);
+                //var info = await api.GetRouteConfig(ag.Tag, item.Name);
                 RouteConfigs.Insert(i, info);
                 item.Background = Common.BrushFromHex(info.Color);
                 item.Foreground = Common.BrushFromHex(info.OppositeColor);
@@ -108,25 +109,24 @@ namespace MTATransit
             var api = Common.NextBusApi;
             int i = Routes.IndexOf(route);
 
-            RouteConfig info;
             if (i >= RouteConfigs.Count)
-                info = await api.GetRouteConfig(curAgency.Tag, route.Tag);
+                curRouteConfig = await api.GetRouteConfig(curAgency.Tag, route.Tag);
             else
-                info = RouteConfigs[i];
+                curRouteConfig = RouteConfigs[i];
 
-            StopsBox.Background = Common.BrushFromHex(info.Color);
+            StopsBox.Background = Common.BrushFromHex(curRouteConfig.Color);
             StopsBox.Items.Clear();
             Stops.Clear();
 
-            foreach (Stop st in info.Stops)
+            foreach (Stop st in curRouteConfig.Stops)
             {
                 Stops.Add(st);
                 StopsBox.Items.Add(new ListViewItem()
                 {
                     Name = st.Tag,
                     Content = st.Title,
-                    Foreground = Common.BrushFromHex(info.OppositeColor),
-                    RequestedTheme = Common.ThemeFromColor(info.OppositeColor),
+                    Foreground = Common.BrushFromHex(curRouteConfig.OppositeColor),
+                    RequestedTheme = Common.ThemeFromColor(curRouteConfig.OppositeColor),
                 });
             }
         }
@@ -154,7 +154,7 @@ namespace MTATransit
         private void StopsBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             var ag = curAgency;
-            var rt = curRoute;
+            var rt = curRouteConfig;
 
             object[] pars =
             {
