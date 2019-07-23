@@ -1,7 +1,7 @@
 ﻿var UnoAppManifest = {
 
     splashScreenImage: "Assets/SplashScreen.scale-200.png",
-    splashScreenColor: "#00f",
-    displayName: "MTATransit"
+    splashScreenColor: "#f44336",
+    displayName: "LA Move"
 
 }

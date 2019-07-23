@@ -2,17 +2,13 @@
 using Windows.UI.Xaml.Navigation;
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using Windows.UI.Xaml.Media.Animation;
-using NextBus.NET;
 using NextBus.NET.Models;
-using Esri.ArcGISRuntime.Portal;
-using Esri.ArcGISRuntime.Mapping;
+/*using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Data;
 using Esri.ArcGISRuntime.UI.Controls;
 using Esri.ArcGISRuntime.Symbology;
-using Esri.ArcGISRuntime.UI;
+using Esri.ArcGISRuntime.UI;*/
 using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -52,7 +48,7 @@ namespace MTATransit.Shared.Pages
             var stop = ((object[])e.Parameter)[2] as Stop;
 
             LoadStopInfo(agency, route, stop);
-            LoadMap(stop, route);
+            //LoadMap(stop, route);
             base.OnNavigatedTo(e);
         }
 
@@ -85,7 +81,7 @@ namespace MTATransit.Shared.Pages
             }
         }
 
-        public void LoadMap(Stop stop, RouteConfig route)
+        /*public void LoadMap(Stop stop, RouteConfig route)
         {
             MainMapView.Map = new Map(
                 BasemapType.ImageryWithLabelsVector,
@@ -101,12 +97,12 @@ namespace MTATransit.Shared.Pages
             //MapGraphics.Graphics.Add(stopPoint);
 
             // Display the selected route & stop
-            DrawRoutePath(route, stop, MapGraphics, true);
+            //DrawRoutePath(route, stop, MapGraphics, true);
 
             // Display all of the Park & Ride Locations
             var parkrideUri = new Uri("https://public.gis.lacounty.gov/public/rest/services/LACounty_Dynamic/LMS_Data_Public/MapServer/187");
             var parkrideLayer = new FeatureLayer(new ServiceFeatureTable(parkrideUri));
-            MainMapView.Map.OperationalLayers.Add(parkrideLayer);
+            //MainMapView.Map.OperationalLayers.Add(parkrideLayer);
         }
 
         private Graphic CreateRouteStop(decimal lat, decimal lon, System.Drawing.Color fill)
@@ -161,9 +157,7 @@ namespace MTATransit.Shared.Pages
             //MapPoint tappedPoint = (MapPoint)GeometryEngine.Project(e.Location, SpatialReferences.Wgs84);
 
             var resultGraphics = await MainMapView.IdentifyGraphicsOverlayAsync(MapGraphics, e.Position, 10, false);
-            
-
-        }
+        }*/
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {

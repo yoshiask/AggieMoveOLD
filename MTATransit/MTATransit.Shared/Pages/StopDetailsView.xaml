@@ -9,6 +9,7 @@
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     xmlns:ArcGIS="using:Esri.ArcGISRuntime.UI.Controls"
     xmlns:ArcGISUI="using:Esri.ArcGISRuntime.UI"
+    xmlns:ArcGISForms="using:Esri.ArcGISRuntime.Xamarin.Forms"
     xmlns:ios="http://uno.ui/ios"
     xmlns:android="http://uno.ui/android"
     xmlns:xamarin="http://uno.ui/xamarin"
@@ -31,11 +32,11 @@
             <TextBlock x:Name="PageHeader" Margin="10,0,20,0" FontSize="30" Height="40" VerticalAlignment="Center" Text="Page Header" FontWeight="Bold" />
             <ListView x:Name="PredictionBox" Grid.Row="1"/>
 
-            <ArcGIS:MapView x:Name="MainMapView" Grid.Row="2" GeoViewTapped="MapView_Tapped">
+            <!--ArcGIS:MapView x:Name="MainMapView" Grid.Row="2" GeoViewTapped="MapView_Tapped">
                 <ArcGIS:MapView.GraphicsOverlays>
                     <ArcGISUI:GraphicsOverlay x:Name="MapGraphics"/>
                 </ArcGIS:MapView.GraphicsOverlays>
-            </ArcGIS:MapView>
+            </ArcGIS:MapView!-->
         </Grid>
     </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

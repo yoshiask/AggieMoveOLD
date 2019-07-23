@@ -46,9 +46,9 @@ namespace MTATransit
             }
 #endif
             // Initialize the ArcGIS environment
-            Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.SetLicense(
+            /*Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.SetLicense(
                 "runtimelite,1000,rud5976483922,none,GB2PMD17J06HZF3RE159"
-            );
+            );*/
 
             Frame rootFrame = Window.Current.Content as Frame;
 
