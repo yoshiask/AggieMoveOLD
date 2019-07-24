@@ -61,8 +61,20 @@ namespace MTATransit
 
         public async void LoadAgencies()
         {
+            try
+            {
+                //await Shared.API.LAMove.LAMoveHelper.GetVIDFromBus();
+            }
+            catch
+            {
+                // TODO: Prompt the user for vehicle id. Display the pictogram showing where the ID can be found inside the bus.
+            }
+
             // Get a list of the agencies this api serves
             Agencies = await SafeNextBus.GetAgencies();
+            if (Agencies == null)
+                return;
+
             foreach (Agency ag in Agencies)
             {
                 AgenciesBox.Items.Add(new ComboBoxItem()
@@ -79,6 +91,9 @@ namespace MTATransit
 
             // Now load the available routes
             Routes = (await api.GetRoutesForAgency(ag.Tag)).ToList();
+            if (Routes == null)
+                return;
+
             foreach (Route rt in Routes)
             {
                 RoutesBox.Items.Add(new ComboBoxItem()
@@ -87,20 +102,22 @@ namespace MTATransit
                     Content = rt.Title,
                 });
             }
-
             RouteConfigs.Clear();
+
             // Now get the routeConfig for colors
             for (int i = 0; i < RoutesBox.Items.Count; ++i)
             {
                 var item = RoutesBox.Items[i] as ComboBoxItem;
-                //System.Threading.Thread.Sleep(100);
 
                 var info = await SafeNextBus.GetRouteConfig(ag.Tag, item.Name);
                 //var info = await api.GetRouteConfig(ag.Tag, item.Name);
-                RouteConfigs.Insert(i, info);
-                item.Background = Common.BrushFromHex(info.Color);
-                item.Foreground = Common.BrushFromHex(info.OppositeColor);
-                item.RequestedTheme = ElementTheme.Light;
+                if (info != null)
+                {
+                    RouteConfigs.Insert(i, info);
+                    item.Background = Common.BrushFromHex(info.Color);
+                    item.Foreground = Common.BrushFromHex(info.OppositeColor);
+                    item.RequestedTheme = ElementTheme.Light;
+                }
             }
         }
 
@@ -113,6 +130,9 @@ namespace MTATransit
                 curRouteConfig = await api.GetRouteConfig(curAgency.Tag, route.Tag);
             else
                 curRouteConfig = RouteConfigs[i];
+
+            if (curRouteConfig == null)
+                return;
 
             StopsBox.Background = Common.BrushFromHex(curRouteConfig.Color);
             StopsBox.Items.Clear();

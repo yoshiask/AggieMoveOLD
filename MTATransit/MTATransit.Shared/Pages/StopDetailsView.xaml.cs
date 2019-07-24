@@ -20,6 +20,10 @@ namespace MTATransit.Shared.Pages
     /// </summary>
     public sealed partial class RouteDetailsView : Page
     {
+        Agency curAgency;
+        RouteConfig curRouteConfig;
+        Stop curStop;
+
         public RouteDetailsView()
         {
             this.InitializeComponent();
@@ -43,27 +47,27 @@ namespace MTATransit.Shared.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            var agency = ((object[])e.Parameter)[0] as Agency;
-            var route = ((object[])e.Parameter)[1] as RouteConfig;
-            var stop = ((object[])e.Parameter)[2] as Stop;
+            curAgency = ((object[])e.Parameter)[0] as Agency;
+            curRouteConfig = ((object[])e.Parameter)[1] as RouteConfig;
+            curStop = ((object[])e.Parameter)[2] as Stop;
 
-            LoadStopInfo(agency, route, stop);
+            LoadStopInfo();
             //LoadMap(stop, route);
             base.OnNavigatedTo(e);
         }
 
-        public async void LoadStopInfo(Agency agency, RouteConfig route, Stop stop)
+        public async void LoadStopInfo()
         {
             var api = Common.NextBusApi;
-            var predictions = (await api.GetRoutePredictionsByStopTag(agency.Tag, stop.Tag, route.Tag)).ToList();
-            var routeInfo = await api.GetRouteConfig(agency.Tag, route.Tag);
+            var predictions = (await SafeNextBus.GetRoutePredictionsByStopTag(curAgency.Tag, curStop.Tag, curRouteConfig.Tag)).ToList();
 
-            MainGrid.Background = Common.BrushFromHex(routeInfo.Color);
-            PageHeader.Foreground = Common.BrushFromHex(routeInfo.OppositeColor);
-            var itemTheme = Common.ThemeFromColor(routeInfo.OppositeColor);
+            MainGrid.Background = Common.BrushFromHex(curRouteConfig.Color);
+            PageHeader.Foreground = Common.BrushFromHex(curRouteConfig.OppositeColor);
+            var itemTheme = Common.ThemeFromColor(curRouteConfig.OppositeColor);
 
             var pred = predictions[0];
             PageHeader.Text = pred.StopTitle;
+            PredictionBox.Items.Clear();
             foreach (RouteDirection dir in pred.Directions)
             {
                 foreach (Prediction pr in dir.Predictions)
@@ -74,7 +78,7 @@ namespace MTATransit.Shared.Pages
                     PredictionBox.Items.Add(new ListViewItem()
                     {
                         Content = display,
-                        Foreground = Common.BrushFromHex(routeInfo.OppositeColor),
+                        Foreground = Common.BrushFromHex(curRouteConfig.OppositeColor),
                         RequestedTheme = itemTheme,
                     });
                 }
@@ -158,6 +162,25 @@ namespace MTATransit.Shared.Pages
 
             var resultGraphics = await MainMapView.IdentifyGraphicsOverlayAsync(MapGraphics, e.Position, 10, false);
         }*/
+
+        Windows.Foundation.Deferral RefreshCompletionDeferral;
+        private void rc_RefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)
+        {
+            //Do some work to show new Content! Once the work is done, call RefreshCompletionDeferral.Complete()
+            RefreshCompletionDeferral = args.GetDeferral();
+
+            try
+            {
+                LoadStopInfo();
+            }
+            catch
+            {
+                var dialog = new Controls.DialogBox("Error", "Unable to get stop predictions. Please try again in a minute.");
+                MainGrid.Children.Add(dialog);
+            }
+
+            RefreshCompletionDeferral.Complete();
+        }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {

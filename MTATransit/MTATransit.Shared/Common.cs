@@ -3,7 +3,6 @@ using Refit;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Windows.UI;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
 using NextBus.NET;
@@ -12,16 +11,23 @@ using System.Threading.Tasks;
 using NextBus.NET.Models;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace MTATransit.Shared
 {
     public static class Common
     {
+        #region API Initializers
         // Initialize the services that we're requesting from
         public static NextBusClient NextBusApi = new NextBusClient();
         public static API.NextBus.INextBusApi OldNextBusApi {
             get {
                 return RestService.For<Shared.API.NextBus.INextBusApi>("http://webservices.nextbus.com/service/");
+            }
+        }
+        public static API.RestBus.IRestBusApi RestBusApi {
+            get {
+                return RestService.For<API.RestBus.IRestBusApi>("http://restbus.info/api");
             }
         }
         public static IArcGISApi ArcGISApi {
@@ -34,18 +40,24 @@ namespace MTATransit.Shared
                 return RestService.For<API.MTA.IMTAApi>("http://api.metro.net/");
             }
         }
+        public static API.LAMove.ILAMoveApi LAMoveApi {
+            get {
+                return RestService.For<API.LAMove.ILAMoveApi>("http://lamove-api.herokuapp.com/v1");
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Creates Color from HEX code
         /// </summary>
         /// <param name="hex">HEX code string</param>
-        public static Color ColorFromHex(string hex)
+        public static Windows.UI.Color ColorFromHex(string hex)
         {
             hex = hex.Replace("#", string.Empty);
             byte r = (byte)(Convert.ToUInt32(hex.Substring(0, 2), 16));
             byte g = (byte)(Convert.ToUInt32(hex.Substring(2, 2), 16));
             byte b = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
-            return Color.FromArgb(255, r, g, b);
+            return Windows.UI.Color.FromArgb(255, r, g, b);
         }
 
         /// <summary>

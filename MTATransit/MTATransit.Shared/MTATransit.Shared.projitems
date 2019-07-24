@@ -24,6 +24,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\FareTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\FareType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\ILAMoveApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\LAMoveHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\URLResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\Agency.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\IMTAApi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\MTA\MTAHelper.cs" />
@@ -41,10 +43,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Stop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Vehicle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Agency.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Direction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\IRestBusApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Prediction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Route.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Stop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DialogBox.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -52,6 +61,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\SettingsPage.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -80,11 +93,17 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\DialogBox.xaml.cs">
+      <DependentUpon>DialogBox.xaml</DependentUpon>
+    </Compile>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\RouteDetailsView.xaml.cs">
       <DependentUpon>RouteDetailsView.xaml</DependentUpon>
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Controls\" />
   </ItemGroup>
 </Project>

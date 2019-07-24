@@ -45,10 +45,19 @@ namespace MTATransit
                // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            // Initialize the ArcGIS environment
-            /*Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.SetLicense(
-                "runtimelite,1000,rud5976483922,none,GB2PMD17J06HZF3RE159"
-            );*/
+            // Check if connected to internet
+            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                // Initialize the ArcGIS environment
+                /*Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.SetLicense(
+                    "runtimelite,1000,rud5976483922,none,GB2PMD17J06HZF3RE159"
+                );*/
+            }
+            else
+            {
+                
+                App.Current.Exit();
+            }
 
             Frame rootFrame = Window.Current.Content as Frame;
 
