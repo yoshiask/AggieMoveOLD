@@ -2,7 +2,6 @@
 using Windows.UI.Xaml.Navigation;
 using System;
 using System.Linq;
-using NextBus.NET.Models;
 /*using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Data;
@@ -10,6 +9,8 @@ using Esri.ArcGISRuntime.UI.Controls;
 using Esri.ArcGISRuntime.Symbology;
 using Esri.ArcGISRuntime.UI;*/
 using System.Diagnostics;
+using System.Collections.Generic;
+using MTATransit.Shared.API.RestBus;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -21,7 +22,7 @@ namespace MTATransit.Shared.Pages
     public sealed partial class RouteDetailsView : Page
     {
         Agency curAgency;
-        RouteConfig curRouteConfig;
+        Route curRouteConfig;
         Stop curStop;
 
         public RouteDetailsView()
@@ -48,40 +49,37 @@ namespace MTATransit.Shared.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             curAgency = ((object[])e.Parameter)[0] as Agency;
-            curRouteConfig = ((object[])e.Parameter)[1] as RouteConfig;
+            curRouteConfig = ((object[])e.Parameter)[1] as Route;
             curStop = ((object[])e.Parameter)[2] as Stop;
 
             LoadStopInfo();
             //LoadMap(stop, route);
+            LoadNearbyStops();
             base.OnNavigatedTo(e);
         }
 
         public async void LoadStopInfo()
         {
-            var api = Common.NextBusApi;
-            var predictions = (await SafeNextBus.GetRoutePredictionsByStopTag(curAgency.Tag, curStop.Tag, curRouteConfig.Tag)).ToList();
+            var api = Common.RestBusApi;
+            var predictions = await api.GetStopPredictions(curAgency.Id, curRouteConfig.Id, curStop.Id);
 
             MainGrid.Background = Common.BrushFromHex(curRouteConfig.Color);
-            PageHeader.Foreground = Common.BrushFromHex(curRouteConfig.OppositeColor);
-            var itemTheme = Common.ThemeFromColor(curRouteConfig.OppositeColor);
+            PageHeader.Foreground = Common.BrushFromHex(curRouteConfig.TextColor);
+            var itemTheme = Common.ThemeFromColor(curRouteConfig.TextColor);
 
             var pred = predictions[0];
-            PageHeader.Text = pred.StopTitle;
+            PageHeader.Text = pred.Stop.Title;
             PredictionBox.Items.Clear();
-            foreach (RouteDirection dir in pred.Directions)
+            foreach (PredictionData pr in pred.Values)
             {
-                foreach (Prediction pr in dir.Predictions)
-                {
-                    int secs = pr.Seconds;
-                    string display = Math.Round(Convert.ToDouble(pr.Seconds) / 60, 0).ToString();
+                string display = Math.Round(Convert.ToDouble(pr.Seconds) / 60, 0).ToString();
 
-                    PredictionBox.Items.Add(new ListViewItem()
-                    {
-                        Content = display,
-                        Foreground = Common.BrushFromHex(curRouteConfig.OppositeColor),
-                        RequestedTheme = itemTheme,
-                    });
-                }
+                PredictionBox.Items.Add(new ListViewItem()
+                {
+                    Content = display,
+                    Foreground = Common.BrushFromHex(curRouteConfig.TextColor),
+                    RequestedTheme = itemTheme,
+                });
             }
         }
 
@@ -162,6 +160,26 @@ namespace MTATransit.Shared.Pages
 
             var resultGraphics = await MainMapView.IdentifyGraphicsOverlayAsync(MapGraphics, e.Position, 10, false);
         }*/
+
+        public async void LoadNearbyStops()
+        {
+            string fromString = System.Web.HttpUtility.UrlEncode("Baldwin Park, CA, 91706");
+            //string toString = System.Web.HttpUtility.UrlEncode("Union Station, Los Angeles, CA");
+
+            var startSuggestions = await Common.ArcGISApi.GetSuggestions(fromString);
+            var startGeo = await Common.ArcGISApi.Geocode(fromString, startSuggestions.Items[0].MagicKey);
+
+            //var endSuggestions = await Common.ArcGISApi.GetSuggestions(toString);
+            //var endGeo = await Common.ArcGISApi.Geocode(toString, endSuggestions.Items[0].MagicKey);
+
+            string startCoord = startGeo.Candidates[0].Location.Longitude.ToString() + "," + startGeo.Candidates[0].Location.Latitude.ToString();
+            //string endCoord = endGeo.Candidates[0].Location.Longitude.ToString() + "," + endGeo.Candidates[0].Location.Latitude.ToString();
+            // TODO: Figure out why this is backwards
+            string endCoord = curStop.Latitude.ToString() + "," + curStop.Longitude.ToString();
+
+            var api = Refit.RestService.For<API.OTPMTA.IOTPMTAApi>("https://otp.metroservices.io/otp");
+            var plan = await api.CalculatePlan(startCoord, endCoord);
+        }
 
         Windows.Foundation.Deferral RefreshCompletionDeferral;
         private void rc_RefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)

@@ -8,10 +8,10 @@ namespace MTATransit.Shared.API.ArcGIS
     public class Location
     {
         [JsonProperty(PropertyName = "x")]
-        public float X { get; set; }
+        public double Latitude { get; set; }
 
         [JsonProperty(PropertyName = "y")]
-        public float Y { get; set; }
+        public double Longitude { get; set; }
     }
 
     public class Extent

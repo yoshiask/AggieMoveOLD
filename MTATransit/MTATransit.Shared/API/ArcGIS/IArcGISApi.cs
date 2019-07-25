@@ -9,7 +9,7 @@ namespace MTATransit.Shared.API.ArcGIS
         [Get("/suggest?text={text}&f=json")]
         Task<Suggestions> GetSuggestions(string text);
 
-        [Get("/addressCandidates?SingleLine={text}&magicKey={key}&f=json")]
+        [Get("/findAddressCandidates?SingleLine={text}&magicKey={key}&f=json")]
         Task<GeocodeResponse> Geocode(string text, string key);
     }
 }

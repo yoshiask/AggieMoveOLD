@@ -1,7 +1,7 @@
 ﻿using MTATransit.Shared;
 using MTATransit.Shared.API;
 using MTATransit.Shared.Pages;
-using NextBus.NET.Models;
+using MTATransit.Shared.API.RestBus;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -31,10 +31,8 @@ namespace MTATransit
     {
         Agency curAgency;
         Route curRoute;
-        RouteConfig curRouteConfig;
         List<Agency> Agencies = new List<Agency>();
         List<Route> Routes = new List<Route>();
-        List<RouteConfig> RouteConfigs = new List<RouteConfig>();
         List<Stop> Stops = new List<Stop>();
 
         public MainPage()
@@ -71,7 +69,7 @@ namespace MTATransit
             }
 
             // Get a list of the agencies this api serves
-            Agencies = await SafeNextBus.GetAgencies();
+            Agencies = await Common.RestBusApi.GetAgencies();
             if (Agencies == null)
                 return;
 
@@ -86,11 +84,12 @@ namespace MTATransit
 
         public async void LoadRoutes(Agency ag)
         {
-            var api = Common.NextBusApi;
+            var api = Common.RestBusApi;
             RoutesBox.Items.Clear();
+            Routes.Clear();
 
             // Now load the available routes
-            Routes = (await api.GetRoutesForAgency(ag.Tag)).ToList();
+            Routes = await api.GetAgencyRoutes(ag.Id);
             if (Routes == null)
                 return;
 
@@ -98,24 +97,26 @@ namespace MTATransit
             {
                 RoutesBox.Items.Add(new ComboBoxItem()
                 {
-                    Name = rt.Tag,
+                    Name = rt.Id,
                     Content = rt.Title,
                 });
             }
-            RouteConfigs.Clear();
 
             // Now get the routeConfig for colors
             for (int i = 0; i < RoutesBox.Items.Count; ++i)
             {
                 var item = RoutesBox.Items[i] as ComboBoxItem;
 
-                var info = await SafeNextBus.GetRouteConfig(ag.Tag, item.Name);
-                //var info = await api.GetRouteConfig(ag.Tag, item.Name);
+                var info = await api.GetRoute(ag.Id, item.Name);
                 if (info != null)
                 {
-                    RouteConfigs.Insert(i, info);
+                    int ind = Routes.FindIndex(r => r.Id == info.Id);
+                    if (ind < 0)
+                        ind = i;
+                    Routes[ind] = info;
+
                     item.Background = Common.BrushFromHex(info.Color);
-                    item.Foreground = Common.BrushFromHex(info.OppositeColor);
+                    item.Foreground = Common.BrushFromHex(info.TextColor);
                     item.RequestedTheme = ElementTheme.Light;
                 }
             }
@@ -123,30 +124,27 @@ namespace MTATransit
 
         public async void LoadStops(Route route)
         {
-            var api = Common.NextBusApi;
+            var api = Common.RestBusApi;
             int i = Routes.IndexOf(route);
 
-            if (i >= RouteConfigs.Count)
-                curRouteConfig = await api.GetRouteConfig(curAgency.Tag, route.Tag);
+            if (curRoute.Color == null)
+                curRoute = await api.GetRoute(curAgency.Id, route.Id);
             else
-                curRouteConfig = RouteConfigs[i];
+                curRoute = Routes[i];
 
-            if (curRouteConfig == null)
-                return;
-
-            StopsBox.Background = Common.BrushFromHex(curRouteConfig.Color);
+            StopsBox.Background = Common.BrushFromHex(curRoute.Color);
             StopsBox.Items.Clear();
             Stops.Clear();
 
-            foreach (Stop st in curRouteConfig.Stops)
+            foreach (Stop st in curRoute.Stops)
             {
                 Stops.Add(st);
                 StopsBox.Items.Add(new ListViewItem()
                 {
-                    Name = st.Tag,
+                    Name = st.Id,
                     Content = st.Title,
-                    Foreground = Common.BrushFromHex(curRouteConfig.OppositeColor),
-                    RequestedTheme = Common.ThemeFromColor(curRouteConfig.OppositeColor),
+                    Foreground = Common.BrushFromHex(curRoute.TextColor),
+                    RequestedTheme = Common.ThemeFromColor(curRoute.TextColor),
                 });
             }
         }
@@ -156,6 +154,7 @@ namespace MTATransit
             if (Agencies.Count > 0)
             {
                 curAgency = await NextBusApiHelper.GetAgencyByTitle(((ComboBoxItem)AgenciesBox.SelectedItem).Content.ToString(), Agencies);
+                StopsBox.Items.Clear();
                 LoadRoutes(curAgency);
                 RoutesBox.IsEnabled = true;
             }
@@ -165,7 +164,7 @@ namespace MTATransit
         {
             if (RoutesBox.Items.Count > 0)
             {
-                curRoute = await NextBusApiHelper.GetRouteByTitle(curAgency.Tag, ((ComboBoxItem)RoutesBox.SelectedItem).Content.ToString(), Routes);
+                curRoute = await NextBusApiHelper.GetRouteByTitle(curAgency.Id, ((ComboBoxItem)RoutesBox.SelectedItem).Content.ToString(), Routes);
                 LoadStops(curRoute);
                 StopsBox.ScrollIntoView(StopsBox.Items[0]);
             }
@@ -174,7 +173,7 @@ namespace MTATransit
         private void StopsBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             var ag = curAgency;
-            var rt = curRouteConfig;
+            var rt = curRoute;
 
             object[] pars =
             {

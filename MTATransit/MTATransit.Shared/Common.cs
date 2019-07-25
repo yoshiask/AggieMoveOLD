@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 using NextBus.NET;
 using Windows.UI.Xaml;
 using System.Threading.Tasks;
-using NextBus.NET.Models;
+using MTATransit.Shared.API.RestBus;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -19,13 +19,7 @@ namespace MTATransit.Shared
     {
         #region API Initializers
         // Initialize the services that we're requesting from
-        public static NextBusClient NextBusApi = new NextBusClient();
-        public static API.NextBus.INextBusApi OldNextBusApi {
-            get {
-                return RestService.For<Shared.API.NextBus.INextBusApi>("http://webservices.nextbus.com/service/");
-            }
-        }
-        public static API.RestBus.IRestBusApi RestBusApi {
+        public static IRestBusApi RestBusApi {
             get {
                 return RestService.For<API.RestBus.IRestBusApi>("http://restbus.info/api");
             }
@@ -186,92 +180,6 @@ namespace MTATransit.Shared
             public static bool IsWithinRadius(double lat, double lon, double x, double y, double radius)
             {
                 return GetDistance(lat, lon, x, y) <= radius;
-            }
-        }
-    }
-
-    public class SafeNextBus
-    {
-        public static async Task<List<Agency>> GetAgencies()
-        {
-            try
-            {
-                return (await Common.NextBusApi.GetAgencies()).ToList();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-        public static async Task<RouteConfig> GetRouteConfig(string agencyTag, string routeTag, bool includePaths = false)
-        {
-            try
-            {
-                return await Common.NextBusApi.GetRouteConfig(agencyTag, routeTag, includePaths);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-        public static async Task<IEnumerable<RoutePrediction>> GetRoutePredictionsByStopId(string agencyTag, string stopId, string routeTag = null, bool verbose = false)
-        {
-            return await Common.NextBusApi.GetRoutePredictionsByStopId(agencyTag, stopId, routeTag, verbose);
-        }
-
-        public static async Task<IEnumerable<RoutePrediction>> GetRoutePredictionsByStopTag(string agencyTag, string stopTag, string routeTag, bool verbose = false)
-        {
-            try
-            {
-                return await Common.NextBusApi.GetRoutePredictionsByStopTag(agencyTag, stopTag, routeTag, verbose);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-        public static async Task<IEnumerable<RoutePrediction>> GetRoutePredictionsForMultipleStops(string agencyTag, Dictionary<string, string[]> routeStoptags, bool useShortTitles = false)
-        {
-            try
-            {
-                return await Common.NextBusApi.GetRoutePredictionsForMultipleStops(agencyTag, routeStoptags, useShortTitles);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-        public static async Task<IEnumerable<RouteSchedule>> GetRouteSchedule(string agencyTag, string routeTag)
-        {
-            try
-            {
-                return await Common.NextBusApi.GetRouteSchedule(agencyTag, routeTag);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-        public static async Task<IEnumerable<Route>> GetRoutesForAgency(string agencyTag, bool verbose = false)
-        {
-            try
-            {
-                return await Common.NextBusApi.GetRoutesForAgency(agencyTag, verbose);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return null;
             }
         }
     }

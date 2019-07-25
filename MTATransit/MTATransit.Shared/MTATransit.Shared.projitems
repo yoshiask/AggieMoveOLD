@@ -43,12 +43,21 @@
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Stop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Vehicle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\GooglePolylineConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\IOTPMTAApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\Itinerary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\Leg.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\Plan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\PlanResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\Step.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Agency.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Direction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\IRestBusApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Prediction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Stop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Vehicle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
