@@ -12,6 +12,7 @@ using MTATransit.Shared.API.RestBus;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Windows.UI.Xaml.Data;
 
 namespace MTATransit.Shared
 {
@@ -40,6 +41,8 @@ namespace MTATransit.Shared
             }
         }
         #endregion
+
+        public static FontFamily DINFont = new FontFamily("/Assets/Fonts/DINRegular#DIN");
 
         /// <summary>
         /// Creates Color from HEX code
@@ -91,17 +94,27 @@ namespace MTATransit.Shared
                 return ElementTheme.Light;
         }
 
+        public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dtDateTime;
+        }
+
+
         public static Dictionary<string, Tuple<Type, NavigationViewItem>> Pages = new Dictionary<string, Tuple<Type, NavigationViewItem>>
         {
             {
-                "Explore",
+                "Navigate",
                 new Tuple<Type, NavigationViewItem>(
-                    typeof(MainPage),
+                    typeof(Pages.NavigateHomePage),
                     new NavigationViewItem()
                     {
-                        Icon = new SymbolIcon(Symbol.Street),
-                        Content = "Explore",
-                        Tag = "Explore your options"
+                        Icon = new SymbolIcon(Symbol.Directions),
+                        Content = "Navigate",
+                        Tag = "Navigate to your destination",
+                        FontFamily = DINFont
                     }
                 )
             },
@@ -114,20 +127,22 @@ namespace MTATransit.Shared
                     {
                         Icon = new SymbolIcon(Symbol.Map),
                         Content = "Discover",
-                        Tag = "Discover hotspots in your area"
+                        Tag = "Discover hotspots in your area",
+                        FontFamily = DINFont
                     }
                 )
             },
 
             {
-                "Navigate",
+                "Explore",
                 new Tuple<Type, NavigationViewItem>(
-                    typeof(object),
+                    typeof(MainPage),
                     new NavigationViewItem()
                     {
-                        Icon = new SymbolIcon(Symbol.Directions),
-                        Content = "Navigate",
-                        Tag = "Navigate to your destination"
+                        Icon = new SymbolIcon(Symbol.Street),
+                        Content = "Explore",
+                        Tag = "Explore your options",
+                        FontFamily = DINFont,
                     }
                 )
             },
@@ -153,6 +168,25 @@ namespace MTATransit.Shared
 
             if (newPage.BaseType == typeof(Page))
                 frame.Navigate(newPage);
+        }
+
+        public static void LoadNavView(Page page, NavigationView NavView)
+        {
+            foreach (Tuple<Type, NavigationViewItem> info in Common.Pages.Values)
+            {
+                var menuItem = new NavigationViewItem
+                {
+                    Icon = info.Item2.Icon,
+                    Content = info.Item2.Content,
+                    Tag = info.Item2.Tag
+                };
+
+                NavView.MenuItems.Add(menuItem);
+
+                // If the menu item we're adding goes to this page, then select it
+                if (info.Item1 == page.GetType())
+                    NavView.SelectedItem = menuItem;
+            }
         }
 
         public static class SpatialHelper
@@ -181,6 +215,43 @@ namespace MTATransit.Shared
             {
                 return GetDistance(lat, lon, x, y) <= radius;
             }
+        }
+
+        public static class NumberHelper
+        {
+            public static string ToShortTimeString(long seconds)
+            {
+                decimal hours = Decimal.Divide(seconds, 3600);
+                if (hours <= 1)
+                    return (seconds / 60).ToString() + " min";
+                else
+                    return Math.Round(d:hours, decimals:1).ToString() + " hr";
+            }
+
+            public static double MetersToMiles(double meters)
+            {
+                double kilometers = meters / 1000;
+                double miles = kilometers * 0.621371;
+                return miles; 
+            }
+
+            public static double MilesToMeters(double miles)
+            {
+                double kilometers = miles / 0.621371;
+                double meters = kilometers * 1000;
+                return meters;
+            }
+        }
+    }
+
+    public class XamlConverters
+    {
+        class VisibleWhenZeroConverter : IValueConverter
+        {
+            public object Convert(object v, Type t, object p, string l) =>
+                Equals(0d, (double)v) ? Visibility.Visible : Visibility.Collapsed;
+
+            public object ConvertBack(object v, Type t, object p, string l) => null;
         }
     }
 }

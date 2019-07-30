@@ -5,4 +5,10 @@
     xmlns:local="using:MTATransit"
     RequestedTheme="Light">
 
+    <Application.Resources>
+        <ResourceDictionary>
+            <FontFamily x:Key="DINFontFamily">/Assets/Fonts/DINRegular#DIN</FontFamily>
+        </ResourceDictionary>
+    </Application.Resources>
+    
 </Application>

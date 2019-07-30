@@ -40,28 +40,25 @@ namespace MTATransit
             this.InitializeComponent();
             LoadAgencies();
 
-            foreach (Tuple<Type, NavigationViewItem> info in Common.Pages.Values)
-            {
-                var menuItem = new NavigationViewItem
-                {
-                    Icon = info.Item2.Icon,
-                    Content = info.Item2.Content,
-                    Tag = info.Item2.Tag
-                };
-
-                NavView.MenuItems.Add(menuItem);
-
-                // If the menu item we're adding goes to this page, then select it
-                if (info.Item1 == GetType())
-                    NavView.SelectedItem = menuItem;
-            }
+            Common.LoadNavView(this, NavView);
         }
 
         public async void LoadAgencies()
         {
             try
             {
-                //await Shared.API.LAMove.LAMoveHelper.GetVIDFromBus();
+                /*var vid = await Shared.API.LAMove.LAMoveHelper.GetVIDFromBus();
+                var vehicles = await Common.RestBusApi.GetAgencyVehicles("lametro");
+                var vehicle = vehicles.Find(v => v.Id == vid);
+                if (vehicle != null)
+                {
+                    var dialog = new Shared.Controls.DialogBox("LA Move", $"You are currently on route {vehicle.RouteId}, vehicle #{vid}");
+                    dialog.OnDialogClosed += (Shared.Controls.DialogBox.DialogResult result) =>
+                    {
+                        MainGrid.Children.Remove(dialog);
+                    };
+                    MainGrid.Children.Add(dialog);
+                }*/
             }
             catch
             {

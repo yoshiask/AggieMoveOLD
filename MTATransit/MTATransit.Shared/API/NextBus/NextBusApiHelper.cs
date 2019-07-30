@@ -12,14 +12,14 @@ namespace MTATransit.Shared.API
         public static async Task<Agency> GetAgencyByTitle(string title, List<Agency> agencies = null)
         {
             if (agencies == null)
-                agencies = await Common.NextBusApi.GetAgencies();
+                agencies = await Common.RestBusApi.GetAgencies();
             return agencies.Find(x => x.Title == title);
         }
 
         public static async Task<Route> GetRouteByTitle(string agency, string title, List<Route> routes = null)
         {
             if (routes == null)
-                routes = await Common.NextBusApi.GetAgencyRoutes(agency);
+                routes = await Common.RestBusApi.GetAgencyRoutes(agency);
             return routes.Find(x => x.Title == title);
         }
     }

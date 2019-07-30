@@ -45,8 +45,10 @@ namespace MTATransit
                // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            bool isInternetAvailable = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
+
             // Check if connected to internet
-            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            if (isInternetAvailable)
             {
                 // Initialize the ArcGIS environment
                 /*Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.SetLicense(
@@ -55,7 +57,6 @@ namespace MTATransit
             }
             else
             {
-                
                 App.Current.Exit();
             }
 
@@ -76,17 +77,28 @@ namespace MTATransit
                 }
 
                 // Place the frame in the current Window
-                Windows.UI.Xaml.Window.Current.Content = rootFrame;
+                Window.Current.Content = rootFrame;
             }
 
             if (e.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
                 {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    if (!isInternetAvailable)
+                        rootFrame.Navigate(
+                            typeof(Shared.Pages.FatalErrorPage),
+                            new Shared.Pages.FatalErrorPage.FatalErrorArgs()
+                            {
+                                //Icon = "\uE774",
+                                //SecondaryIcon = "\uEA39",
+                                Icon = "\uEB5E",
+                                Message = "You are not connected to the internet"
+                            });
+                    else
+                        // When the navigation stack isn't restored navigate to the first page,
+                        // configuring the new page by passing required information as a navigation
+                        // parameter
+                        rootFrame.Navigate(typeof(Shared.Pages.NavigateHomePage), e.Arguments);
                 }
                 // Ensure the current window is active
                 Windows.UI.Xaml.Window.Current.Activate();

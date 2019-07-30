@@ -23,16 +23,16 @@
         x:Name="NavView"
         SelectionChanged="NavView_SelectionChanged"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200">
+        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200" FontFamily="{StaticResource DINFontFamily}">
         <Grid x:Name="MainGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="80"/>
                 <RowDefinition Height="43*"/>
                 <RowDefinition Height="85*"/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="PageHeader" Margin="10,0,20,0" FontSize="30" Height="40" VerticalAlignment="Center" Text="Page Header" FontWeight="Bold" />
+            <TextBlock x:Name="PageHeader" Margin="10,0,20,0" FontSize="30" Height="40" VerticalAlignment="Center" Text="Page Header" FontWeight="Bold" FontFamily="{StaticResource DINFontFamily}" />
             <Windows10version1803:RefreshContainer x:Name="rc" RefreshRequested="rc_RefreshRequested" Grid.Row="1">
-                <ListView x:Name="PredictionBox"/>
+                <ListView x:Name="PredictionBox" FontFamily="{StaticResource DINFontFamily}"/>
             </Windows10version1803:RefreshContainer>
             
             <!--ArcGIS:MapView x:Name="MainMapView" Grid.Row="2" GeoViewTapped="MapView_Tapped">

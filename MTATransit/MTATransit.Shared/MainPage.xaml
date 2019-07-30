@@ -12,17 +12,17 @@
     <Windows10FallCreatorsUpdate:NavigationView
         x:Name="NavView" SelectionChanged="NavView_SelectionChanged"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200">
+        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200" FontFamily="{StaticResource DINFontFamily}">
         <Grid x:Name="MainGrid">
             <RichTextBlock Margin="20" FontSize="30" Height="40" VerticalAlignment="Top" IsTextSelectionEnabled="False" >
                 <Paragraph Foreground="Black" FontSize="32">
-                    <Run FontWeight="Bold" FontFamily="Segoe UI" Foreground="#FFFFC107" Text="LA"/>
-                    <Run FontFamily="Century Gothic" FontWeight="SemiBold" Foreground="#FFF44336" Text="Move"/>
+                    <Run FontWeight="Bold" FontFamily="{StaticResource DINFontFamily}" Foreground="#FFFFC107" Text="LA"/>
+                    <Run FontFamily="{StaticResource DINFontFamily}" FontWeight="SemiBold" Foreground="#FFF44336" Text="Move"/>
                 </Paragraph>
             </RichTextBlock>
-            <ComboBox x:Name="AgenciesBox" Margin="10,70,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="AgenciesBox_SelectionChanged" PlaceholderText="Select an Agency" />
-            <ComboBox x:Name="RoutesBox" Margin="10,120,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="RoutesBox_SelectionChanged" PlaceholderText="Select a Route" IsEnabled="False" />
-            <ListView x:Name="StopsBox" Margin="10,170,10,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="StopsBox_SelectionChanged" />
+            <ComboBox x:Name="AgenciesBox" Margin="10,70,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="AgenciesBox_SelectionChanged" PlaceholderText="Select an Agency" FontFamily="{StaticResource DINFontFamily}" />
+            <ComboBox x:Name="RoutesBox" Margin="10,120,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="RoutesBox_SelectionChanged" PlaceholderText="Select a Route" IsEnabled="False" FontFamily="{StaticResource DINFontFamily}" />
+            <ListView x:Name="StopsBox" Margin="10,170,10,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="StopsBox_SelectionChanged" FontFamily="{StaticResource DINFontFamily}" />
         </Grid>
 
         <!--NavigationView.MenuItems>

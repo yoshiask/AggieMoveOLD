@@ -59,13 +59,20 @@ namespace MTATransit.Shared.Controls
         }
 
 
+        public delegate void DialogClosedHandler(DialogResult r);
+        public event DialogClosedHandler OnDialogClosed;
+
         private void PrimaryButton_Click(object sender, RoutedEventArgs args)
         {
             Result = DialogResult.Primary;
+            //this.Visibility = Visibility.Collapsed;
+            OnDialogClosed?.Invoke(Result);
         }
         private void SecondaryButton_Click(object sender, RoutedEventArgs args)
         {
             Result = DialogResult.Secondary;
+            //this.Visibility = Visibility.Collapsed;
+            OnDialogClosed?.Invoke(Result);
         }
 
         public enum DialogResult

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -20,15 +21,20 @@ namespace MTATransit.Shared.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SettingsPage : Page
+    public sealed partial class NavigateHomePage : Page
     {
-        public SettingsPage()
+        public ObservableCollection<Models.PointModel> Points { get; set; } = new ObservableCollection<Models.PointModel>();
+
+        public NavigateHomePage()
         {
             this.InitializeComponent();
+            Points.Add(new Models.PointModel()
+            {
+                Title = "A: El Monte Station",
+                Address = "El Monte, CA, USA",
+            });
 
             Common.LoadNavView(this, NavView);
-
-            NavView.SelectedItem = NavView.SettingsItem;
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

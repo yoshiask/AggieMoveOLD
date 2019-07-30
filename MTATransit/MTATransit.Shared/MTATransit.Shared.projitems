@@ -63,9 +63,15 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\DialogBox.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\NavigationPointCard.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PointModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\FatalErrorPage.xaml.cs">
+      <DependentUpon>$fileinputname$.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\NavigateHomePage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\StopDetailsView.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\SettingsPage.xaml.cs" />
   </ItemGroup>
@@ -74,7 +80,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\NavigationPointCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\FatalErrorPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\NavigateHomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -102,8 +120,17 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Controls\NavigationPointCard.xaml.cs">
+      <DependentUpon>NavigationPointCard.xaml</DependentUpon>
+    </Compile>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\DialogBox.xaml.cs">
       <DependentUpon>DialogBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\FatalErrorPage.xaml.cs">
+      <DependentUpon>FatalErrorPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\NavigateHomePage.xaml.cs">
+      <DependentUpon>NavigateHomePage.xaml</DependentUpon>
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\RouteDetailsView.xaml.cs">
       <DependentUpon>RouteDetailsView.xaml</DependentUpon>
@@ -111,8 +138,5 @@
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Controls\" />
   </ItemGroup>
 </Project>

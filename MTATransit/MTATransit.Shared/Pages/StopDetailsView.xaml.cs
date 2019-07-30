@@ -22,34 +22,20 @@ namespace MTATransit.Shared.Pages
     public sealed partial class RouteDetailsView : Page
     {
         Agency curAgency;
-        Route curRouteConfig;
+        Route curRoute;
         Stop curStop;
 
         public RouteDetailsView()
         {
             this.InitializeComponent();
 
-            foreach (Tuple<Type, NavigationViewItem> info in Common.Pages.Values)
-            {
-                var menuItem = new NavigationViewItem
-                {
-                    Icon = info.Item2.Icon,
-                    Content = info.Item2.Content,
-                    Tag = info.Item2.Tag
-                };
-
-                NavView.MenuItems.Add(menuItem);
-
-                // If the menu item we're adding goes to this page, then select it
-                if (info.Item1 == GetType())
-                    NavView.SelectedItem = menuItem;
-            }
+            Common.LoadNavView(this, NavView);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             curAgency = ((object[])e.Parameter)[0] as Agency;
-            curRouteConfig = ((object[])e.Parameter)[1] as Route;
+            curRoute = ((object[])e.Parameter)[1] as Route;
             curStop = ((object[])e.Parameter)[2] as Stop;
 
             LoadStopInfo();
@@ -61,12 +47,14 @@ namespace MTATransit.Shared.Pages
         public async void LoadStopInfo()
         {
             var api = Common.RestBusApi;
-            var predictions = await api.GetStopPredictions(curAgency.Id, curRouteConfig.Id, curStop.Id);
+            var predictions = await api.GetStopPredictions(curAgency.Id, curRoute.Id, curStop.Id);
 
-            MainGrid.Background = Common.BrushFromHex(curRouteConfig.Color);
-            PageHeader.Foreground = Common.BrushFromHex(curRouteConfig.TextColor);
-            var itemTheme = Common.ThemeFromColor(curRouteConfig.TextColor);
+            MainGrid.Background = Common.BrushFromHex(curRoute.Color);
+            PageHeader.Foreground = Common.BrushFromHex(curRoute.TextColor);
+            var itemTheme = Common.ThemeFromColor(curRoute.TextColor);
 
+            if (predictions == null || predictions.Count == 0)
+                return;
             var pred = predictions[0];
             PageHeader.Text = pred.Stop.Title;
             PredictionBox.Items.Clear();
@@ -77,7 +65,7 @@ namespace MTATransit.Shared.Pages
                 PredictionBox.Items.Add(new ListViewItem()
                 {
                     Content = display,
-                    Foreground = Common.BrushFromHex(curRouteConfig.TextColor),
+                    Foreground = Common.BrushFromHex(curRoute.TextColor),
                     RequestedTheme = itemTheme,
                 });
             }
@@ -163,7 +151,7 @@ namespace MTATransit.Shared.Pages
 
         public async void LoadNearbyStops()
         {
-            string fromString = System.Web.HttpUtility.UrlEncode("Baldwin Park, CA, 91706");
+            string fromString = System.Web.HttpUtility.UrlEncode("El Monte, CA, 91706");
             //string toString = System.Web.HttpUtility.UrlEncode("Union Station, Los Angeles, CA");
 
             var startSuggestions = await Common.ArcGISApi.GetSuggestions(fromString);
@@ -178,7 +166,31 @@ namespace MTATransit.Shared.Pages
             string endCoord = curStop.Latitude.ToString() + "," + curStop.Longitude.ToString();
 
             var api = Refit.RestService.For<API.OTPMTA.IOTPMTAApi>("https://otp.metroservices.io/otp");
-            var plan = await api.CalculatePlan(startCoord, endCoord);
+            var plan = (await api.CalculatePlan(startCoord, endCoord)).Plan;
+
+            if (plan == null)
+                return;
+            foreach (API.OTPMTA.Itinerary it in plan.Itineraries)
+            {
+                int i = plan.Itineraries.IndexOf(it);
+                var dialog = new Controls.DialogBox("Itinerary " + i.ToString(), it.ToString());
+                dialog.OnDialogClosed += (Controls.DialogBox.DialogResult result) =>
+                {
+                    switch (result)
+                    {
+                        case Controls.DialogBox.DialogResult.Primary:
+
+                            break;
+
+                        case Controls.DialogBox.DialogResult.Secondary:
+
+                            break;
+                    }
+                    MainGrid.Children.Remove(dialog);
+                };
+                MainGrid.Children.Add(dialog);
+                Grid.SetRowSpan(dialog, 3);
+            }
         }
 
         Windows.Foundation.Deferral RefreshCompletionDeferral;

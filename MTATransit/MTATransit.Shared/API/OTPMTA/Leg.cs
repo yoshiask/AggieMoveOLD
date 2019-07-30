@@ -21,6 +21,9 @@ namespace MTATransit.Shared.API.OTPMTA
         [JsonProperty(PropertyName = "realTime")]
         public bool RealTime { get; set; }
 
+        /// <summary>
+        /// Distance of the leg, in meters
+        /// </summary>
         [JsonProperty(PropertyName = "distance")]
         public double Distance { get; set; }
 
@@ -46,7 +49,7 @@ namespace MTATransit.Shared.API.OTPMTA
         public int RouteType { get; set; }
 
         [JsonProperty(PropertyName = "routeId")]
-        public string RouteID { get; set; }
+        public string RouteId { get; set; }
 
         [JsonProperty(PropertyName = "interlineWithPreviousLeg")]
         public bool InterlineWithPreviousLeg { get; set; }
@@ -81,6 +84,9 @@ namespace MTATransit.Shared.API.OTPMTA
         [JsonProperty(PropertyName = "transitLeg")]
         public bool TransitLeg { get; set; }
 
+        /// <summary>
+        /// How long it takes to complete the leg, in seconds
+        /// </summary>
         [JsonProperty(PropertyName = "duration")]
         public long Duration { get; set; }
 

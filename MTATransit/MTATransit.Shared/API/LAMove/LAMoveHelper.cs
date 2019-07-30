@@ -11,15 +11,17 @@ namespace MTATransit.Shared.API.LAMove
         {
             string url = (await Common.LAMoveApi.GetVIDUrl()).Url;
             string js = await new HttpClient().GetAsync(url).Result.Content.ReadAsStringAsync();
+            //string js = "var vid = 8365;\n";
             System.Diagnostics.Debug.WriteLine(js);
 
-            Regex r = new Regex(@"/(var vid = )(?<vid>[0-9]*)(;)+/g",
-                RegexOptions.None, TimeSpan.FromMilliseconds(150));
-            Match m = r.Match(js);
-            if (m.Success)
-                return r.Match(url).Result("${vid}");
-            else
-                return null;
+            try
+            {
+                return js.Substring(10, 4);
+            }
+            catch
+            {
+                return "";
+            }
         }
     }
 }
