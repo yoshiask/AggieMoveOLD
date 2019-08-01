@@ -45,7 +45,7 @@ namespace MTATransit.Shared.Models
 
         public bool HasDepartureTime {
             get {
-                return ArrivalTime != 0 ? true : false;
+                return DepartureTime != 0 ? true : false;
             }
         }
         public string DepartureTimeString {

@@ -11,14 +11,27 @@
     xmlns:shared="using:MTATransit.Shared"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="AddPointButton" Icon="Add" Label="Add Point"
+                    Click="AddPointButton_Click"/>
+                <AppBarButton x:Name="NextButton" Icon="Forward" Label="Next"
+                    Click="NextButton_Click"/>
+            </CommandBar.PrimaryCommands>
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="OptionsButton" Icon="Setting" Label="Options"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
 
     <Windows10FallCreatorsUpdate:NavigationView
         x:Name="NavView" SelectionChanged="NavView_SelectionChanged"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
         Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200" FontFamily="{StaticResource DINFontFamily}">
-        
+
         <Grid x:Name="MainGrid">
-            <TextBlock x:Name="NoPointsBlock" Text="Add a point by clicking 'Add' in the bottom bar" VerticalAlignment="Top" Margin="10,10,10,0"/>
             <ScrollViewer Margin="10,10,10,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                 <ItemsControl  x:Name="PointsControl" ItemsSource="{x:Bind Points}">
                     <ItemsControl.Resources>
@@ -27,13 +40,15 @@
                         <FontIconSource x:Key="EditIcon" Glyph="&#xE70F;"/>
                         <FontIconSource x:Key="DeleteIcon" Glyph="&#xE107;"/>
 
-                        <SwipeItems x:Key="left" Mode="Execute">
+                        <SwipeItems x:Key="left" Mode="Reveal">
                             <SwipeItem Text="Edit" IconSource="{StaticResource EditIcon}"
-                                Background="#FF0063B1" Foreground="White"/>
+                                Background="#FF0063B1" Foreground="White"
+                                Invoked="EditPoint_Invoked"/>
                         </SwipeItems>
                         <SwipeItems x:Key="right" Mode="Execute">
                             <SwipeItem Text="Delete" IconSource="{StaticResource DeleteIcon}"
-                                Background="#FFE81123" />
+                                Background="#FFE81123" BehaviorOnInvoked="Close"
+                                Invoked="DeletePoint_Invoked"/>
                         </SwipeItems>
                     </ItemsControl.Resources>
 
@@ -41,7 +56,21 @@
                         <DataTemplate>
                             <SwipeControl LeftItems="{StaticResource left}"
                                 RightItems="{StaticResource right}" Margin="0,0,0,10">
-                                <lcontrols:NavigationPointCard />
+                                <Grid>
+                                    <lcontrols:NavigationPointCard/>
+                                    <StackPanel x:Name="ModControls"
+                                            Orientation="Horizontal" FlowDirection="RightToLeft"
+                                            VerticalAlignment="Bottom" HorizontalAlignment="Right" >
+                                        <Button x:Name="EditButton" Content="&#xE70F;"
+                                            VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                                            FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                            Click="EditPointButton_Click"/>
+                                        <Button x:Name="DeleteButton" Content="&#xE74D;"
+                                            VerticalAlignment="Bottom" HorizontalAlignment="Right" 
+                                            FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                            Click="DeletePointButton_Click"/>
+                                    </StackPanel>
+                                </Grid>
                             </SwipeControl>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

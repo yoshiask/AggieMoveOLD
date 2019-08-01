@@ -22,7 +22,30 @@ namespace MTATransit.Shared.Controls
         public string SecondaryButtonText { get; set; }
         public Visibility SecondaryButtonVisibility { get; set; }
 
-        public Models.PointModel Model { get; set; } = null;
+        Models.PointModel _model = null;
+        public Models.PointModel Model {
+            get {
+                return _model;
+            }
+            set {
+                _model = value;
+                if (Model.HasArrivalTime)
+                {
+                    EnableArrivalBox.IsChecked = true;
+                    ArrivalDatePicker.Date = Model.ArrivalDateTime.Value;
+                    ArrivalTimePicker.Time = Model.ArrivalDateTime.Value.TimeOfDay;
+                }
+                if (Model.HasDepartureTime)
+                {
+                    EnableDepartureBox.IsChecked = true;
+                    DepartureDatePicker.Date = Model.DepartureDateTime.Value;
+                    DepartureTimePicker.Time = Model.DepartureDateTime.Value.TimeOfDay;
+                }
+                //AddressBox.Text = Model.Address;
+                AddressBox.Text = Model.Title;
+                AddressSearchQuery = Model.Address;
+            }
+        }
 
         public NewPointDialogResult Result { get; internal set; } = new NewPointDialogResult();
 
@@ -64,6 +87,7 @@ namespace MTATransit.Shared.Controls
             SecondaryButtonText = secondaryButtonText;
             SecondaryButtonVisibility = Visibility.Visible;
         }
+
 
         public NewPointDialog(string title, Models.PointModel model, bool isCancellable = false)
         {

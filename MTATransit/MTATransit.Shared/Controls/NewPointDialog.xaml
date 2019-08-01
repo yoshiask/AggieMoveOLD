@@ -59,16 +59,14 @@
                     <Grid Grid.Row="2" Background="{ThemeResource SystemBaseLowColor}">
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                             <Button x:Name="PrimaryButton" Content="{x:Bind Path=PrimaryButtonText}"
-                                Margin="10,10,10,10" VerticalAlignment="Stretch" Click="PrimaryButton_Click"
-                                Height="33" FontFamily="{StaticResource DINFontFamily}" Style="{StaticResource ButtonRevealStyle}">
+                                Margin="10,10,5,10" VerticalAlignment="Stretch" Click="PrimaryButton_Click" FontFamily="{StaticResource DINFontFamily}" Style="{StaticResource ButtonRevealStyle}">
                                 <Button.FocusVisualSecondaryBrush>
                                     <SolidColorBrush Color="{ThemeResource SystemAccentColor}"/>
                                 </Button.FocusVisualSecondaryBrush>
                             </Button>
 
                             <Button x:Name="SecondaryButton" Content="{x:Bind Path=SecondaryButtonText}"
-                                VerticalAlignment="Stretch" Click="SecondaryButton_Click"
-                                Height="33" Margin="10,10,10,10" Visibility="{x:Bind Path=SecondaryButtonVisibility}"
+                                VerticalAlignment="Stretch" Click="SecondaryButton_Click" Margin="10,10,0,10" Visibility="{x:Bind Path=SecondaryButtonVisibility}"
                                 FontFamily="{StaticResource DINFontFamily}" Style="{StaticResource ButtonRevealStyle}"/>
                         </StackPanel>
                     </Grid>

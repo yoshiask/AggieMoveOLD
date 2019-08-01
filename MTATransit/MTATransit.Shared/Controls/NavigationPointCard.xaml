@@ -23,22 +23,24 @@
             <ColumnDefinition Width="40*"/>
         </Grid.ColumnDefinitions>
         
-        <Grid Height="37" VerticalAlignment="Center" Grid.ColumnSpan="2">
+        <StackPanel VerticalAlignment="Stretch" Grid.ColumnSpan="2" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
             <TextBlock x:Name="HeaderBlock" VerticalAlignment="Top" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Point.Title}" FontWeight="Bold" FontSize="18" Padding="5,2,0,0" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
-            <TextBlock x:Name="AddressBlock" VerticalAlignment="Top" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Point.Address}" FontWeight="Normal" FontSize="12" Padding="5,2,0,0" Margin="0,21,0,0" Foreground="{ThemeResource SystemBaseMediumColor}" FontStretch="Normal"/>
-        </Grid>
-        
-        <Grid Height="45" VerticalAlignment="Top" Grid.Row="1">
+            <TextBlock x:Name="AddressBlock" VerticalAlignment="Top" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Point.Address}" FontWeight="Normal" FontSize="12" Padding="5,2,0,0" Foreground="{ThemeResource SystemBaseMediumColor}" FontStretch="Normal"/>
+        </StackPanel>
+
+        <StackPanel VerticalAlignment="Top" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <TextBlock x:Name="ArriveByHeader" VerticalAlignment="Top" FontFamily="{StaticResource DINFontFamily}" Text="Arrive By:" FontWeight="Normal" FontSize="18" Padding="5,2,0,0" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
             <TextBlock x:Name="ArriveByText" VerticalAlignment="Bottom" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Point.ArrivalTimeString}" FontWeight="Bold" FontSize="18" Padding="5,2,0,2" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
-        </Grid>
-        
-        <Grid Height="46" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1">
+        </StackPanel>
+
+        <StackPanel VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <TextBlock x:Name="LeaveByHeader" VerticalAlignment="Top" FontFamily="{StaticResource DINFontFamily}" Text="Leave By:" FontWeight="Normal" FontSize="18" Padding="5,2,0,0" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
             <TextBlock x:Name="LeaveByText" VerticalAlignment="Bottom" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Point.DepartureTimeString}" FontWeight="Bold" FontSize="18" Padding="5,2,0,2" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
-        </Grid>
+        </StackPanel>
 
-        <Grid x:Name="MapGrid" Background="{ThemeResource SystemBaseLowColor}" Grid.Column="2" Grid.RowSpan="2"/>
+        <Grid x:Name="MapGrid" Background="{ThemeResource SystemBaseLowColor}" Grid.Column="2" Grid.RowSpan="2">
+            
+        </Grid>
 
     </Grid>
 
