@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MTATransit.Shared.Models
 {
@@ -13,19 +11,68 @@ namespace MTATransit.Shared.Models
         public long ArrivalTime { get; set; }
         public long DepartureTime { get; set; }
 
+        #region Derived Properties
+        public bool HasArrivalTime {
+            get {
+                return ArrivalTime != 0 ? true : false;
+            }
+        }
         public string ArrivalTimeString {
             get {
-                if (ArrivalTime == 0)
+                if (!HasArrivalTime)
                     return "N/A";
-                return Common.NumberHelper.ToShortTimeString(ArrivalTime);
+                return Common.NumberHelper.ToShortDayTimeString(ArrivalTime);
+            }
+        }
+        public DateTime? ArrivalDateTime {
+            get {
+                if (HasArrivalTime)
+                {
+                    return Common.NumberHelper.UnixTimeStampToDateTime(ArrivalTime);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        public TimeSpan ArrivalTimeSpan {
+            get {
+                var dt = Common.NumberHelper.UnixTimeStampToDateTime(ArrivalTime);
+                return new TimeSpan(((DateTimeOffset)new DateTime(dt.Year, dt.Month, dt.Day)).ToUnixTimeSeconds());
+            }
+        }
+
+        public bool HasDepartureTime {
+            get {
+                return ArrivalTime != 0 ? true : false;
             }
         }
         public string DepartureTimeString {
             get {
-                if (DepartureTime == 0)
+                if (!HasDepartureTime)
                     return "N/A";
-                return Common.NumberHelper.ToShortTimeString(ArrivalTime);
+                return Common.NumberHelper.ToShortDayTimeString(DepartureTime);
             }
         }
+        public DateTime? DepartureDateTime {
+            get {
+                if (HasDepartureTime)
+                {
+                    return Common.NumberHelper.UnixTimeStampToDateTime(DepartureTime);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        public TimeSpan DepartureTimeSpan {
+            get {
+                var dt = Common.NumberHelper.UnixTimeStampToDateTime(DepartureTime);
+                return new TimeSpan(((DateTimeOffset)new DateTime(dt.Year, dt.Month, dt.Day)).ToUnixTimeSeconds());
+            }
+        }
+        #endregion
     }
 }

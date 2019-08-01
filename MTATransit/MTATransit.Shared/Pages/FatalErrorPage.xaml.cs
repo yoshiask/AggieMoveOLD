@@ -40,6 +40,11 @@ namespace MTATransit.Shared.Pages
 
             base.OnNavigatedTo(e);
         }
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            App.Current.Exit();
+            //base.OnNavigatingFrom(e);
+        }
 
         public class FatalErrorArgs
         {

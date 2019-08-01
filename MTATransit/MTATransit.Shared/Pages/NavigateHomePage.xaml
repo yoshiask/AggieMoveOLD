@@ -23,11 +23,26 @@
                 <ItemsControl  x:Name="PointsControl" ItemsSource="{x:Bind Points}">
                     <ItemsControl.Resources>
                         <shared:XamlConverters x:Name="VisibleWhenZeroConverter" />
+
+                        <FontIconSource x:Key="EditIcon" Glyph="&#xE70F;"/>
+                        <FontIconSource x:Key="DeleteIcon" Glyph="&#xE107;"/>
+
+                        <SwipeItems x:Key="left" Mode="Execute">
+                            <SwipeItem Text="Edit" IconSource="{StaticResource EditIcon}"
+                                Background="#FF0063B1" Foreground="White"/>
+                        </SwipeItems>
+                        <SwipeItems x:Key="right" Mode="Execute">
+                            <SwipeItem Text="Delete" IconSource="{StaticResource DeleteIcon}"
+                                Background="#FFE81123" />
+                        </SwipeItems>
                     </ItemsControl.Resources>
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <lcontrols:NavigationPointCard Margin="0,0,0,10" />
+                            <SwipeControl LeftItems="{StaticResource left}"
+                                RightItems="{StaticResource right}" Margin="0,0,0,10">
+                                <lcontrols:NavigationPointCard />
+                            </SwipeControl>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

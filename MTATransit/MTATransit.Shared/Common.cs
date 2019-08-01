@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.UI.Xaml.Data;
+using System.Globalization;
 
 namespace MTATransit.Shared
 {
@@ -228,13 +229,60 @@ namespace MTATransit.Shared
                     return Math.Round(d:hours, decimals:1).ToString() + " hr";
             }
 
+            /// <summary>
+            /// Takes Unix time (seconds) and returns something like 2:00 AM
+            /// </summary>
+            /// <param name="seconds"></param>
+            /// <returns></returns>
+            public static string ToShortDayTimeString(double unixTimeStamp)
+            {
+                var dt = UnixTimeStampToDateTime(unixTimeStamp);
+
+                if (dt.Hour < 12)
+                    return $"{dt.Hour.ToString().PadLeft(2, '0')}:{dt.Minute.ToString().PadLeft(2)} AM";
+                else if (dt.Hour == 12)
+                    return $"12:{dt.Minute.ToString().PadLeft(2, '0')} PM";
+                else
+                    return $"{(dt.Hour - 12).ToString()}:{dt.Minute.ToString().PadLeft(2, '0')} PM";
+            }
+            /// <summary>
+            /// Takes Unix time (seconds) and returns something like 2:00 AM
+            /// </summary>
+            /// <param name="seconds"></param>
+            /// <returns></returns>
+            public static string ToShortDayTimeString(long unixTimeStamp)
+            {
+                var dt = UnixTimeStampToDateTime(unixTimeStamp);
+
+                if (dt.Hour < 12)
+                    return $"{dt.Hour.ToString().PadLeft(2)}:{dt.Minute.ToString().PadLeft(2, '0')} AM";
+                else if (dt.Hour == 12)
+                    return $"12:{dt.Minute.ToString().PadLeft(2, '0')} PM";
+                else
+                    return $"{(dt.Hour - 12).ToString()}:{dt.Minute.ToString().PadLeft(2, '0')} PM";
+            }
+
+            public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+            {
+                // Unix timestamp is seconds past epoch
+                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+                return dtDateTime;
+            }
+            public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
+            {
+                // Unix timestamp is seconds past epoch
+                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+                return dtDateTime;
+            }
+
             public static double MetersToMiles(double meters)
             {
                 double kilometers = meters / 1000;
                 double miles = kilometers * 0.621371;
                 return miles; 
             }
-
             public static double MilesToMeters(double miles)
             {
                 double kilometers = miles / 0.621371;
@@ -246,7 +294,7 @@ namespace MTATransit.Shared
 
     public class XamlConverters
     {
-        class VisibleWhenZeroConverter : IValueConverter
+        public class VisibleWhenZeroConverter : IValueConverter
         {
             public object Convert(object v, Type t, object p, string l) =>
                 Equals(0d, (double)v) ? Visibility.Visible : Visibility.Collapsed;

@@ -28,13 +28,25 @@ namespace MTATransit.Shared.Pages
         public NavigateHomePage()
         {
             this.InitializeComponent();
-            Points.Add(new Models.PointModel()
-            {
-                Title = "A: El Monte Station",
-                Address = "El Monte, CA, USA",
-            });
 
             Common.LoadNavView(this, NavView);
+
+            var pointDialog = new Controls.NewPointDialog(
+                "Add Point",
+                new Models.PointModel()
+                {
+                    Title = "A: El Monte Station",
+                    Address = "El Monte, CA 91731",
+                    ArrivalTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds(),
+                    DepartureTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds() + 1000,
+                },
+                true);
+            pointDialog.OnDialogClosed += (Controls.NewPointDialog.NewPointDialogResult result) =>
+            {
+                MainGrid.Children.Remove(pointDialog);
+                Points.Add(result.Model);
+            };
+            MainGrid.Children.Add(pointDialog);
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

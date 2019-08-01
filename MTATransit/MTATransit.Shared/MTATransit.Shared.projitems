@@ -64,6 +64,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\DialogBox.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\NavigationPointCard.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\NewPointDialog.xaml.cs">
+      <DependentUpon>$fileinputname$.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -81,6 +84,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\NavigationPointCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\NewPointDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -122,6 +129,12 @@
   <ItemGroup>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Controls\NavigationPointCard.xaml.cs">
       <DependentUpon>NavigationPointCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Controls\NewItemDialog.xaml.cs">
+      <DependentUpon>NewItemDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Controls\NewPointDialog.xaml.cs">
+      <DependentUpon>NewPointDialog.xaml</DependentUpon>
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\DialogBox.xaml.cs">
       <DependentUpon>DialogBox.xaml</DependentUpon>
