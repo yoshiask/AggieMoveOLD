@@ -62,10 +62,19 @@ namespace MTATransit.Shared.Pages
             var request = new PlanRequestParameters()
             {
                 FromPlace = startCoord,
-                ToPlace = endCoord,
-                ArriveDate = points[1].ArrivalDateTime.Value.ToString("MM-dd-yyy"),
-                ArriveTime = points[1].ArrivalTime
+                ToPlace = endCoord
             };
+            if (points[1].HasArrivalTime)
+            {
+                request.ArriveDate = points[1].ArrivalDateTime.Value.ToString("MM-dd-yyy");
+                request.ArriveTime = points[1].ArrivalTime;
+            }
+            else
+            {
+                request.ArriveDate = DateTime.Now.ToString("MM-dd-yyy");
+                request.ArriveTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
+            }
+
             var plan = (await Common.OTPMTAApi.CalculatePlan(request)).Plan;
 
             if (plan == null)

@@ -30,6 +30,8 @@
     <Content Include="LinkerConfig.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Esri.ArcGISRuntime" Version="100.5.0" />
+    <PackageReference Include="Esri.ArcGISRuntime.Xamarin.Forms" Version="100.5.0" />
     <PackageReference Include="GeoJSON.Net" Version="1.1.72" />
     <PackageReference Include="NextBus.NET" Version="0.0.3" />
     <PackageReference Include="Refit" Version="4.5.6" />
