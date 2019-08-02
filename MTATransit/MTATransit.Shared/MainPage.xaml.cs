@@ -47,7 +47,7 @@ namespace MTATransit
         {
             try
             {
-                /*var vid = await Shared.API.LAMove.LAMoveHelper.GetVIDFromBus();
+                var vid = await Shared.API.LAMove.LAMoveHelper.GetVIDFromBus();
                 var vehicles = await Common.RestBusApi.GetAgencyVehicles("lametro");
                 var vehicle = vehicles.Find(v => v.Id == vid);
                 if (vehicle != null)
@@ -58,7 +58,7 @@ namespace MTATransit
                         MainGrid.Children.Remove(dialog);
                     };
                     MainGrid.Children.Add(dialog);
-                }*/
+                }
             }
             catch
             {

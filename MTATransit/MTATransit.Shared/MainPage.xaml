@@ -13,16 +13,29 @@
         x:Name="NavView" SelectionChanged="NavView_SelectionChanged"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
         Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200" FontFamily="{StaticResource DINFontFamily}">
+
         <Grid x:Name="MainGrid">
-            <RichTextBlock Margin="20" FontSize="30" Height="40" VerticalAlignment="Top" IsTextSelectionEnabled="False" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="9*"/>
+                <RowDefinition Height="80*"/>
+            </Grid.RowDefinitions>
+            <RichTextBlock Margin="20,20,20,0" FontSize="30" Height="40" VerticalAlignment="Top" IsTextSelectionEnabled="False"
+                        Visibility="Collapsed">
                 <Paragraph Foreground="Black" FontSize="32">
                     <Run FontWeight="Bold" FontFamily="{StaticResource DINFontFamily}" Foreground="#FFFFC107" Text="LA"/>
                     <Run FontFamily="{StaticResource DINFontFamily}" FontWeight="SemiBold" Foreground="#FFF44336" Text="Move"/>
                 </Paragraph>
             </RichTextBlock>
-            <ComboBox x:Name="AgenciesBox" Margin="10,70,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="AgenciesBox_SelectionChanged" PlaceholderText="Select an Agency" FontFamily="{StaticResource DINFontFamily}" />
-            <ComboBox x:Name="RoutesBox" Margin="10,120,10,0" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="RoutesBox_SelectionChanged" PlaceholderText="Select a Route" IsEnabled="False" FontFamily="{StaticResource DINFontFamily}" />
-            <ListView x:Name="StopsBox" Margin="10,170,10,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="StopsBox_SelectionChanged" FontFamily="{StaticResource DINFontFamily}" />
+
+            <StackPanel Margin="12,20,12,0" Height="40" VerticalAlignment="Center" Orientation="Horizontal">
+                <TextBlock x:Name="PageIconBox" Text="&#xE913;" FontSize="30"
+                    FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontWeight="Bold"/>
+                <TextBlock x:Name="PageTitleBox" Text="Explore" FontSize="30"
+                    FontFamily="{StaticResource DINFontFamily}" Padding="7,0,0,0" FontWeight="Bold"/>
+            </StackPanel>
+            <ComboBox x:Name="AgenciesBox" Margin="10,5.259,10,0" Height="40" HorizontalAlignment="Stretch" SelectionChanged="AgenciesBox_SelectionChanged" PlaceholderText="Select an Agency" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
+            <ComboBox x:Name="RoutesBox" Margin="10,55.259,10,0" Height="40" HorizontalAlignment="Stretch" SelectionChanged="RoutesBox_SelectionChanged" PlaceholderText="Select a Route" IsEnabled="False" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
+            <ListView x:Name="StopsBox" Margin="10,105.259,10,0" VerticalAlignment="Top" SelectionChanged="StopsBox_SelectionChanged" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
         </Grid>
 
         <!--NavigationView.MenuItems>

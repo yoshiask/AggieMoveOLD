@@ -40,7 +40,7 @@ namespace MTATransit.Shared.Pages
 
             LoadStopInfo();
             //LoadMap(stop, route);
-            LoadNearbyStops();
+            //LoadNearbyStops();
             base.OnNavigatedTo(e);
         }
 

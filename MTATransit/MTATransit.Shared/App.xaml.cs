@@ -57,7 +57,7 @@ namespace MTATransit
             }
             else
             {
-                App.Current.Exit();
+                //App.Current.Exit();
             }
 
             Frame rootFrame = Window.Current.Content as Frame;

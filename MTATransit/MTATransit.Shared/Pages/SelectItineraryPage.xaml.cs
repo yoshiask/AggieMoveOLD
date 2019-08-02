@@ -38,7 +38,7 @@ namespace MTATransit.Shared.Pages
         {
             Points = e.Parameter as List<Models.PointModel>;
             LoadItineraries(Points); ;
-            
+
             base.OnNavigatedTo(e);
         }
 
@@ -59,7 +59,14 @@ namespace MTATransit.Shared.Pages
             string startCoord = points[0].Longitude.ToString() + "," + points[0].Latitude.ToString();
             string endCoord = points[1].Longitude.ToString() + "," + points[1].Latitude.ToString();
 
-            var plan = (await Common.OTPMTAApi.CalculatePlan(startCoord, endCoord)).Plan;
+            var request = new PlanRequestParameters()
+            {
+                FromPlace = startCoord,
+                ToPlace = endCoord,
+                ArriveDate = points[1].ArrivalDateTime.Value.ToString("MM-dd-yyy"),
+                ArriveTime = points[1].ArrivalTime
+            };
+            var plan = (await Common.OTPMTAApi.CalculatePlan(request)).Plan;
 
             if (plan == null)
                 return;
@@ -92,6 +99,22 @@ namespace MTATransit.Shared.Pages
                 Grid.SetRowSpan(dialog, 3);
             }*/
             #endregion
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs args)
+        {
+            Frame.Navigate(typeof(NavigateHomePage), Points);
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs args)
+        {
+            var dialog = new Controls.DialogBox("\"Go\" Button", "This button would start navigation.\nOf course, the app will support\nthis, just like Google Maps.\nAt the moment, this feature is\nincomplete.");
+            dialog.OnDialogClosed += (Controls.DialogBox.DialogResult result) =>
+            {
+                MainGrid.Children.Remove(dialog);
+            };
+            MainGrid.Children.Add(dialog);
+            Grid.SetRowSpan(dialog, 2);
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

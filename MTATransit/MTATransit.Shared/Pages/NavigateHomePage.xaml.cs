@@ -74,7 +74,8 @@ namespace MTATransit.Shared.Pages
         #endregion
 
         #region Points Functions
-        private void AddPoint(Models.PointModel model) {
+        private void AddPoint(Models.PointModel model)
+        {
             Points.Add(model);
         }
         private void RemovePoint(Models.PointModel model)
@@ -110,6 +111,7 @@ namespace MTATransit.Shared.Pages
                 }
             };
             MainGrid.Children.Add(pointDialog);
+            Grid.SetRowSpan(pointDialog, 2);
         }
         private void EditPoint(Models.PointModel oldModel)
         {
@@ -126,6 +128,7 @@ namespace MTATransit.Shared.Pages
                 }
             };
             MainGrid.Children.Add(pointDialog);
+            Grid.SetRowSpan(pointDialog, 2);
         }
 
         private Models.PointModel GetModelFromControls(Button button)
@@ -144,6 +147,24 @@ namespace MTATransit.Shared.Pages
             }
         }
         #endregion
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.SourcePageType == typeof(SelectItineraryPage))
+            {
+                var points = e.Parameter as List<Models.PointModel>;
+                if (points != null)
+                {
+                    Points = new ObservableCollection<Models.PointModel>(points);
+                    DataContext = new ObservableCollection<Models.PointModel>(points);
+                }
+                    
+            }
+
+
+
+            base.OnNavigatedTo(e);
+        }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {

@@ -16,9 +16,9 @@
         <CommandBar>
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Name="BackButton" Icon="Back" Label="Edit Trip"
-                    />
+                    Click="BackButton_Click"/>
                 <AppBarButton x:Name="NextButton" Icon="Go" Label="Go"
-                    />
+                    Click="NextButton_Click"/>
             </CommandBar.PrimaryCommands>
 
             <CommandBar.SecondaryCommands>
@@ -34,7 +34,18 @@
         Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200" FontFamily="{StaticResource DINFontFamily}">
 
         <Grid x:Name="MainGrid">
-            <ScrollViewer Margin="10,10,10,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="9*"/>
+                <RowDefinition Height="80*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Margin="12,20,12,0" Height="40" VerticalAlignment="Center" Orientation="Horizontal">
+                <TextBlock x:Name="PageIconBox" Text="&#xE8F0;" FontSize="30"
+                    FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontWeight="Bold"/>
+                <TextBlock x:Name="PageTitleBox" Text="Navigate" FontSize="30"
+                    FontFamily="{StaticResource DINFontFamily}" Padding="2,0,0,0" FontWeight="Bold"/>
+            </StackPanel>
+
+            <ScrollViewer Margin="10,10,10,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="1">
                 <ItemsControl  x:Name="ItinerariesControl" ItemsSource="{x:Bind Itineraries}" >
 
                     <ItemsControl.ItemTemplate>

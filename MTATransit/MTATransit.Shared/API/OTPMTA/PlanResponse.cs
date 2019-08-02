@@ -22,5 +22,13 @@ namespace MTATransit.Shared.API.OTPMTA
         [AliasAs("toPlace")]
         [JsonProperty(PropertyName = "toPlace")]
         public string ToPlace { get; set; }
+
+        [AliasAs("date")]
+        [JsonProperty(PropertyName = "date")]
+        public string ArriveDate { get; set; }
+
+        [AliasAs("time")]
+        [JsonProperty(PropertyName = "time")]
+        public long ArriveTime { get; set; }
     }
 }
