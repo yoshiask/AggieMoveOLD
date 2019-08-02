@@ -165,7 +165,7 @@ namespace MTATransit.Shared.Pages
             // TODO: Figure out why this is backwards
             string endCoord = curStop.Latitude.ToString() + "," + curStop.Longitude.ToString();
 
-            var api = Refit.RestService.For<API.OTPMTA.IOTPMTAApi>("https://otp.metroservices.io/otp");
+            var api = Common.OTPMTAApi;
             var plan = (await api.CalculatePlan(startCoord, endCoord)).Plan;
 
             if (plan == null)

@@ -41,6 +41,11 @@ namespace MTATransit.Shared
                 return RestService.For<API.LAMove.ILAMoveApi>("http://lamove-api.herokuapp.com/v1");
             }
         }
+        public static API.OTPMTA.IOTPMTAApi OTPMTAApi {
+            get {
+                return RestService.For<API.OTPMTA.IOTPMTAApi>("https://otp.metroservices.io/otp");
+            }
+        }
         #endregion
 
         public static FontFamily DINFont = new FontFamily("/Assets/Fonts/DINRegular#DIN");
@@ -239,9 +244,11 @@ namespace MTATransit.Shared
                 var dt = UnixTimeStampToDateTime(unixTimeStamp);
 
                 if (dt.Hour < 12)
-                    return $"{dt.Hour.ToString().PadLeft(2, '0')}:{dt.Minute.ToString().PadLeft(2)} AM";
+                    return $"{dt.Hour.ToString()}:{dt.Minute.ToString().PadLeft(2)} AM";
                 else if (dt.Hour == 12)
                     return $"12:{dt.Minute.ToString().PadLeft(2, '0')} PM";
+                else if (dt.Hour == 0)
+                    return $"12:{dt.Minute.ToString().PadLeft(2, '0')} AM";
                 else
                     return $"{(dt.Hour - 12).ToString()}:{dt.Minute.ToString().PadLeft(2, '0')} PM";
             }
@@ -255,9 +262,11 @@ namespace MTATransit.Shared
                 var dt = UnixTimeStampToDateTime(unixTimeStamp);
 
                 if (dt.Hour < 12)
-                    return $"{dt.Hour.ToString().PadLeft(2)}:{dt.Minute.ToString().PadLeft(2, '0')} AM";
+                    return $"{dt.Hour.ToString()}:{dt.Minute.ToString().PadLeft(2, '0')} AM";
                 else if (dt.Hour == 12)
                     return $"12:{dt.Minute.ToString().PadLeft(2, '0')} PM";
+                else if (dt.Hour == 0)
+                    return $"12:{dt.Minute.ToString().PadLeft(2, '0')} AM";
                 else
                     return $"{(dt.Hour - 12).ToString()}:{dt.Minute.ToString().PadLeft(2, '0')} PM";
             }
@@ -288,6 +297,18 @@ namespace MTATransit.Shared
                 double kilometers = miles / 0.621371;
                 double meters = kilometers * 1000;
                 return meters;
+            }
+
+            /// <summary>
+            /// Returns a string that represents U.S. dollars. Formatted like ~$2.31
+            /// </summary>
+            public static string ToShortCurrencyString(decimal amount, bool isApprox = false)
+            {
+                string output = "";
+                if (isApprox)
+                    output += "~";
+                output += String.Format("{0:C}", amount);
+                return output;
             }
         }
     }

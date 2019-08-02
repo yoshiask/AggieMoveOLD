@@ -125,6 +125,17 @@ namespace MTATransit.Shared.Controls
         #region Events
         private async void PrimaryButton_Click(object sender, RoutedEventArgs args)
         {
+            CloseProgress.Visibility = Visibility.Visible;
+            AddressBox.IsEnabled = false;
+            EnableArrivalBox.IsEnabled = false;
+            EnableDepartureBox.IsEnabled = false;
+            ArrivalDatePicker.IsEnabled = false;
+            ArrivalTimePicker.IsEnabled = false;
+            DepartureDatePicker.IsEnabled = false;
+            DepartureTimePicker.IsEnabled = false;
+            PrimaryButton.IsEnabled = false;
+            SecondaryButton.IsEnabled = false;
+
             var model = new Models.PointModel();
             if (EnableArrivalBox.IsChecked.Value)
             {
@@ -180,6 +191,17 @@ namespace MTATransit.Shared.Controls
         }
         private void SecondaryButton_Click(object sender, RoutedEventArgs args)
         {
+            CloseProgress.Visibility = Visibility.Visible;
+            AddressBox.IsEnabled = false;
+            EnableArrivalBox.IsEnabled = false;
+            EnableDepartureBox.IsEnabled = false;
+            ArrivalDatePicker.IsEnabled = false;
+            ArrivalTimePicker.IsEnabled = false;
+            DepartureDatePicker.IsEnabled = false;
+            DepartureTimePicker.IsEnabled = false;
+            PrimaryButton.IsEnabled = false;
+            SecondaryButton.IsEnabled = false;
+
             Result.Result = DialogResult.Secondary;
             Result.Model = null;
             OnDialogClosed?.Invoke(Result);

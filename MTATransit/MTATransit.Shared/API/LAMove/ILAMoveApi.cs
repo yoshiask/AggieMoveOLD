@@ -16,7 +16,7 @@ namespace MTATransit.Shared.API.LAMove
         Task<List<FareTable>> GetFareTables(string agency);
 
         [Get("/{agency}/fares/{fareType}?isDisabled={isDisabled}&isStudent={isStudent}&isCollege={isCollege}")]
-        Task<double> GetFareCost(string agency, int fareType, bool isDisabled = false, bool isStudent = false, bool isCollege = false);
+        Task<FareCost> GetFareCost(string agency, int fareType, bool isDisabled = false, bool isStudent = false, bool isCollege = false);
 
         [Get("/vidurl")]
         Task<URLResponse> GetVIDUrl();

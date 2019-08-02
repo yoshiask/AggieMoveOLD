@@ -27,14 +27,22 @@ namespace MTATransit.Shared.Controls
 
         public DialogResult Result { get; internal set; }
 
-        public DialogBox(string title, string message)
+        public DialogBox(string title, string message, bool isCancellable = false)
         {
             this.InitializeComponent();
 
             Title = title;
             Message = message;
             PrimaryButtonText = "OK";
-            SecondaryButtonVisibility = Visibility.Collapsed;
+            if (isCancellable)
+            {
+                SecondaryButtonText = "Cancel";
+                SecondaryButtonVisibility = Visibility.Visible;
+            }
+            else
+            {
+                SecondaryButtonVisibility = Visibility.Collapsed;
+            }
         }
 
         public DialogBox(string title, string message, string buttonText)

@@ -92,6 +92,20 @@ namespace MTATransit.Shared.API.OTPMTA
 
         [JsonProperty(PropertyName = "steps")]
         public List<Step> Steps { get; set; }
+
+        public string ToLegString()
+        {
+            string output = "";
+            if (Mode == "WALK")
+            {
+                output += "Walk, ";
+                double miles = Common.NumberHelper.MetersToMiles(Distance);
+                output += System.Math.Round(miles, 2).ToString() + " mi";
+            }
+            else
+                output += Route;
+            return output;
+        }
     }
 
     public class LegPoint

@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\SpatialReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\ArcGIS\Suggestion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\Agency.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\FareCost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\FareTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\FareType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\LAMove\ILAMoveApi.cs" />
@@ -71,7 +72,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ItineraryModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\PointModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\DialogPage.xaml.cs">
+      <DependentUpon>$fileinputname$.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\FatalErrorPage.xaml.cs">
       <DependentUpon>$fileinputname$.xaml</DependentUpon>
     </Compile>
@@ -100,6 +105,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\DialogPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -133,6 +142,40 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Bike - Heavy.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Bike.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Bus - Heavy.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Bus.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Car - Heavy.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Car.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\ENC Bus - Heavy (Blank).png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\ENC Bus - Heavy (Silver).png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\ENC-Bus_Heavy.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\ENC-Bus.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Heavy Rail - Heavy (Purple).png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Heavy Rail - Heavy (Red).png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Heavy Rail - Heavy.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Heavy Rail.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Light Rail - Heavy.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Light Rail.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Metro Design 2.0\Airport Shuttle.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Metro Design 2.0\Bus.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Metro Design 2.0\Commuter Rail.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Metro Design 2.0\Metro Rail (Heavy).png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Metro Design 2.0\Metro Rail (Light).png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Metro Design 2.0\Motorcycle.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Metro Design 2.0\Shuttle.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Metro Design 2.0\Taxi.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Scooter - Heavy.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Scooter.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Symbol\Car - Symbol.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Symbol\ENC Bus - Symbol.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Symbol\Light Rail - Symbol.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Symbol\Walk - Symbol.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Taxi - Heavy.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Taxi.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Walk - Heavy.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Walk.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +196,9 @@
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\DialogBox.xaml.cs">
       <DependentUpon>DialogBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\DialogPage.xaml.cs">
+      <DependentUpon>DialogPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\FatalErrorPage.xaml.cs">
       <DependentUpon>FatalErrorPage.xaml</DependentUpon>

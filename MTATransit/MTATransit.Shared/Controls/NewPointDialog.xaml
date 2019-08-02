@@ -21,6 +21,9 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" Background="{ThemeResource SystemAccentColor}" >
+                        <ProgressBar VerticalAlignment="Top" IsIndeterminate="True"
+                            Visibility="Collapsed" x:Name="CloseProgress"
+                            Foreground="{ThemeResource ApplicationForegroundThemeBrush}" />
                         <TextBlock x:Name="TitleBox" FontWeight="Bold"
                             Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
                             Text="{x:Bind Title}" Margin="10,10,10,10"/>

@@ -19,9 +19,32 @@ namespace MTATransit.Shared.Controls
 {
     public sealed partial class ItineraryCard : UserControl
     {
+        public Models.ItineraryModel Itin {
+            get {
+                return this.DataContext as Models.ItineraryModel;
+            }
+        }
+
         public ItineraryCard()
         {
             this.InitializeComponent();
+        }
+
+        private void Card_Loading(FrameworkElement sender, object args)
+        {
+            // TODO: Find a way to add the arrows using Binding
+
+            for (int i = 0; i < Itin.Legs.Count; i++)
+            {
+                string text = "";
+
+                var l = Itin.Legs[i];
+                text += l.ToLegString();
+                if (i != Itin.Legs.Count - 1)
+                    text += " > ";
+
+                LegText.Text += text;
+            }
         }
     }
 }

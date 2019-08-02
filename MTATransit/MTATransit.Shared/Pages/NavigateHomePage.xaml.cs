@@ -69,7 +69,7 @@ namespace MTATransit.Shared.Pages
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(SelectItineraryPage), Points);
+            Frame.Navigate(typeof(SelectItineraryPage), Points.ToList());
         }
         #endregion
 
@@ -91,13 +91,13 @@ namespace MTATransit.Shared.Pages
         private void NewPoint()
         {
             var pointDialog = new Controls.NewPointDialog(
-                "Add Point",
+                "New Point",
                 new Models.PointModel()
                 {
-                    Title = "Baldwin Park, CA 91706",
-                    Address = "Baldwin Park, CA 91706",
-                    ArrivalTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds(),
-                    DepartureTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds() + 1000,
+                    Title = "",
+                    Address = "",
+                    ArrivalTime = 0,
+                    DepartureTime = 0
                 },
                 true
             );

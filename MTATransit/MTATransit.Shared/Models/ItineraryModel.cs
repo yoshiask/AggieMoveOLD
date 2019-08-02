@@ -1,69 +1,79 @@
-﻿using Newtonsoft.Json;
+﻿using MTATransit.Shared.API.OTPMTA;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MTATransit.Shared.API.OTPMTA
+namespace MTATransit.Shared.Models
 {
-    public class Itinerary
+    public class ItineraryModel
     {
+        public ItineraryModel() { }
+
+        public ItineraryModel(Itinerary otpI)
+        {
+            Duration = otpI.Duration;
+            ElevationGained = otpI.ElevationGained;
+            ElevationLost = otpI.ElevationLost;
+            Legs = otpI.Legs;
+            StartTime = otpI.StartTime;
+            StopTime = otpI.StopTime;
+            TooSloped = otpI.TooSloped;
+            Transfers = otpI.Transfers;
+            TransitTime = otpI.TransitTime;
+            WaitingTime = otpI.WaitingTime;
+            WalkDistance = otpI.WalkDistance;
+            WalkLimitExceeded = otpI.WalkLimitExceeded;
+            WalkTime = otpI.WalkTime;
+
+            LoadTotalCost();
+        }
+
         #region Properties
         /// <summary>
         /// Total duration of the trip, in seconds
         /// </summary>
-        [JsonProperty(PropertyName = "duration")]
         public long Duration { get; set; }
 
         /// <summary>
         /// Unix Time, but in milliseconds
         /// </summary>
-        [JsonProperty(PropertyName = "startTime")]
         public long StartTime { get; set; }
 
         /// <summary>
         /// Unix Time, but in milliseconds
         /// </summary>
-        [JsonProperty(PropertyName = "stopTime")]
         public long StopTime { get; set; }
 
         /// <summary>
         /// Total time spent walking, in seconds
         /// </summary>
-        [JsonProperty(PropertyName = "walkTime")]
         public long WalkTime { get; set; }
 
         /// <summary>
         /// Total time spent on transit, in seconds
         /// </summary>
-        [JsonProperty(PropertyName = "transitTime")]
         public long TransitTime { get; set; }
 
         /// <summary>
         /// Total time spent waiting, in seconds
         /// </summary>
-        [JsonProperty(PropertyName = "waitingTime")]
         public long WaitingTime { get; set; }
 
-        [JsonProperty(PropertyName = "walkDistance")]
         public double WalkDistance { get; set; }
 
-        [JsonProperty(PropertyName = "walkLimitExceeded")]
         public bool WalkLimitExceeded { get; set; }
 
-        [JsonProperty(PropertyName = "elevationLost")]
         public double ElevationLost { get; set; }
 
-        [JsonProperty(PropertyName = "elevationGained")]
         public double ElevationGained { get; set; }
 
-        [JsonProperty(PropertyName = "transfers")]
         public int Transfers { get; set; }
 
-        [JsonProperty(PropertyName = "tooSloped")]
         public bool TooSloped { get; set; }
 
-        [JsonProperty(PropertyName = "legs")]
         public List<Leg> Legs { get; set; }
+
+        public decimal TotalCost { get; set; }
         #endregion
 
         #region Strings
@@ -88,6 +98,15 @@ namespace MTATransit.Shared.API.OTPMTA
             return Common.NumberHelper.ToShortTimeString(Duration);
         }
 
+        public string ToDurationRangeString()
+        {
+            if (StopTime == 0)
+                StopTime = StartTime + (Duration * 1000);
+
+            return Common.NumberHelper.ToShortDayTimeString(StartTime / 1000) + " - "
+                + Common.NumberHelper.ToShortDayTimeString(StopTime / 1000);
+        }
+
         public string ToShortLegString()
         {
             string output = "";
@@ -95,19 +114,17 @@ namespace MTATransit.Shared.API.OTPMTA
             for (int i = 0; i < Legs.Count; i++)
             {
                 var l = Legs[i];
-                if (l.Mode == "WALK")
-                {
-                    output += "Walk, ";
-                    double miles = Common.NumberHelper.MetersToMiles(l.Distance);
-                    output += Math.Round(miles, 2).ToString() + " mi";
-                }
-                else
-                    output += Legs[i].RouteShortName;
+                output += l.ToLegString();
                 if (i != Legs.Count - 1)
                     output += " > ";
             }
 
             return output;
+        }
+
+        public string ToShortCostString()
+        {
+            return Common.NumberHelper.ToShortCurrencyString(TotalCost, true);
         }
         #endregion
 
@@ -145,6 +162,11 @@ namespace MTATransit.Shared.API.OTPMTA
                 }
             }
             return cost;
+        }
+
+        private async void LoadTotalCost()
+        {
+            TotalCost = await GetTotalCost();
         }
         #endregion
     }

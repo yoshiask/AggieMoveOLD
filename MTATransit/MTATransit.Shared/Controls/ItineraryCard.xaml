@@ -6,10 +6,32 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignHeight="200"
+    d:DesignWidth="400"
+    Loading="Card_Loading">
 
-    <Grid>
+    <Grid x:Name="BackgroundGrid" Background="{ThemeResource SystemChromeLowColor}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="80*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,0,0,0" Orientation="Horizontal" >
+            <TextBlock x:Name="TimeRangeBlock" VerticalAlignment="Stretch" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Itin.ToDurationRangeString()}" FontWeight="Bold" FontSize="18" Padding="5,2,0,0" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
+            <TextBlock x:Name="TripCost" VerticalAlignment="Center" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Itin.ToShortCostString()}" FontWeight="Normal" FontSize="12" Padding="5,2,0,0" Foreground="{ThemeResource SystemBaseMediumColor}" FontStretch="Normal"/>
+        </StackPanel>
+        <TextBlock x:Name="CategoryBlock" FontFamily="{StaticResource DINFontFamily}" Text="Eco-Friendly" FontWeight="Normal" FontSize="18" Padding="5,2,0,0" Foreground="#FF419545" TextAlignment="Right" HorizontalAlignment="Right" Margin="0,0,5,0" Visibility="Collapsed"/>
+
+        <StackPanel x:Name="LegsStack" VerticalAlignment="Stretch"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Row="1"
+            Orientation="Horizontal" Background="{ThemeResource SystemChromeMediumColor}">
+            <TextBlock x:Name="LegText" FontFamily="{StaticResource DINFontFamily}"
+                FontSize="18" Padding="5,2,0,2" />
+        </StackPanel>
+
+        <Grid x:Name="MapGrid" Background="{ThemeResource SystemBaseLowColor}" Grid.Row="2"/>
 
     </Grid>
+
 </UserControl>

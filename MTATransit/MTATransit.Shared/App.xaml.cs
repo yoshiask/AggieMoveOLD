@@ -95,10 +95,28 @@ namespace MTATransit
                                 Message = "You are not connected to the internet"
                             });
                     else
+                    {
+                        var dialog = new Shared.Controls.DialogBox(
+                            "Heads up!",
+                            @"This app is still in development.
+Many bugs are present, and it is likely
+that you will find one. If the app crashes
+during this demonstration, please reopen
+the ""LA Move"" app from the taskbar.
+Thank you!"
+                        );
+                        dialog.OnDialogClosed += (Shared.Controls.DialogBox.DialogResult result) =>
+                        {
+                            rootFrame.Navigate(typeof(Shared.Pages.NavigateHomePage), e.Arguments);
+                        };
+                        rootFrame.Navigate(typeof(Shared.Pages.DialogPage), dialog);
+
                         // When the navigation stack isn't restored navigate to the first page,
                         // configuring the new page by passing required information as a navigation
                         // parameter
-                        rootFrame.Navigate(typeof(Shared.Pages.NavigateHomePage), e.Arguments);
+                        //rootFrame.Navigate(typeof(Shared.Pages.NavigateHomePage), e.Arguments);
+                    }
+                    
                 }
                 // Ensure the current window is active
                 Windows.UI.Xaml.Window.Current.Activate();
