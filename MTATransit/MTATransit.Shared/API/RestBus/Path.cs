@@ -13,9 +13,9 @@ namespace MTATransit.Shared.API.RestBus
     public class Point
     {
         [JsonProperty(PropertyName = "lat")]
-        public double Latitude { get; set; }
+        public decimal Latitude { get; set; }
 
         [JsonProperty(PropertyName = "lon")]
-        public double Longitude { get; set; }
+        public decimal Longitude { get; set; }
     }
 }

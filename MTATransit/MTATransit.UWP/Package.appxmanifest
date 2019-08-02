@@ -9,7 +9,7 @@
   <Identity
     Name="52374YoshiAskharoun.LAMove"
     Publisher="CN=CD3113F3-18EB-4B8D-9D8A-C6D373E7A464"
-    Version="1.0.2.0" />
+    Version="1.0.3.0" />
 
   <mp:PhoneIdentity PhoneProductId="cc5357cb-4189-4b19-8767-9a6349567c47" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

@@ -35,11 +35,11 @@
                 <ListView x:Name="PredictionBox" FontFamily="{StaticResource DINFontFamily}"/>
             </Windows10version1803:RefreshContainer>
             
-            <!--ArcGIS:MapView x:Name="MainMapView" Grid.Row="2" GeoViewTapped="MapView_Tapped">
+            <ArcGIS:MapView x:Name="MainMapView" Grid.Row="2" GeoViewTapped="MapView_Tapped">
                 <ArcGIS:MapView.GraphicsOverlays>
                     <ArcGISUI:GraphicsOverlay x:Name="MapGraphics"/>
                 </ArcGIS:MapView.GraphicsOverlays>
-            </ArcGIS:MapView!-->
+            </ArcGIS:MapView>
         </Grid>
     </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

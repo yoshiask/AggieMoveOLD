@@ -7,10 +7,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:ArcGIS="using:Esri.ArcGISRuntime.UI.Controls"
+    xmlns:ArcGISUI="using:Esri.ArcGISRuntime.UI"
     d:DesignHeight="120"
     d:DesignWidth="400"
-    BorderBrush="{ThemeResource SystemAltLowColor}" BorderThickness="5">
+    BorderBrush="{ThemeResource SystemAltLowColor}" BorderThickness="5"
+    Loading="Card_Loading">
 
     <Grid x:Name="BackgroundGrid" Background="{ThemeResource SystemChromeMediumColor}" >
         <Grid.RowDefinitions>
@@ -39,7 +41,11 @@
         </StackPanel>
 
         <Grid x:Name="MapGrid" Background="{ThemeResource SystemBaseLowColor}" Grid.Column="2" Grid.RowSpan="2">
-            
+            <ArcGIS:MapView x:Name="MainMapView" Grid.Row="2" GeoViewTapped="MapView_Tapped" MinHeight="120">
+                <ArcGIS:MapView.GraphicsOverlays>
+                    <ArcGISUI:GraphicsOverlay x:Name="MapGraphics"/>
+                </ArcGIS:MapView.GraphicsOverlays>
+            </ArcGIS:MapView>
         </Grid>
 
     </Grid>

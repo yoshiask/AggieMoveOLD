@@ -5,6 +5,8 @@
     xmlns:local="using:MTATransit.Shared.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ArcGIS="using:Esri.ArcGISRuntime.UI.Controls"
+    xmlns:ArcGISUI="using:Esri.ArcGISRuntime.UI"
     mc:Ignorable="d"
     d:DesignHeight="200"
     d:DesignWidth="400"
@@ -30,7 +32,13 @@
                 FontSize="18" Padding="5,2,0,2" />
         </StackPanel>
 
-        <Grid x:Name="MapGrid" Background="{ThemeResource SystemBaseLowColor}" Grid.Row="2"/>
+        <Grid x:Name="MapGrid" Background="{ThemeResource SystemBaseLowColor}" Grid.RowSpan="2" Grid.Row="2">
+            <ArcGIS:MapView x:Name="MainMapView" Grid.Row="2" MinHeight="120">
+                <ArcGIS:MapView.GraphicsOverlays>
+                    <ArcGISUI:GraphicsOverlay x:Name="MapGraphics"/>
+                </ArcGIS:MapView.GraphicsOverlays>
+            </ArcGIS:MapView>
+        </Grid>
 
     </Grid>
 

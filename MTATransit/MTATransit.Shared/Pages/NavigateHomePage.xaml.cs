@@ -160,9 +160,6 @@ namespace MTATransit.Shared.Pages
                 }
                     
             }
-
-
-
             base.OnNavigatedTo(e);
         }
 

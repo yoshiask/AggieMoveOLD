@@ -2,12 +2,12 @@
 using Windows.UI.Xaml.Navigation;
 using System;
 using System.Linq;
-/*using Esri.ArcGISRuntime.Mapping;
+using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Data;
 using Esri.ArcGISRuntime.UI.Controls;
 using Esri.ArcGISRuntime.Symbology;
-using Esri.ArcGISRuntime.UI;*/
+using Esri.ArcGISRuntime.UI;
 using System.Diagnostics;
 using System.Collections.Generic;
 using MTATransit.Shared.API.RestBus;
@@ -39,7 +39,7 @@ namespace MTATransit.Shared.Pages
             curStop = ((object[])e.Parameter)[2] as Stop;
 
             LoadStopInfo();
-            //LoadMap(stop, route);
+            LoadMap(curStop, curRoute);
             //LoadNearbyStops();
             base.OnNavigatedTo(e);
         }
@@ -71,23 +71,23 @@ namespace MTATransit.Shared.Pages
             }
         }
 
-        /*public void LoadMap(Stop stop, RouteConfig route)
+        public void LoadMap(Stop stop, Route route)
         {
             MainMapView.Map = new Map(
                 BasemapType.ImageryWithLabelsVector,
-                Convert.ToDouble(stop.Lat),
-                Convert.ToDouble(stop.Lon),
+                Convert.ToDouble(stop.Latitude),
+                Convert.ToDouble(stop.Longitude),
                 19
             );
             MainMapView.LocationDisplay.IsEnabled = true;
             MainMapView.LocationDisplay.ShowLocation = true;
 
             // Now draw a point where the stop is
-            //var stopPoint = CreateRouteStop(stop.Lat, stop.Lon, System.Drawing.Color.Red);
+            //var stopPoint = CreateRouteStop(stop.Latitude, stop.Longitude, System.Drawing.Color.Red);
             //MapGraphics.Graphics.Add(stopPoint);
 
             // Display the selected route & stop
-            //DrawRoutePath(route, stop, MapGraphics, true);
+            DrawRoutePath(route, stop, MapGraphics, true);
 
             // Display all of the Park & Ride Locations
             var parkrideUri = new Uri("https://public.gis.lacounty.gov/public/rest/services/LACounty_Dynamic/LMS_Data_Public/MapServer/187");
@@ -109,7 +109,7 @@ namespace MTATransit.Shared.Pages
             return CreateRouteStop(lat, lon, System.Drawing.Color.Black);
         }
 
-        private void DrawRoutePath(RouteConfig rtc, Stop selectedStop, GraphicsOverlay overlay, bool showStops)
+        private void DrawRoutePath(Route rtc, Stop selectedStop, GraphicsOverlay overlay, bool showStops)
         {
             //Create polyline geometry
             var polylinePoints = new PointCollection(SpatialReferences.Wgs84);
@@ -117,7 +117,7 @@ namespace MTATransit.Shared.Pages
             {
                 foreach (Point stop in path.Points)
                 {
-                    polylinePoints.Add(new MapPoint(Convert.ToDouble(stop.Lon), Convert.ToDouble(stop.Lat)));
+                    polylinePoints.Add(new MapPoint(Convert.ToDouble(stop.Longitude), Convert.ToDouble(stop.Latitude)));
                 }
             }
                 
@@ -127,17 +127,17 @@ namespace MTATransit.Shared.Pages
             var polylineSymbol = new SimpleLineSymbol(SimpleLineSymbolStyle.Solid, Common.DrawingColorFromHex(rtc.Color), 3);
 
             //Create a polyline graphic with geometry and symbol
-            overlay.Graphics.Add(new Graphic(polyline, polylineSymbol));
+            //overlay.Graphics.Add(new Graphic(polyline, polylineSymbol));
 
             if (showStops)
                 // Draw a point for each stop
                 foreach (Stop stop in rtc.Stops)
                 {
                     Graphic graphic;
-                    if (selectedStop.Lat == stop.Lat && selectedStop.Lon == stop.Lon)
-                        graphic = CreateRouteStop(stop.Lat, stop.Lon, System.Drawing.Color.Red);
+                    if (selectedStop.Latitude == stop.Latitude && selectedStop.Longitude == stop.Longitude)
+                        graphic = CreateRouteStop(Convert.ToDecimal(stop.Latitude), Convert.ToDecimal(stop.Longitude), System.Drawing.Color.Red);
                     else
-                        graphic = CreateInactiveRouteStop(stop.Lat, stop.Lon);
+                        graphic = CreateInactiveRouteStop(Convert.ToDecimal(stop.Latitude), Convert.ToDecimal(stop.Longitude));
                     overlay.Graphics.Add(graphic);
                 }
         }
@@ -147,7 +147,7 @@ namespace MTATransit.Shared.Pages
             //MapPoint tappedPoint = (MapPoint)GeometryEngine.Project(e.Location, SpatialReferences.Wgs84);
 
             var resultGraphics = await MainMapView.IdentifyGraphicsOverlayAsync(MapGraphics, e.Position, 10, false);
-        }*/
+        }
 
         public async void LoadNearbyStops()
         {
@@ -189,7 +189,7 @@ namespace MTATransit.Shared.Pages
                     MainGrid.Children.Remove(dialog);
                 };
                 MainGrid.Children.Add(dialog);
-                Grid.SetRowSpan(dialog, 3);
+                Windows.UI.Xaml.Controls.Grid.SetRowSpan(dialog, 3);
             }
         }
 
