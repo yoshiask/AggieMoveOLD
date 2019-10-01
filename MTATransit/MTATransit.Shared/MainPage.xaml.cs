@@ -47,7 +47,7 @@ namespace MTATransit
         {
             try
             {
-                var vid = await Shared.API.LAMove.LAMoveHelper.GetVIDFromBus();
+                /*var vid = await Shared.API.LAMove.LAMoveHelper.GetVIDFromBus();
                 var vehicles = await Common.RestBusApi.GetAgencyVehicles("lametro");
                 var vehicle = vehicles.Find(v => v.Id == vid);
                 if (vehicle != null)
@@ -58,29 +58,40 @@ namespace MTATransit
                         MainGrid.Children.Remove(dialog);
                     };
                     MainGrid.Children.Add(dialog);
-                }
+                }*/
             }
             catch
             {
-                // TODO: Prompt the user for vehicle id. Display the pictogram showing where the ID can be found inside the bus.
+                // TODO: Prompt the user for vehicle id.
+                // Display the pictogram showing where the ID can be found inside the bus.
             }
 
             // Get a list of the agencies this api serves
-            Agencies = await Common.RestBusApi.GetAgencies();
-            if (Agencies == null)
-                return;
-
-            foreach (Agency ag in Agencies)
+            try
             {
-                AgenciesBox.Items.Add(new ComboBoxItem()
+                SetLoadingBar(true);
+                Agencies = await Common.RestBusApi.GetAgencies();
+                if (Agencies == null)
+                    return;
+
+                foreach (Agency ag in Agencies)
                 {
-                    Content = ag.Title,
-                });
+                    AgenciesBox.Items.Add(new ComboBoxItem()
+                    {
+                        Content = ag.Title,
+                    });
+                }
+                SetLoadingBar(false);
+            }
+            catch
+            {
+                // Was unable to load agencies
             }
         }
 
         public async void LoadRoutes(Agency ag)
         {
+            SetLoadingBar(true);
             var api = Common.RestBusApi;
             RoutesBox.Items.Clear();
             Routes.Clear();
@@ -90,37 +101,47 @@ namespace MTATransit
             if (Routes == null)
                 return;
 
-            foreach (Route rt in Routes)
+            try
             {
-                RoutesBox.Items.Add(new ComboBoxItem()
+                foreach (Route rt in Routes)
                 {
-                    Name = rt.Id,
-                    Content = rt.Title,
-                });
-            }
+                    RoutesBox.Items.Add(new ComboBoxItem()
+                    {
+                        Name = rt.Id,
+                        Content = rt.Title,
+                    });
+                }
 
-            // Now get the routeConfig for colors
-            for (int i = 0; i < RoutesBox.Items.Count; ++i)
-            {
-                var item = RoutesBox.Items[i] as ComboBoxItem;
-
-                var info = await api.GetRoute(ag.Id, item.Name);
-                if (info != null)
+                // Now get the routeConfig for colors
+                for (int i = 0; i < RoutesBox.Items.Count; ++i)
                 {
-                    int ind = Routes.FindIndex(r => r.Id == info.Id);
-                    if (ind < 0)
-                        ind = i;
-                    Routes[ind] = info;
+                    var item = RoutesBox.Items[i] as ComboBoxItem;
 
-                    item.Background = Common.BrushFromHex(info.Color);
-                    item.Foreground = Common.BrushFromHex(info.TextColor);
-                    item.RequestedTheme = ElementTheme.Light;
+                    var info = await api.GetRoute(ag.Id, item.Name);
+                    if (info != null)
+                    {
+                        int ind = Routes.FindIndex(r => r.Id == info.Id);
+                        if (ind < 0)
+                            ind = i;
+                        Routes[ind] = info;
+
+                        item.Background = Common.BrushFromHex(info.Color);
+                        item.Foreground = Common.BrushFromHex(info.TextColor);
+                        item.RequestedTheme = ElementTheme.Light;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
+            SetLoadingBar(false);
         }
 
         public async void LoadStops(Route route)
         {
+            SetLoadingBar(true);
             var api = Common.RestBusApi;
             int i = Routes.IndexOf(route);
 
@@ -144,6 +165,7 @@ namespace MTATransit
                     RequestedTheme = Common.ThemeFromColor(curRoute.TextColor),
                 });
             }
+            SetLoadingBar(false);
         }
 
         private async void AgenciesBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
@@ -182,6 +204,11 @@ namespace MTATransit
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             Common.NavView_SelectionChanged(this, sender, args);
+        }
+
+        private void SetLoadingBar(bool loading)
+        {
+            PageLoadingBar.Visibility = loading ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
         }
     }
 }

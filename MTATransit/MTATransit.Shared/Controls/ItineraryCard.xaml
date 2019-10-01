@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     d:DesignHeight="200"
     d:DesignWidth="400"
-    Loading="Card_Loading">
+    Loaded="ItineraryCard_Loaded">
 
     <Grid x:Name="BackgroundGrid" Background="{ThemeResource SystemChromeLowColor}" >
         <Grid.RowDefinitions>

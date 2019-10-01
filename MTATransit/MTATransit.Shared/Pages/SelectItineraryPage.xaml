@@ -44,6 +44,7 @@
                 <TextBlock x:Name="PageTitleBox" Text="Navigate" FontSize="30"
                     FontFamily="{StaticResource DINFontFamily}" Padding="2,0,0,0" FontWeight="Bold"/>
             </StackPanel>
+            <ProgressBar x:Name="PageLoadingBar" Height="10" VerticalAlignment="Top" IsIndeterminate="True" Visibility="Collapsed" Grid.Row="1" HorizontalAlignment="Stretch" />
 
             <ScrollViewer Margin="10,10,10,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="1">
                 <ItemsControl  x:Name="ItinerariesControl" ItemsSource="{x:Bind Itineraries}" >

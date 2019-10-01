@@ -36,10 +36,10 @@ namespace MTATransit.Shared.Controls
         {
             this.InitializeComponent();
 
-            DataContextChanged += (s, e) => Bindings.Update();
+            //DataContextChanged += (s, e) => Bindings.Update();
         }
 
-        private void Card_Loading(FrameworkElement sender, object args)
+        private void Card_Loading(DependencyObject sender, object args)
         {
             LoadMap(Convert.ToDouble(Point.Latitude), Convert.ToDouble(Point.Longitude));
         }

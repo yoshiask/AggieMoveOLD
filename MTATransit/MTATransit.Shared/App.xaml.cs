@@ -119,7 +119,7 @@ Thank you!"
                     
                 }
                 // Ensure the current window is active
-                Windows.UI.Xaml.Window.Current.Activate();
+                Window.Current.Activate();
             }
         }
 
@@ -130,7 +130,17 @@ Thank you!"
         /// <param name="e">Details about the navigation failure</param>
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+            (Window.Current.Content as Frame).Navigate(
+                            typeof(Shared.Pages.FatalErrorPage),
+                            new Shared.Pages.FatalErrorPage.FatalErrorArgs()
+                            {
+                                //Icon = "\uE774",
+                                //SecondaryIcon = "\uEA39",
+                                Icon = "\uEB5E",
+                                Message = "Failed to naviagte to " + e.SourcePageType.FullName
+                            });
+
+            //throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
         /// <summary>

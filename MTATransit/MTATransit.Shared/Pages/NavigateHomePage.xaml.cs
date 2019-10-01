@@ -150,7 +150,7 @@ namespace MTATransit.Shared.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.SourcePageType == typeof(SelectItineraryPage))
+            if (e.Parameter is List<Models.PointModel>)
             {
                 var points = e.Parameter as List<Models.PointModel>;
                 if (points != null)

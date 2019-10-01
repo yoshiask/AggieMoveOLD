@@ -100,15 +100,6 @@ namespace MTATransit.Shared
                 return ElementTheme.Light;
         }
 
-        public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
-        {
-            // Unix timestamp is seconds past epoch
-            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dtDateTime;
-        }
-
-
         public static Dictionary<string, Tuple<Type, NavigationViewItem>> Pages = new Dictionary<string, Tuple<Type, NavigationViewItem>>
         {
             {
@@ -278,10 +269,13 @@ namespace MTATransit.Shared
                 dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
                 return dtDateTime;
             }
-            public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
+            public static DateTime UnixTimeStampToDateTime(long unixTimeStamp, bool isLocal = false)
             {
                 // Unix timestamp is seconds past epoch
-                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                DateTime dtDateTime = new DateTime(
+                    1970, 1, 1, 0, 0, 0, 0,
+                    isLocal ? DateTimeKind.Local : DateTimeKind.Utc
+                );
                 dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
                 return dtDateTime;
             }

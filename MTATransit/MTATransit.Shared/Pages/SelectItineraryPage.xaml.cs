@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using MTATransit.Shared.API.OTPMTA;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,7 +38,7 @@ namespace MTATransit.Shared.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             Points = e.Parameter as List<Models.PointModel>;
-            LoadItineraries(Points); ;
+            LoadItineraries(Points);
 
             base.OnNavigatedTo(e);
         }
@@ -53,6 +54,8 @@ namespace MTATransit.Shared.Pages
                 return;
             }
 
+            SetLoadingBar(true);
+
             // TODO: This is only temporary, as the app should definitely support
             // more than just two points.
 
@@ -62,27 +65,28 @@ namespace MTATransit.Shared.Pages
             var request = new PlanRequestParameters()
             {
                 FromPlace = startCoord,
-                ToPlace = endCoord
+                ToPlace = endCoord,
+                IsArriveBy = points[1].HasArrivalTime,
+                ItineraryCount = 5
             };
-            if (points[1].HasArrivalTime)
-            {
-                request.ArriveDate = points[1].ArrivalDateTime.Value.ToString("MM-dd-yyy");
-                request.ArriveTime = points[1].ArrivalTime;
-            }
-            else
-            {
-                request.ArriveDate = DateTime.Now.ToString("MM-dd-yyy");
-                request.ArriveTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
-            }
 
-            var plan = (await Common.OTPMTAApi.CalculatePlan(request)).Plan;
+            DateTime date = points[1].HasArrivalTime ? points[1].ArrivalDateTime.Value.ToLocalTime() : DateTime.Now;
+            DateTime time = points[1].HasArrivalTime ? Common.NumberHelper.UnixTimeStampToDateTime(points[1].ArrivalTime) : DateTime.Now;
+            request.Date = date.ToString("MM-dd-yyyy");
+            request.Time = time.ToString("hh:mmtt");
 
-            if (plan == null)
+            var response = await Common.OTPMTAApi.CalculatePlan(request);
+            SetLoadingBar(false);
+
+            if (response.Plan == null)
                 return;
 
-            foreach (Itinerary it in plan.Itineraries)
+            System.Diagnostics.Debug.WriteLine($"Request date-time: {request.Date} {request.Time}");
+            System.Diagnostics.Debug.WriteLine($"Plan date-time: {response.RequestParameters.Date} {response.RequestParameters.Time}");
+            foreach (Itinerary it in response.Plan.Itineraries)
             {
                 Itineraries.Add(new Models.ItineraryModel(it));
+                System.Diagnostics.Debug.WriteLine("Itin start: " + it.StartTime.ToString());
             }
 
             #region old junk
@@ -134,6 +138,11 @@ namespace MTATransit.Shared.Pages
         public class ItineraryPageNavigationArgs
         {
             public IList<Models.PointModel> Points;
+        }
+
+        private void SetLoadingBar(bool loading)
+        {
+            PageLoadingBar.Visibility = loading ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
         }
     }
 }

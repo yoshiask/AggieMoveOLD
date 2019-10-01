@@ -4,9 +4,11 @@ using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Symbology;
 using Esri.ArcGISRuntime.UI;
 using Esri.ArcGISRuntime.UI.Controls;
+using MTATransit.Shared.API.OTPMTA;
 using MTATransit.Shared.API.RestBus;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -34,11 +36,12 @@ namespace MTATransit.Shared.Controls
         public ItineraryCard()
         {
             this.InitializeComponent();
+            this.Loaded += ItineraryCard_Loaded;
         }
 
-        private void Card_Loading(FrameworkElement sender, object args)
+        private void ItineraryCard_Loaded(object sender, RoutedEventArgs e)
         {
-            //LoadMap(Convert.ToDouble(Itin.Legs[1].Latitude), Convert.ToDouble(Point.Longitude));
+            LoadMap();
 
             // TODO: Find a way to add the arrows using Binding
             for (int i = 0; i < Itin.Legs.Count; i++)
@@ -54,32 +57,53 @@ namespace MTATransit.Shared.Controls
             }
         }
 
-        /*public void LoadMap(double lat, double lon)
+        public async void LoadMap()
         {
             MainMapView.Map = new Map(
-                BasemapType.ImageryWithLabelsVector,
-                lon,
-                lat,
-                12
+                BasemapType.ImageryWithLabels, 0, 0, 1
             );
             MainMapView.LocationDisplay.IsEnabled = true;
             MainMapView.LocationDisplay.ShowLocation = true;
+            //MainMapView.IsHitTestVisible = false;
 
-            // Now draw a point where the stop is
-            var stopPoint = CreateRouteStop(Convert.ToDecimal(lat), Convert.ToDecimal(lon), System.Drawing.Color.Red);
-            MapGraphics.Graphics.Add(stopPoint);
+            List<MapPoint> Points = new List<MapPoint>();
+            foreach (Leg leg in Itin.Legs)
+            {
+                var geometry = GooglePolylineConverter.Decode(leg.Geometry.Points);
+                foreach (API.ArcGIS.Location location in geometry)
+                {
+                    Points.Add(new MapPoint(location.Longitude, location.Latitude));
+                }
+            }
 
-            // Display all of the Park & Ride Locations
-            var parkrideUri = new Uri("https://public.gis.lacounty.gov/public/rest/services/LACounty_Dynamic/LMS_Data_Public/MapServer/187");
-            var parkrideLayer = new FeatureLayer(new ServiceFeatureTable(parkrideUri));
-            //MainMapView.Map.OperationalLayers.Add(parkrideLayer);
+            //  use a polyline builder to create the new polyline from a collection of points
+            Polyline Path = new PolylineBuilder(Points, SpatialReferences.Wgs84).ToGeometry();
+            System.Diagnostics.Debug.WriteLine(Path.Extent);
+            // create a simple line symbol to display the polyline
+            var lineSymbol = new SimpleLineSymbol(SimpleLineSymbolStyle.Solid, System.Drawing.Color.FromArgb(255, 11, 95, 96), 4.0);
+
+            MapGraphics.Graphics.Add(new Graphic(Path, lineSymbol));
+            await MainMapView.SetViewpointGeometryAsync(Path, 20);
+
+            // Have to add points after the path, otherwise the points will show underneath the line
+            foreach (Leg leg in Itin.Legs)
+            {
+                MapGraphics.Graphics.Add(CreateRouteStop(
+                    Convert.ToDecimal(Points[0].Y), Convert.ToDecimal(Points[0].X),
+                    System.Drawing.Color.DarkRed
+                ));
+                MapGraphics.Graphics.Add(CreateRouteStop(
+                    Convert.ToDecimal(Points[Points.Count - 1].Y), Convert.ToDecimal(Points[Points.Count - 1].X),
+                    System.Drawing.Color.DarkRed
+                ));
+            }
         }
 
         private Graphic CreateRouteStop(decimal lat, decimal lon, System.Drawing.Color fill)
         {
             // Now draw a point where the stop is
-            var stopPoint = new MapPoint(Convert.ToDouble(lat),
-                Convert.ToDouble(lon), SpatialReferences.Wgs84);
+            var stopPoint = new MapPoint(Convert.ToDouble(lon),
+                Convert.ToDouble(lat), SpatialReferences.Wgs84);
             var pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle.Circle, fill, 20);
             pointSymbol.Outline = new SimpleLineSymbol(SimpleLineSymbolStyle.Solid, System.Drawing.Color.White, 5);
             return new Graphic(stopPoint, pointSymbol);
@@ -94,6 +118,6 @@ namespace MTATransit.Shared.Controls
             //MapPoint tappedPoint = (MapPoint)GeometryEngine.Project(e.Location, SpatialReferences.Wgs84);
 
             var resultGraphics = await MainMapView.IdentifyGraphicsOverlayAsync(MapGraphics, e.Position, 10, false);
-        }*/
+        }
     }
 }

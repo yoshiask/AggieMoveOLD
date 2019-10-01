@@ -235,7 +235,7 @@ namespace MTATransit.Shared.Controls
                 catch (System.Net.Http.HttpRequestException ex)
                 {
                     // TODO: Handle what's likely an HTTP timeout
-                    Debug.WriteLine(ex);
+                    //Debug.WriteLine(ex);
                 }
             }
         }

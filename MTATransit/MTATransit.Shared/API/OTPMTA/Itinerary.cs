@@ -71,8 +71,8 @@ namespace MTATransit.Shared.API.OTPMTA
         {
             string output = "";
 
-            DateTime startTime = Common.UnixTimeStampToDateTime(StartTime / 1000);
-            DateTime stopTime = Common.UnixTimeStampToDateTime(StopTime / 1000);
+            DateTime startTime = Common.NumberHelper.UnixTimeStampToDateTime(StartTime / 1000);
+            DateTime stopTime = Common.NumberHelper.UnixTimeStampToDateTime(StopTime / 1000);
 
             output += ToShortLegString();
             output += ": ";

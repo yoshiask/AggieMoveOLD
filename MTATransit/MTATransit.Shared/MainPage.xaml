@@ -16,8 +16,8 @@
 
         <Grid x:Name="MainGrid">
             <Grid.RowDefinitions>
-                <RowDefinition Height="9*"/>
-                <RowDefinition Height="80*"/>
+                <RowDefinition Height="73*"/>
+                <RowDefinition Height="647*"/>
             </Grid.RowDefinitions>
             <RichTextBlock Margin="20,20,20,0" FontSize="30" Height="40" VerticalAlignment="Top" IsTextSelectionEnabled="False"
                         Visibility="Collapsed">
@@ -27,15 +27,16 @@
                 </Paragraph>
             </RichTextBlock>
 
-            <StackPanel Margin="12,20,12,0" Height="40" VerticalAlignment="Center" Orientation="Horizontal">
+            <StackPanel Margin="12,26,12,0" Height="40" VerticalAlignment="Top" Orientation="Horizontal">
                 <TextBlock x:Name="PageIconBox" Text="&#xE913;" FontSize="30"
                     FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontWeight="Bold"/>
                 <TextBlock x:Name="PageTitleBox" Text="Explore" FontSize="30"
                     FontFamily="{StaticResource DINFontFamily}" Padding="7,0,0,0" FontWeight="Bold"/>
             </StackPanel>
-            <ComboBox x:Name="AgenciesBox" Margin="10,5.259,10,0" Height="40" HorizontalAlignment="Stretch" SelectionChanged="AgenciesBox_SelectionChanged" PlaceholderText="Select an Agency" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
-            <ComboBox x:Name="RoutesBox" Margin="10,55.259,10,0" Height="40" HorizontalAlignment="Stretch" SelectionChanged="RoutesBox_SelectionChanged" PlaceholderText="Select a Route" IsEnabled="False" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
-            <ListView x:Name="StopsBox" Margin="10,105.259,10,0" VerticalAlignment="Top" SelectionChanged="StopsBox_SelectionChanged" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
+            <ComboBox x:Name="AgenciesBox" Margin="10,5.333,10,0" Height="40" HorizontalAlignment="Stretch" SelectionChanged="AgenciesBox_SelectionChanged" PlaceholderText="Select an Agency" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
+            <ComboBox x:Name="RoutesBox" Margin="10,55.333,10,0" Height="40" HorizontalAlignment="Stretch" SelectionChanged="RoutesBox_SelectionChanged" PlaceholderText="Select a Route" IsEnabled="False" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
+            <ListView x:Name="StopsBox" Margin="10,105.333,10,10" VerticalAlignment="Stretch" SelectionChanged="StopsBox_SelectionChanged" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
+            <ProgressBar x:Name="PageLoadingBar" Height="10" VerticalAlignment="Bottom" IsIndeterminate="True" Visibility="Collapsed" />
         </Grid>
 
         <!--NavigationView.MenuItems>

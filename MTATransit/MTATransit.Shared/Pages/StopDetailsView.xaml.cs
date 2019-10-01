@@ -11,6 +11,7 @@ using Esri.ArcGISRuntime.UI;
 using System.Diagnostics;
 using System.Collections.Generic;
 using MTATransit.Shared.API.RestBus;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -24,6 +25,7 @@ namespace MTATransit.Shared.Pages
         Agency curAgency;
         Route curRoute;
         Stop curStop;
+        SolidColorBrush PageForeground;
 
         public RouteDetailsView()
         {
@@ -46,11 +48,14 @@ namespace MTATransit.Shared.Pages
 
         public async void LoadStopInfo()
         {
+            SetLoadingBar(true);
             var api = Common.RestBusApi;
             var predictions = await api.GetStopPredictions(curAgency.Id, curRoute.Id, curStop.Id);
 
             MainGrid.Background = Common.BrushFromHex(curRoute.Color);
-            PageHeader.Foreground = Common.BrushFromHex(curRoute.TextColor);
+            PageForeground = Common.BrushFromHex(curRoute.TextColor);
+            PageHeader.Foreground = PageForeground;
+            PageLoadingBar.Foreground = PageForeground;
             var itemTheme = Common.ThemeFromColor(curRoute.TextColor);
 
             if (predictions == null || predictions.Count == 0)
@@ -65,10 +70,11 @@ namespace MTATransit.Shared.Pages
                 PredictionBox.Items.Add(new ListViewItem()
                 {
                     Content = display,
-                    Foreground = Common.BrushFromHex(curRoute.TextColor),
+                    Foreground = PageForeground,
                     RequestedTheme = itemTheme,
                 });
             }
+            SetLoadingBar(false);
         }
 
         public void LoadMap(Stop stop, Route route)
@@ -112,7 +118,7 @@ namespace MTATransit.Shared.Pages
         private void DrawRoutePath(Route rtc, Stop selectedStop, GraphicsOverlay overlay, bool showStops)
         {
             //Create polyline geometry
-            var polylinePoints = new PointCollection(SpatialReferences.Wgs84);
+            var polylinePoints = new Esri.ArcGISRuntime.Geometry.PointCollection(SpatialReferences.Wgs84);
             foreach (Path path in rtc.Paths)
             {
                 foreach (Point stop in path.Points)
@@ -151,7 +157,8 @@ namespace MTATransit.Shared.Pages
 
         public async void LoadNearbyStops()
         {
-            string fromString = System.Web.HttpUtility.UrlEncode("El Monte, CA, 91706");
+            string fromString = Uri.EscapeDataString("El Monte, CA, 91706");
+            //fromString = System.Web.HttpUtility.UrlEncode("El Monte, CA, 91706");
             //string toString = System.Web.HttpUtility.UrlEncode("Union Station, Los Angeles, CA");
 
             var startSuggestions = await Common.ArcGISApi.GetSuggestions(fromString);
@@ -215,6 +222,11 @@ namespace MTATransit.Shared.Pages
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             Common.NavView_SelectionChanged(this, sender, args);
+        }
+
+        private void SetLoadingBar(bool loading)
+        {
+            PageLoadingBar.Visibility = loading ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
         }
     }
 }

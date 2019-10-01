@@ -84,6 +84,9 @@ namespace MTATransit.Shared.API.OTPMTA
         [JsonProperty(PropertyName = "transitLeg")]
         public bool TransitLeg { get; set; }
 
+        [JsonProperty(PropertyName = "legGeometry")]
+        public LegGeometry Geometry { get; set; }
+
         /// <summary>
         /// How long it takes to complete the leg, in seconds
         /// </summary>
