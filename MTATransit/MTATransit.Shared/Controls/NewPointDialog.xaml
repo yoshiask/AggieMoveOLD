@@ -33,27 +33,34 @@
 
                         <StackPanel x:Name="ContentList" Margin="10,10,10,10" MinHeight="50">
 
-                            <AutoSuggestBox x:Name="AddressBox" TextChanged="AddressBox_TextChanged"
-                                QuerySubmitted="AddressBox_QuerySubmitted" SuggestionChosen="AddressBox_SuggestionChosen"
-                                QueryIcon="Find" PlaceholderText="Address" HorizontalAlignment="Stretch"
-                                FontFamily="{StaticResource DINFontFamily}" />
+                            <Grid Height="33" Width="242">
+
+                                <AutoSuggestBox x:Name="AddressBox" TextChanged="AddressBox_TextChanged"
+                                    QuerySubmitted="AddressBox_QuerySubmitted" SuggestionChosen="AddressBox_SuggestionChosen"
+                                    QueryIcon="Find" PlaceholderText="Address" IsEnabled="{x:Bind CurrentLocationButton.IsChecked.Value.Equals(x:False)}"
+                                    FontFamily="{StaticResource DINFontFamily}" VerticalAlignment="Center" Margin="0,0,33,0" />
+                                <ToggleButton x:Name="CurrentLocationButton" Content="&#xE707;"
+                                    VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="33"
+                                    FontFamily="Segoe MDL2 Assets" FontWeight="Normal" IsChecked="{x:Bind Model.IsCurrentLocation, Mode=TwoWay}"/>
+
+                            </Grid>
 
                             <CheckBox x:Name="EnableArrivalBox" Content="Arrive By:" Margin="0,5,0,0"
                                 FontFamily="{StaticResource DINFontFamily}" />
                             <CalendarDatePicker x:Name="ArrivalDatePicker" HorizontalAlignment="Stretch"
-                                IsEnabled="{Binding Path=IsChecked, ElementName=EnableArrivalBox}"
+                                IsEnabled="{Binding IsChecked, ElementName=EnableArrivalBox}"
                                 FontFamily="{StaticResource DINFontFamily}" />
                             <TimePicker x:Name="ArrivalTimePicker" HorizontalAlignment="Stretch"
-                                IsEnabled="{Binding Path=IsChecked, ElementName=EnableArrivalBox}"
+                                IsEnabled="{Binding IsChecked, ElementName=EnableArrivalBox}"
                                 FontFamily="{StaticResource DINFontFamily}" Margin="0,3,0,0" />
 
                             <CheckBox x:Name="EnableDepartureBox" Content="Leave By:" Margin="0,5,0,0"
                                 FontFamily="{StaticResource DINFontFamily}" />
                             <CalendarDatePicker x:Name="DepartureDatePicker" HorizontalAlignment="Stretch"
-                                IsEnabled="{Binding Path=IsChecked, ElementName=EnableDepartureBox}"
+                                IsEnabled="{Binding IsChecked, ElementName=EnableDepartureBox}"
                                 FontFamily="{StaticResource DINFontFamily}" />
                             <TimePicker x:Name="DepartureTimePicker" HorizontalAlignment="Stretch"
-                                IsEnabled="{Binding Path=IsChecked, ElementName=EnableDepartureBox}"
+                                IsEnabled="{Binding IsChecked, ElementName=EnableDepartureBox}"
                                 FontFamily="{StaticResource DINFontFamily}" Margin="0,3,0,0" />
 
                         </StackPanel>

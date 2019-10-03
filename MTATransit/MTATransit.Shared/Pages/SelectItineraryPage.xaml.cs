@@ -81,12 +81,12 @@ namespace MTATransit.Shared.Pages
             if (response.Plan == null)
                 return;
 
-            System.Diagnostics.Debug.WriteLine($"Request date-time: {request.Date} {request.Time}");
-            System.Diagnostics.Debug.WriteLine($"Plan date-time: {response.RequestParameters.Date} {response.RequestParameters.Time}");
+            Debug.WriteLine($"Request date-time: {request.Date} {request.Time}");
+            Debug.WriteLine($"Plan date-time: {response.RequestParameters.Date} {response.RequestParameters.Time}");
             foreach (Itinerary it in response.Plan.Itineraries)
             {
                 Itineraries.Add(new Models.ItineraryModel(it));
-                System.Diagnostics.Debug.WriteLine("Itin start: " + it.StartTime.ToString());
+                Debug.WriteLine("Itin start: " + it.StartTime.ToString());
             }
 
             #region old junk
@@ -142,7 +142,7 @@ namespace MTATransit.Shared.Pages
 
         private void SetLoadingBar(bool loading)
         {
-            PageLoadingBar.Visibility = loading ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
+            PageLoadingBar.Visibility = loading ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

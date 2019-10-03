@@ -16,7 +16,7 @@ namespace MTATransit.Shared.API.RestBus
         public string ShortTitle { get; set; }
 
         [JsonProperty(PropertyName = "useForUi")]
-        public bool UseForUi { get; set; }
+        public bool UseForUI { get; set; }
 
         /// <summary>
         /// List of stop IDs, not codes

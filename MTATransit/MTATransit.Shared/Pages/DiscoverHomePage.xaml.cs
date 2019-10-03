@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -22,11 +21,11 @@ namespace MTATransit.Shared.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NavigateHomePage : Page
+    public sealed partial class DiscoverHomePage : Page
     {
         public ObservableCollection<Models.PointModel> Points { get; set; } = new ObservableCollection<Models.PointModel>();
 
-        public NavigateHomePage()
+        public DiscoverHomePage()
         {
             this.InitializeComponent();
 
@@ -34,42 +33,34 @@ namespace MTATransit.Shared.Pages
         }
 
         #region Swipe Events
-        private void DeletePoint_Invoked(SwipeItem sender, SwipeItemInvokedEventArgs args)
+        private void FavoritePoint_Invoked(SwipeItem sender, SwipeItemInvokedEventArgs args)
         {
+            return;
             RemovePoint((Models.PointModel)args.SwipeControl.DataContext);
         }
 
-        private void EditPoint_Invoked(SwipeItem sender, SwipeItemInvokedEventArgs args)
+        private void GoPoint_Invoked(SwipeItem sender, SwipeItemInvokedEventArgs args)
         {
+            return;
             EditPoint((Models.PointModel)args.SwipeControl.DataContext);
         }
         #endregion
 
         #region Card Events
-        private void EditPointButton_Click(object sender, RoutedEventArgs e)
+        private void GoPointButton_Click(object sender, RoutedEventArgs e)
         {
+            return;
             var model = GetModelFromControls(sender as Button);
             if (model != null)
                 EditPoint(model);
         }
 
-        private void DeletePointButton_Click(object sender, RoutedEventArgs e)
+        private void FavoritePointButton_Click(object sender, RoutedEventArgs e)
         {
+            return;
             var model = GetModelFromControls(sender as Button);
             if (model != null)
                 RemovePoint(model);
-        }
-        #endregion
-
-        #region CommandBar Events
-        private void AddPointButton_Click(object sender, RoutedEventArgs e)
-        {
-            NewPoint();
-        }
-
-        private void NextButton_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(SelectItineraryPage), Points.ToList());
         }
         #endregion
 
@@ -102,11 +93,9 @@ namespace MTATransit.Shared.Pages
                 },
                 true
             );
-            ControlBar.Visibility = Visibility.Collapsed;
             pointDialog.OnDialogClosed += (Controls.NewPointDialog.NewPointDialogResult result) =>
             {
                 MainGrid.Children.Remove(pointDialog);
-                ControlBar.Visibility = Visibility.Visible;
                 if (result.Result == Controls.NewPointDialog.DialogResult.Primary)
                 {
                     Points.Add(result.Model);
@@ -120,13 +109,10 @@ namespace MTATransit.Shared.Pages
             var pointDialog = new Controls.NewPointDialog(
                 "Edit Point",
                 oldModel,
-                true
-            );
-            ControlBar.Visibility = Visibility.Collapsed;
+                true);
             pointDialog.OnDialogClosed += (Controls.NewPointDialog.NewPointDialogResult result) =>
             {
                 MainGrid.Children.Remove(pointDialog);
-                ControlBar.Visibility = Visibility.Visible;
                 if (result.Result == Controls.NewPointDialog.DialogResult.Primary)
                 {
                     ReplacePoint(oldModel, result.Model);
@@ -152,21 +138,6 @@ namespace MTATransit.Shared.Pages
             }
         }
         #endregion
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            if (e.Parameter is List<Models.PointModel>)
-            {
-                var points = e.Parameter as List<Models.PointModel>;
-                if (points != null)
-                {
-                    Points = new ObservableCollection<Models.PointModel>(points);
-                    DataContext = new ObservableCollection<Models.PointModel>(points);
-                }
-                    
-            }
-            base.OnNavigatedTo(e);
-        }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {

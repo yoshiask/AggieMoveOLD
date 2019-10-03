@@ -12,6 +12,12 @@ namespace MTATransit.Shared.API.OTPMTA
 
         [Get("/routers/default/plan")]
         Task<PlanResponse> CalculatePlan(PlanRequestParameters param);
+
+        [Get("/routers/{routerId}/plan?fromPlace={from}&toPlace={to}")]
+        Task<PlanResponse> CalculatePlan(string routerId, string from, string to);
+
+        [Get("/routers/{routerId}/plan")]
+        Task<PlanResponse> CalculatePlan(string routerId, PlanRequestParameters param);
         #endregion
     }
 }

@@ -9,24 +9,9 @@
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     xmlns:shared="using:MTATransit.Shared"
     xmlns:lcontrols="using:MTATransit.Shared.Controls"
+    xmlns:ctk="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Page.BottomAppBar>
-        <CommandBar>
-            <CommandBar.PrimaryCommands>
-                <AppBarButton x:Name="BackButton" Icon="Back" Label="Edit Trip"
-                    Click="BackButton_Click"/>
-                <AppBarButton x:Name="NextButton" Icon="Go" Label="Go"
-                    Click="NextButton_Click"/>
-            </CommandBar.PrimaryCommands>
-
-            <CommandBar.SecondaryCommands>
-                <AppBarButton x:Name="SortButton" Icon="Sort" Label="Sort" />
-                <AppBarButton x:Name="OptionsButton" Icon="Setting" Label="Options" />
-            </CommandBar.SecondaryCommands>
-        </CommandBar>
-    </Page.BottomAppBar>
 
     <Windows10FallCreatorsUpdate:NavigationView
         x:Name="NavView" SelectionChanged="NavView_SelectionChanged"
@@ -38,6 +23,37 @@
                 <RowDefinition Height="9*"/>
                 <RowDefinition Height="80*"/>
             </Grid.RowDefinitions>
+
+            <ctk:DropShadowPanel Canvas.ZIndex="20"
+                             Grid.Row="1"
+                             BlurRadius="10.0"
+                             ShadowOpacity="0.30"
+                             Color="Black"
+                             OffsetX="0"
+                             OffsetY="2"
+                             Margin="24"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Bottom">
+                <CommandBar DefaultLabelPosition="Right"
+                        Style="{ThemeResource CommandBarRevealStyle}">
+                    <CommandBar.PrimaryCommands>
+                        <AppBarButton Icon="Go"
+                                Label="Go"
+                                Click="NextButton_Click"
+                                Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}">
+                        </AppBarButton>
+                        <AppBarButton x:Name="BackButton" Icon="Back" Label="Edit Trip"
+                                Click="BackButton_Click"/>
+                    </CommandBar.PrimaryCommands>
+
+                    <CommandBar.SecondaryCommands>
+                        <AppBarButton x:Name="SortButton" Icon="Sort" Label="Sort" />
+                        <AppBarButton x:Name="OptionsButton" Icon="Setting" Label="Options" />
+                    </CommandBar.SecondaryCommands>
+                </CommandBar>
+            </ctk:DropShadowPanel>
+
             <StackPanel Margin="12,20,12,0" Height="40" VerticalAlignment="Center" Orientation="Horizontal">
                 <TextBlock x:Name="PageIconBox" Text="&#xE8F0;" FontSize="30"
                     FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontWeight="Bold"/>

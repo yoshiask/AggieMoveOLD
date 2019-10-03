@@ -6,6 +6,7 @@ using System.Linq;
 using System.Diagnostics;
 using System;
 using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -75,7 +76,7 @@ namespace MTATransit.Shared.Controls
             if (isCancellable)
                 SecondaryButtonText = "Cancel";
             else
-                SecondaryButtonVisibility = Visibility.Collapsed;
+                SecondaryButtonVisibility = Visibility.Collapsed
         }
 
         public NewPointDialog(string title, string primaryButtonText, string secondaryButtonText)
@@ -87,7 +88,6 @@ namespace MTATransit.Shared.Controls
             SecondaryButtonText = secondaryButtonText;
             SecondaryButtonVisibility = Visibility.Visible;
         }
-
 
         public NewPointDialog(string title, Models.PointModel model, bool isCancellable = false)
         {
@@ -125,16 +125,7 @@ namespace MTATransit.Shared.Controls
         #region Events
         private async void PrimaryButton_Click(object sender, RoutedEventArgs args)
         {
-            CloseProgress.Visibility = Visibility.Visible;
-            AddressBox.IsEnabled = false;
-            EnableArrivalBox.IsEnabled = false;
-            EnableDepartureBox.IsEnabled = false;
-            ArrivalDatePicker.IsEnabled = false;
-            ArrivalTimePicker.IsEnabled = false;
-            DepartureDatePicker.IsEnabled = false;
-            DepartureTimePicker.IsEnabled = false;
-            PrimaryButton.IsEnabled = false;
-            SecondaryButton.IsEnabled = false;
+            DisableDialog();
 
             var model = new Models.PointModel();
             if (EnableArrivalBox.IsChecked.Value)
@@ -165,26 +156,61 @@ namespace MTATransit.Shared.Controls
 
                 model.DepartureTime = arr.ToUniversalTime().ToUnixTimeSeconds();
             }
-            model.Address = AddressBox.Text;
-            API.ArcGIS.AddressCandidate geocode;
-            if (Suggestion == null)
+
+            if (CurrentLocationButton.IsChecked.Value)
             {
-                Suggestion = await GetDefaultSuggestion(AddressSearchQuery);
-                if (Suggestion == null)
-                    Frame.Navigate(
-                        typeof(Pages.FatalErrorPage),
-                        new Pages.FatalErrorPage.FatalErrorArgs()
-                        {
-                            Icon = "\uE774",
-                            Message = "Failed to get any suggestions based on the user's address query",
-                            Exception = new ArgumentNullException("Suggestion", "Failed to get any suggestions based on the user's address query")
-                        }
-                    );
+                // Try to get current location, use instead of selected address
+                var accessStatus = await Geolocator.RequestAccessAsync();
+                if (accessStatus == GeolocationAccessStatus.Allowed)
+                {
+                    Geolocator geolocator = new Geolocator { DesiredAccuracyInMeters = 1 };
+                    Geoposition pos = await geolocator.GetGeopositionAsync();
+                    model.Latitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Longitude);
+                    model.Longitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Latitude);
+                    model.Geolocator = geolocator;
+                    model.Title = "Your Location";
+                    model.Address = $"{model.Longitude}, {model.Latitude}";
+                    model.IsCurrentLocation = true;
+
+                    Debug.WriteLine($"Current location: {model.Address}");
+                }
+                else
+                {
+                    var dialog = new DialogBox("Error", "Access to your device's location was denied.\nPlease allow access or manually enter\nan address.");
+                    dialog.OnDialogClosed += (DialogBox.DialogResult result) =>
+                    {
+                        WindowGrid.Children.Remove(dialog);
+                    };
+                    WindowGrid.Children.Add(dialog);
+                    EnableDialog();
+                    return;
+                }
             }
-            geocode = (await Common.ArcGISApi.Geocode(model.Address, Suggestion.MagicKey)).Candidates[0];
-            model.Title = geocode.Address;
-            model.Latitude = Convert.ToDecimal(geocode.Location.Latitude);
-            model.Longitude = Convert.ToDecimal(geocode.Location.Longitude);
+            else
+            {
+                model.Address = AddressBox.Text;
+                API.ArcGIS.AddressCandidate geocode;
+                if (Suggestion == null)
+                {
+                    Suggestion = await GetDefaultSuggestion(AddressSearchQuery);
+                    if (Suggestion == null)
+                        Frame.Navigate(
+                            typeof(Pages.FatalErrorPage),
+                            new Pages.FatalErrorPage.FatalErrorArgs()
+                            {
+                                Icon = "\uE774",
+                                Message = "Failed to get any suggestions based on the user's address query",
+                                Exception = new ArgumentNullException("Suggestion", "Failed to get any suggestions based on the user's address query")
+                            }
+                        );
+                }
+
+                geocode = (await Common.ArcGISApi.Geocode(model.Address, Suggestion.MagicKey)).Candidates[0];
+                model.Title = geocode.Address;
+                model.Latitude = Convert.ToDecimal(geocode.Location.Latitude);
+                model.Longitude = Convert.ToDecimal(geocode.Location.Longitude);
+            }
+
             Result.Result = DialogResult.Primary;
             Result.Model = model;
             OnDialogClosed?.Invoke(Result);
@@ -267,6 +293,33 @@ namespace MTATransit.Shared.Controls
             }
         }
         #endregion
+
+        private void DisableDialog()
+        {
+            CloseProgress.Visibility = Visibility.Visible;
+            AddressBox.IsEnabled = false;
+            EnableArrivalBox.IsEnabled = false;
+            EnableDepartureBox.IsEnabled = false;
+            ArrivalDatePicker.IsEnabled = false;
+            ArrivalTimePicker.IsEnabled = false;
+            DepartureDatePicker.IsEnabled = false;
+            DepartureTimePicker.IsEnabled = false;
+            PrimaryButton.IsEnabled = false;
+            SecondaryButton.IsEnabled = false;
+        }
+        private void EnableDialog()
+        {
+            CloseProgress.Visibility = Visibility.Visible;
+            AddressBox.IsEnabled = false;
+            EnableArrivalBox.IsEnabled = false;
+            EnableDepartureBox.IsEnabled = false;
+            ArrivalDatePicker.IsEnabled = false;
+            ArrivalTimePicker.IsEnabled = false;
+            DepartureDatePicker.IsEnabled = false;
+            DepartureTimePicker.IsEnabled = false;
+            PrimaryButton.IsEnabled = false;
+            SecondaryButton.IsEnabled = false;
+        }
 
         #endregion
 

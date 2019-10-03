@@ -10,6 +10,8 @@ namespace MTATransit.Shared.Models
         public decimal Longitude { get; set; }
         public long ArrivalTime { get; set; }
         public long DepartureTime { get; set; }
+        public bool IsCurrentLocation { get; set; }
+        public Windows.Devices.Geolocation.Geolocator Geolocator { get; set; }
 
         #region Derived Properties
         public bool HasArrivalTime {

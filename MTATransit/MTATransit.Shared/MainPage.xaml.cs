@@ -156,11 +156,12 @@ namespace MTATransit
 
             foreach (Stop st in curRoute.Stops)
             {
+                var dir = curRoute.Directions.Find(d => d.Stops.Contains(st.Id));
                 Stops.Add(st);
                 StopsBox.Items.Add(new ListViewItem()
                 {
                     Name = st.Id,
-                    Content = st.Title,
+                    Content = $"{st.Title} ({dir.Title})",
                     Foreground = Common.BrushFromHex(curRoute.TextColor),
                     RequestedTheme = Common.ThemeFromColor(curRoute.TextColor),
                 });

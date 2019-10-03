@@ -62,8 +62,6 @@ namespace MTATransit.Shared.Controls
             MainMapView.Map = new Map(
                 BasemapType.ImageryWithLabels, 0, 0, 1
             );
-            MainMapView.LocationDisplay.IsEnabled = true;
-            MainMapView.LocationDisplay.ShowLocation = true;
             //MainMapView.IsHitTestVisible = false;
 
             List<MapPoint> Points = new List<MapPoint>();
@@ -78,14 +76,15 @@ namespace MTATransit.Shared.Controls
 
             //  use a polyline builder to create the new polyline from a collection of points
             Polyline Path = new PolylineBuilder(Points, SpatialReferences.Wgs84).ToGeometry();
-            System.Diagnostics.Debug.WriteLine(Path.Extent);
+            Debug.WriteLine(Path.Extent);
             // create a simple line symbol to display the polyline
             var lineSymbol = new SimpleLineSymbol(SimpleLineSymbolStyle.Solid, System.Drawing.Color.FromArgb(255, 11, 95, 96), 4.0);
 
             MapGraphics.Graphics.Add(new Graphic(Path, lineSymbol));
             await MainMapView.SetViewpointGeometryAsync(Path, 20);
 
-            // Have to add points after the path, otherwise the points will show underneath the line
+            // Have to add points after adding the path, 
+            // otherwise the points will show underneath the line
             foreach (Leg leg in Itin.Legs)
             {
                 MapGraphics.Graphics.Add(CreateRouteStop(
@@ -93,7 +92,7 @@ namespace MTATransit.Shared.Controls
                     System.Drawing.Color.DarkRed
                 ));
                 MapGraphics.Graphics.Add(CreateRouteStop(
-                    Convert.ToDecimal(Points[Points.Count - 1].Y), Convert.ToDecimal(Points[Points.Count - 1].X),
+                    Convert.ToDecimal(Points.Last().Y), Convert.ToDecimal(Points.Last().X),
                     System.Drawing.Color.DarkRed
                 ));
             }

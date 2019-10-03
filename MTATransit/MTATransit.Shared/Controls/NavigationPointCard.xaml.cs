@@ -42,9 +42,42 @@ namespace MTATransit.Shared.Controls
         private void Card_Loading(DependencyObject sender, object args)
         {
             LoadMap(Convert.ToDouble(Point.Latitude), Convert.ToDouble(Point.Longitude));
+            
+            if (Point.IsCurrentLocation)
+            {
+                Point.Geolocator.PositionChanged += Geolocator_PositionChanged;
+            }
+            else
+            {
+                try
+                {
+                    Point.Geolocator.PositionChanged -= Geolocator_PositionChanged;
+                }
+                catch (ArgumentException)
+                {
+                    // Do nothing. This exception just means that the method
+                    // was never attached because it wasn't previously set to
+                    // use the current location.
+                }
+            }
         }
 
-        public void LoadMap(double lat, double lon)
+        private async void Geolocator_PositionChanged(Windows.Devices.Geolocation.Geolocator sender, Windows.Devices.Geolocation.PositionChangedEventArgs args)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                MapGraphics.Graphics.Clear();
+
+                var stopPoint = CreateRouteStop(
+                    Convert.ToDecimal(args.Position.Coordinate.Point.Position.Longitude),
+                    Convert.ToDecimal(args.Position.Coordinate.Point.Position.Latitude),
+                    System.Drawing.Color.Red
+                );
+                MapGraphics.Graphics.Add(stopPoint);
+            });            
+        }
+
+        public Graphic LoadMap(double lat, double lon)
         {
             MainMapView.Map = new Map(
                 BasemapType.ImageryWithLabelsVector,
@@ -52,8 +85,6 @@ namespace MTATransit.Shared.Controls
                 lat,
                 12
             );
-            MainMapView.LocationDisplay.IsEnabled = true;
-            MainMapView.LocationDisplay.ShowLocation = true;
 
             // Now draw a point where the stop is
             var stopPoint = CreateRouteStop(Convert.ToDecimal(lat), Convert.ToDecimal(lon), System.Drawing.Color.Red);
@@ -63,16 +94,18 @@ namespace MTATransit.Shared.Controls
             var parkrideUri = new Uri("https://public.gis.lacounty.gov/public/rest/services/LACounty_Dynamic/LMS_Data_Public/MapServer/187");
             var parkrideLayer = new FeatureLayer(new ServiceFeatureTable(parkrideUri));
             //MainMapView.Map.OperationalLayers.Add(parkrideLayer);
+
+            return stopPoint;
         }
 
         private Graphic CreateRouteStop(decimal lat, decimal lon, System.Drawing.Color fill)
         {
             // Now draw a point where the stop is
-            var stopPoint = new MapPoint(Convert.ToDouble(lat),
+            var mapPoint = new MapPoint(Convert.ToDouble(lat),
                 Convert.ToDouble(lon), SpatialReferences.Wgs84);
             var pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle.Circle, fill, 20);
             pointSymbol.Outline = new SimpleLineSymbol(SimpleLineSymbolStyle.Solid, System.Drawing.Color.White, 5);
-            return new Graphic(stopPoint, pointSymbol);
+            return new Graphic(mapPoint, pointSymbol);
         }
         private Graphic CreateInactiveRouteStop(decimal lat, decimal lon)
         {

@@ -32,6 +32,8 @@
                     FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontWeight="Bold"/>
                 <TextBlock x:Name="PageTitleBox" Text="Explore" FontSize="30"
                     FontFamily="{StaticResource DINFontFamily}" Padding="7,0,0,0" FontWeight="Bold"/>
+                <TextBlock x:Name="PageSubheadBox" Text="your transit options" FontSize="20"
+                    FontFamily="{StaticResource DINFontFamily}" Padding="2,0,0,0" FontWeight="Normal" VerticalAlignment="Bottom" Margin="5,0,0,6"/>
             </StackPanel>
             <ComboBox x:Name="AgenciesBox" Margin="10,5.333,10,0" Height="40" HorizontalAlignment="Stretch" SelectionChanged="AgenciesBox_SelectionChanged" PlaceholderText="Select an Agency" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />
             <ComboBox x:Name="RoutesBox" Margin="10,55.333,10,0" Height="40" HorizontalAlignment="Stretch" SelectionChanged="RoutesBox_SelectionChanged" PlaceholderText="Select a Route" IsEnabled="False" FontFamily="{StaticResource DINFontFamily}" Grid.Row="1" />

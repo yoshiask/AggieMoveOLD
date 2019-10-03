@@ -119,7 +119,7 @@ namespace MTATransit.Shared
             {
                 "Discover",
                 new Tuple<Type, NavigationViewItem>(
-                    typeof(object),
+                    typeof(Pages.DiscoverHomePage),
                     new NavigationViewItem()
                     {
                         Icon = new SymbolIcon(Symbol.Map),
@@ -138,7 +138,7 @@ namespace MTATransit.Shared
                     {
                         Icon = new SymbolIcon(Symbol.Street),
                         Content = "Explore",
-                        Tag = "Explore your options",
+                        Tag = "Explore your transit options",
                         FontFamily = DINFont,
                     }
                 )
@@ -218,11 +218,17 @@ namespace MTATransit.Shared
         {
             public static string ToShortTimeString(long seconds)
             {
-                decimal hours = Decimal.Divide(seconds, 3600);
-                if (hours <= 1)
-                    return (seconds / 60).ToString() + " min";
+                if (seconds < 60)
+                    return "Now";
+
+                int minutes = Convert.ToInt32(seconds / 60);
+                int hours = Convert.ToInt32(minutes / 60);
+                minutes -= (hours * 60);
+
+                if (hours <= 0)
+                    return $"{minutes.ToString()} mins";
                 else
-                    return Math.Round(d:hours, decimals:1).ToString() + " hr";
+                    return $"{hours.ToString()} hrs, {minutes.ToString()} mins";
             }
 
             /// <summary>

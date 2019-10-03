@@ -77,6 +77,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\DialogPage.xaml.cs">
       <DependentUpon>$fileinputname$.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\DiscoverHomePage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\FatalErrorPage.xaml.cs">
       <DependentUpon>$fileinputname$.xaml</DependentUpon>
     </Compile>
@@ -109,6 +110,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Pages\DialogPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\DiscoverHomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -221,6 +226,12 @@
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Pages\DiscoverHomePage.xaml.cs">
+      <DependentUpon>DiscoverHomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Pages\ExploreHomePage.xaml.cs">
+      <DependentUpon>ExploreHomePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

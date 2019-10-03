@@ -65,11 +65,11 @@ namespace MTATransit.Shared.Pages
             PredictionBox.Items.Clear();
             foreach (PredictionData pr in pred.Values)
             {
-                string display = Math.Round(Convert.ToDouble(pr.Seconds) / 60, 0).ToString();
+                //string display = Math.Round(Convert.ToDouble(pr.Seconds) / 60, 0).ToString();
 
                 PredictionBox.Items.Add(new ListViewItem()
                 {
-                    Content = display,
+                    Content = Common.NumberHelper.ToShortTimeString(pr.Seconds),
                     Foreground = PageForeground,
                     RequestedTheme = itemTheme,
                 });
