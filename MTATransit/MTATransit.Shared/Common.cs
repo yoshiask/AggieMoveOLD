@@ -14,6 +14,8 @@ using System.Linq;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.UI.Xaml.Data;
 using System.Globalization;
+using Windows.Devices.Geolocation;
+using Tweetinvi;
 
 namespace MTATransit.Shared
 {
@@ -23,7 +25,7 @@ namespace MTATransit.Shared
         // Initialize the services that we're requesting from
         public static IRestBusApi RestBusApi {
             get {
-                return RestService.For<API.RestBus.IRestBusApi>("http://restbus.info/api");
+                return RestService.For<IRestBusApi>("http://restbus.info/api");
             }
         }
         public static IArcGISApi ArcGISApi {
@@ -41,9 +43,14 @@ namespace MTATransit.Shared
                 return RestService.For<API.LAMove.ILAMoveApi>("http://lamove-api.herokuapp.com/v1");
             }
         }
-        public static API.OTPMTA.IOTPMTAApi OTPMTAApi {
+        public static API.OTP.IOTPApi OTPApi {
             get {
-                return RestService.For<API.OTPMTA.IOTPMTAApi>("https://otp.metroservices.io/otp");
+                return RestService.For<API.OTP.IOTPApi>("http://localhost:8080/otp");
+            }
+        }
+        public static API.Yelp.IYelpApi YelpApi {
+            get {
+                return RestService.For<API.Yelp.IYelpApi>("https://api.yelp.com/v3");
             }
         }
         #endregion
@@ -212,6 +219,35 @@ namespace MTATransit.Shared
             {
                 return GetDistance(lat, lon, x, y) <= radius;
             }
+
+            private static Models.PointModel CurrentLocationCache { get; set; }
+            private static DateTime? CurrentLocationLastUpdated { get; set; }
+            public async static Task<Models.PointModel> GetCurrentLocation(bool acceptCache = true, uint accuracy = 1)
+            {
+                if (CurrentLocationCache == null || 
+                    !CurrentLocationLastUpdated.HasValue
+                    || DateTime.Now.Subtract(CurrentLocationLastUpdated.Value).TotalMinutes > 5)
+                {
+                    // Cache needs to be updated
+                    var accessStatus = await Geolocator.RequestAccessAsync();
+                    if (accessStatus == GeolocationAccessStatus.Allowed)
+                    {
+                        CurrentLocationCache = new Models.PointModel();
+                        Geolocator geolocator = new Geolocator { DesiredAccuracyInMeters = accuracy };
+                        Geoposition pos = await geolocator.GetGeopositionAsync();
+                        CurrentLocationCache.Title = "Your Location";
+                        CurrentLocationCache.IsCurrentLocation = true;
+                        CurrentLocationCache.Latitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Longitude);
+                        CurrentLocationCache.Longitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Latitude);
+                        CurrentLocationCache.Geolocator = geolocator;
+                        CurrentLocationCache.Address = $"{CurrentLocationCache.Longitude}, {CurrentLocationCache.Latitude}";
+
+                        Debug.WriteLine($"Current location: {CurrentLocationCache.Address}");
+                    }
+                }                
+
+                return CurrentLocationCache;
+            }
         }
 
         public static class NumberHelper
@@ -238,16 +274,7 @@ namespace MTATransit.Shared
             /// <returns></returns>
             public static string ToShortDayTimeString(double unixTimeStamp)
             {
-                var dt = UnixTimeStampToDateTime(unixTimeStamp);
-
-                if (dt.Hour < 12)
-                    return $"{dt.Hour.ToString()}:{dt.Minute.ToString().PadLeft(2)} AM";
-                else if (dt.Hour == 12)
-                    return $"12:{dt.Minute.ToString().PadLeft(2, '0')} PM";
-                else if (dt.Hour == 0)
-                    return $"12:{dt.Minute.ToString().PadLeft(2, '0')} AM";
-                else
-                    return $"{(dt.Hour - 12).ToString()}:{dt.Minute.ToString().PadLeft(2, '0')} PM";
+                return UnixTimeStampToDateTime(unixTimeStamp).ToString("hh:mm tt");
             }
             /// <summary>
             /// Takes Unix time (seconds) and returns something like 2:00 AM
@@ -256,16 +283,7 @@ namespace MTATransit.Shared
             /// <returns></returns>
             public static string ToShortDayTimeString(long unixTimeStamp)
             {
-                var dt = UnixTimeStampToDateTime(unixTimeStamp);
-
-                if (dt.Hour < 12)
-                    return $"{dt.Hour.ToString()}:{dt.Minute.ToString().PadLeft(2, '0')} AM";
-                else if (dt.Hour == 12)
-                    return $"12:{dt.Minute.ToString().PadLeft(2, '0')} PM";
-                else if (dt.Hour == 0)
-                    return $"12:{dt.Minute.ToString().PadLeft(2, '0')} AM";
-                else
-                    return $"{(dt.Hour - 12).ToString()}:{dt.Minute.ToString().PadLeft(2, '0')} PM";
+                return UnixTimeStampToDateTime(unixTimeStamp).ToString("hh:mm tt");
             }
 
             public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
@@ -310,6 +328,17 @@ namespace MTATransit.Shared
                 output += String.Format("{0:C}", amount);
                 return output;
             }
+        }
+
+        public static void WatchForAlerts()
+        {
+            var stream = Stream.CreateFilteredStream();
+            stream.AddTrack("tweetinvi");
+            stream.MatchingTweetReceived += (sender, args) =>
+            {
+                Console.WriteLine("A tweet containing 'tweetinvi' has been found; the tweet is '" + args.Tweet + "'");
+            };
+            stream.StartStreamMatchingAllConditions();
         }
     }
 

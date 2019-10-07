@@ -2,7 +2,7 @@
 using Refit;
 using System.Collections.Generic;
 
-namespace MTATransit.Shared.API.OTPMTA
+namespace MTATransit.Shared.API.OTP
 {
     public class PlanResponse
     {

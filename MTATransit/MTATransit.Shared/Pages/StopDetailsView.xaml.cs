@@ -85,8 +85,6 @@ namespace MTATransit.Shared.Pages
                 Convert.ToDouble(stop.Longitude),
                 19
             );
-            MainMapView.LocationDisplay.IsEnabled = true;
-            MainMapView.LocationDisplay.ShowLocation = true;
 
             // Now draw a point where the stop is
             //var stopPoint = CreateRouteStop(stop.Latitude, stop.Longitude, System.Drawing.Color.Red);
@@ -172,12 +170,12 @@ namespace MTATransit.Shared.Pages
             // TODO: Figure out why this is backwards
             string endCoord = curStop.Latitude.ToString() + "," + curStop.Longitude.ToString();
 
-            var api = Common.OTPMTAApi;
+            var api = Common.OTPApi;
             var plan = (await api.CalculatePlan(startCoord, endCoord)).Plan;
 
             if (plan == null)
                 return;
-            foreach (API.OTPMTA.Itinerary it in plan.Itineraries)
+            foreach (API.OTP.Itinerary it in plan.Itineraries)
             {
                 int i = plan.Itineraries.IndexOf(it);
                 var dialog = new Controls.DialogBox("Itinerary " + i.ToString(), it.ToString());

@@ -2,6 +2,7 @@
 using MTATransit.Shared.API;
 using MTATransit.Shared.Pages;
 using MTATransit.Shared.API.RestBus;
+using MTATransit.Shared.API.ArcGIS;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using MTATransit.Shared.Controls;
+using Windows.Networking.Connectivity;
+using System.Collections.ObjectModel;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -29,12 +33,6 @@ namespace MTATransit
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        Agency curAgency;
-        Route curRoute;
-        List<Agency> Agencies = new List<Agency>();
-        List<Route> Routes = new List<Route>();
-        List<Stop> Stops = new List<Stop>();
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -42,6 +40,23 @@ namespace MTATransit
 
             Common.LoadNavView(this, NavView);
         }
+
+        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            Common.NavView_SelectionChanged(this, sender, args);
+        }
+
+        private void SetLoadingBar(bool loading)
+        {
+            PageLoadingBar.Visibility = loading ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
+        }
+
+        #region By Agency
+        Agency curAgency;
+        Route curRoute;
+        List<Agency> Agencies = new List<Agency>();
+        List<Route> Routes = new List<Route>();
+        List<Stop> Stops = new List<Stop>();        
 
         public async void LoadAgencies()
         {
@@ -201,15 +216,187 @@ namespace MTATransit
             };
             Frame.Navigate(typeof(RouteDetailsView), pars);
         }
+        #endregion
 
-        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        #region By Location
+        private string AddressSearchQuery { get; set; }
+        private Suggestion Suggestion { get; set; }
+        private List<Suggestion> Suggestions { get; set; } = new List<Suggestion>();
+
+        private ObservableCollection<LocationPrediction> LocationPredictions { get; set; }
+            = new ObservableCollection<LocationPrediction>();
+        private Shared.Models.PointModel Point { get; set; }
+
+        private readonly string NoResultsString = "No results";
+
+
+        private async void AddressBox_TextChanged(AutoSuggestBox s, AutoSuggestBoxTextChangedEventArgs a)
         {
-            Common.NavView_SelectionChanged(this, sender, args);
+            if (a.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                try
+                {
+                    AddressSearchQuery = s.Text;
+                    var suggs = await Common.ArcGISApi.GetSuggestions(s.Text);
+                    if (suggs != null && suggs.Items != null && suggs.Items.Count > 0)
+                    {
+                        List<string> SuggestList = new List<string>();
+                        Suggestions.Clear();
+                        Suggestions = suggs.Items;
+                        foreach (Suggestion sugg in suggs.Items)
+                        {
+                            SuggestList.Add(sugg.Text);
+                        }
+                        s.ItemsSource = SuggestList;
+                    }
+                    else
+                    {
+                        s.ItemsSource = new string[] { NoResultsString };
+                    }
+                }
+                catch (System.Net.Http.HttpRequestException ex)
+                {
+                    // TODO: Handle what's likely an HTTP timeout
+                    //Debug.WriteLine(ex);
+                }
+            }
         }
 
-        private void SetLoadingBar(bool loading)
+        private async void AddressBox_QuerySubmitted(AutoSuggestBox s, AutoSuggestBoxQuerySubmittedEventArgs a)
         {
-            PageLoadingBar.Visibility = loading ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
+            if (a.ChosenSuggestion != null)
+            {
+                // The user selected a suggestion, show them the results
+                Suggestion = Suggestions.Find(su => su.Text == (string)a.ChosenSuggestion);
+            }
+            else if (!string.IsNullOrEmpty(a.QueryText))
+            {
+                var sugg = await GetDefaultSuggestion(s.Text);
+                if (sugg != null)
+                    // A search has automatically been done, take the first result as if the user selected it
+                    Suggestion = sugg;
+                else
+                    s.ItemsSource = new string[] { NoResultsString };
+            }
         }
+
+        private void AddressBox_SuggestionChosen(AutoSuggestBox s, AutoSuggestBoxSuggestionChosenEventArgs a)
+        {
+            // Here's where we autocomplete
+            if ((string)a.SelectedItem != NoResultsString)
+            {
+                s.Text = (string)a.SelectedItem;
+            }
+        }
+
+        private async System.Threading.Tasks.Task<Suggestion> GetDefaultSuggestion(string query)
+        {
+            var suggs = await Common.ArcGISApi.GetSuggestions(query);
+            if (suggs != null && suggs.Items != null && suggs.Items.Count > 0)
+                // A search has automatically been done, take the first result as if the user selected it
+                return suggs.Items.FirstOrDefault();
+            else
+                return null;
+        }
+
+
+        private async void LocationGoButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetLoadingBar(true);
+            Point = null;
+            if (CurrentLocationButton.IsChecked.Value)
+            {
+                // Try to get current location, use instead of selected address
+                Point = await Common.SpatialHelper.GetCurrentLocation();
+                if (Point == null)
+                {
+                    var dialog = new DialogBox("Error", "Access to your device's location was denied.\nPlease allow access or manually enter\nan address.");
+                    dialog.OnDialogClosed += (DialogBox.DialogResult result) =>
+                    {
+                        MainGrid.Children.Remove(dialog);
+                    };
+                    MainGrid.Children.Add(dialog);
+                    return;
+                }
+            }
+            else
+            {
+                Point = new Shared.Models.PointModel();
+                Point.Address = AddressBox.Text;
+                AddressCandidate geocode;
+                if (Suggestion == null)
+                {
+                    Suggestion = await GetDefaultSuggestion(AddressSearchQuery);
+                    if (Suggestion == null)
+                        Frame.Navigate(
+                            typeof(FatalErrorPage),
+                            new FatalErrorPage.FatalErrorArgs()
+                            {
+                                Icon = "\uE774",
+                                Message = "Failed to get any suggestions based on the user's address query",
+                                Exception = new ArgumentNullException("Suggestion", "Failed to get any suggestions based on the user's address query")
+                            }
+                        );
+                }
+
+                geocode = (await Common.ArcGISApi.Geocode(Point.Address, Suggestion.MagicKey)).Candidates[0];
+                Point.Title = geocode.Address;
+                Point.Latitude = Convert.ToDecimal(geocode.Location.Latitude);
+                Point.Longitude = Convert.ToDecimal(geocode.Location.Longitude);
+            }
+
+            foreach (LocationPrediction pre in await Common.RestBusApi.GetPredictions(Point.Longitude, Point.Latitude))
+            {
+                Debug.WriteLine(pre.Stop.Title);
+                LocationPredictions.Add(pre);
+
+                var connectionCost = NetworkInformation.GetInternetConnectionProfile().GetConnectionCost();
+                if (connectionCost.NetworkCostType == NetworkCostType.Unknown
+                        || connectionCost.NetworkCostType == NetworkCostType.Unrestricted)
+                {
+                    continue;
+                    // Connection cost is unknown/unrestricted, load as much data as you want
+
+                    // Now get the routeConfig for colors
+                    for (int i = 0; i < RoutesBox.Items.Count; ++i)
+                    {
+                        var item = RoutesBox.Items[i] as ComboBoxItem;
+
+                        var info = await Common.RestBusApi.GetRoute(null, item.Name);
+                        if (info != null)
+                        {
+                            int ind = Routes.FindIndex(r => r.Id == info.Id);
+                            if (ind < 0)
+                                ind = i;
+                            Routes[ind] = info;
+
+                            item.Background = Common.BrushFromHex(info.Color);
+                            item.Foreground = Common.BrushFromHex(info.TextColor);
+                            item.RequestedTheme = ElementTheme.Light;
+                        }
+
+                    }
+                }
+                else
+                {
+                    // Metered Network, don't load the extra stuff
+                }
+            }
+            SetLoadingBar(false);
+        }
+
+        private async void LocationStopsBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            SetLoadingBar(true);
+            var selectedPrediction = LocationPredictions[LocationStopsBox.SelectedIndex];
+
+            Agency ag = await Common.RestBusApi.GetAgency(selectedPrediction.Agency.Id);
+            Route rt = await Common.RestBusApi.GetRoute(ag.Id, selectedPrediction.Route.Id);
+            Stop st = rt.Stops.Find((s) => s.Id == selectedPrediction.Stop.Id);
+
+            SetLoadingBar(false);
+            Frame.Navigate(typeof(RouteDetailsView), new object[] { ag, rt, st });
+        }
+        #endregion
     }
 }

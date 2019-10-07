@@ -69,19 +69,7 @@
                         <DataTemplate>
                             <SwipeControl Margin="0,0,0,10">
                                 <Grid>
-                                    <lcontrols:NavigationPointCard/>
-                                    <StackPanel x:Name="ModControls"
-                                            Orientation="Horizontal" FlowDirection="RightToLeft"
-                                            VerticalAlignment="Bottom" HorizontalAlignment="Left" >
-                                        <Button x:Name="EditButton" Content="&#xE70F;"
-                                            VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                                            FontFamily="Segoe MDL2 Assets" FontSize="14"
-                                            Click="EditPointButton_Click"/>
-                                        <Button x:Name="DeleteButton" Content="&#xE74D;"
-                                            VerticalAlignment="Bottom" HorizontalAlignment="Left" 
-                                            FontFamily="Segoe MDL2 Assets" FontSize="14"
-                                            Click="DeletePointButton_Click"/>
-                                    </StackPanel>
+                                    <lcontrols:NavigationPointCard EditRequested="EditPoint" DeleteRequested="RemovePoint" />
                                 </Grid>
 
                                 <SwipeControl.RightItems>
@@ -90,7 +78,7 @@
                                                 Background="#FFE81123" BehaviorOnInvoked="Close"
                                                 Invoked="DeletePoint_Invoked"> 
                                             <SwipeItem.IconSource>
-                                                <FontIconSource Glyph="&#xE70F;"/>
+                                                <SymbolIconSource Symbol="Delete" />
                                             </SwipeItem.IconSource>
                                         </SwipeItem>
                                     </SwipeItems>
@@ -102,7 +90,7 @@
                                                 Background="#FF0063B1" Foreground="White"
                                                 Invoked="EditPoint_Invoked" >
                                             <SwipeItem.IconSource>
-                                                <FontIconSource Glyph="&#xE70F;"/>
+                                                <SymbolIconSource Symbol="Edit" />
                                             </SwipeItem.IconSource>
                                         </SwipeItem>
                                     </SwipeItems>

@@ -1,4 +1,4 @@
-﻿using MTATransit.Shared.API.OTPMTA;
+﻿using MTATransit.Shared.API.OTP;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

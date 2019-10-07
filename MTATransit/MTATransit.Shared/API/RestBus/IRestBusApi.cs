@@ -7,7 +7,7 @@ namespace MTATransit.Shared.API.RestBus
     public interface IRestBusApi
     {
         [Get("/locations/{lat},{lon}/predictions")]
-        Task<List<Prediction>> GetPredictions(int lat, int lon);
+        Task<List<LocationPrediction>> GetPredictions(decimal lat, decimal lon);
 
         [Get("/agencies")]
         Task<List<Agency>> GetAgencies();

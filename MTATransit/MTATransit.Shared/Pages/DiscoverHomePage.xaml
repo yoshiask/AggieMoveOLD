@@ -60,6 +60,7 @@
                 <TextBlock x:Name="PageSubheadBox" Text="hotspots in your area" FontSize="20"
                     FontFamily="{StaticResource DINFontFamily}" Padding="2,0,0,0" FontWeight="Normal" VerticalAlignment="Bottom" Margin="5,0,0,6"/>
             </StackPanel>
+            <ProgressBar x:Name="PageLoadingBar" Height="10" VerticalAlignment="Bottom" IsIndeterminate="True" Visibility="Collapsed" />
 
             <ScrollViewer Margin="10,10,10,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="1" >
                 <ItemsControl  x:Name="PointsControl" ItemsSource="{x:Bind Points}">
@@ -67,36 +68,24 @@
                         <DataTemplate>
                             <SwipeControl Margin="0,0,0,10">
                                 <Grid>
-                                    <lcontrols:NavigationPointCard/>
-                                    <StackPanel x:Name="ModControls"
-                                            Orientation="Horizontal" FlowDirection="RightToLeft"
-                                            VerticalAlignment="Bottom" HorizontalAlignment="Right" >
-                                        <Button x:Name="GoButton" Content="&#xE70F;"
-                                            VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                                            FontFamily="Segoe MDL2 Assets" FontSize="14"
-                                            Click="GoPointButton_Click"/>
-                                        <Button x:Name="FavoriteButton" Content="&#xE74D;"
-                                            VerticalAlignment="Bottom" HorizontalAlignment="Right" 
-                                            FontFamily="Segoe MDL2 Assets" FontSize="14"
-                                            Click="FavoritePointButton_Click"/>
-                                    </StackPanel>
+                                    <lcontrols:DiscoverBusinessCard GoButtonClicked="Go"/>
                                 </Grid>
 
                                 <SwipeControl.LeftItems>
                                     <SwipeItems Mode="Reveal">
                                         <SwipeItem Text="Go" 
-                                                Background="#FF0063B1" Foreground="White"
+                                                Background="#03a9f4" Foreground="White"
                                                 Invoked="GoPoint_Invoked" >
                                             <SwipeItem.IconSource>
-                                                <FontIconSource Glyph="&#xE70F;"/>
+                                                <SymbolIconSource Symbol="Go"/>
                                             </SwipeItem.IconSource>
                                         </SwipeItem>
 
                                         <SwipeItem Text="Favorite" 
-                                                Background="#FFED22" Foreground="White"
+                                                Background="#FFED22" Foreground="Black"
                                                 Invoked="FavoritePoint_Invoked" >
                                             <SwipeItem.IconSource>
-                                                <FontIconSource Glyph="&#xE70F;"/>
+                                                <SymbolIconSource Symbol="Favorite"/>
                                             </SwipeItem.IconSource>
                                         </SwipeItem>
                                     </SwipeItems>

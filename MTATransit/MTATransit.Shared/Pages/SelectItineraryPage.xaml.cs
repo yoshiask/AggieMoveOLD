@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using MTATransit.Shared.API.OTPMTA;
+using MTATransit.Shared.API.OTP;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -75,7 +75,7 @@ namespace MTATransit.Shared.Pages
             request.Date = date.ToString("MM-dd-yyyy");
             request.Time = time.ToString("hh:mmtt");
 
-            var response = await Common.OTPMTAApi.CalculatePlan(request);
+            var response = await Common.OTPApi.CalculatePlan(request);
             SetLoadingBar(false);
 
             if (response.Plan == null)

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MTATransit.Shared.API.OTPMTA
+namespace MTATransit.Shared.API.OTP
 {
-    public interface IOTPMTAApi
+    public interface IOTPApi
     {
         #region CalculatePlan Overrides
         [Get("/routers/default/plan?fromPlace={from}&toPlace={to}")]

@@ -40,6 +40,6 @@ namespace MTATransit.Shared.API.RestBus
         public double Longitude { get; set; }
 
         [JsonProperty(PropertyName = "leadingVehicleId")]
-        public string LEadingVehicleId { get; set; }
+        public string LeadingVehicleId { get; set; }
     }
 }

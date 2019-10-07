@@ -6,7 +6,6 @@ using System.Linq;
 using System.Diagnostics;
 using System;
 using System.Threading.Tasks;
-using Windows.Devices.Geolocation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -76,7 +75,7 @@ namespace MTATransit.Shared.Controls
             if (isCancellable)
                 SecondaryButtonText = "Cancel";
             else
-                SecondaryButtonVisibility = Visibility.Collapsed
+                SecondaryButtonVisibility = Visibility.Collapsed;
         }
 
         public NewPointDialog(string title, string primaryButtonText, string secondaryButtonText)
@@ -160,21 +159,8 @@ namespace MTATransit.Shared.Controls
             if (CurrentLocationButton.IsChecked.Value)
             {
                 // Try to get current location, use instead of selected address
-                var accessStatus = await Geolocator.RequestAccessAsync();
-                if (accessStatus == GeolocationAccessStatus.Allowed)
-                {
-                    Geolocator geolocator = new Geolocator { DesiredAccuracyInMeters = 1 };
-                    Geoposition pos = await geolocator.GetGeopositionAsync();
-                    model.Latitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Longitude);
-                    model.Longitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Latitude);
-                    model.Geolocator = geolocator;
-                    model.Title = "Your Location";
-                    model.Address = $"{model.Longitude}, {model.Latitude}";
-                    model.IsCurrentLocation = true;
-
-                    Debug.WriteLine($"Current location: {model.Address}");
-                }
-                else
+                model = await Common.SpatialHelper.GetCurrentLocation();
+                if (model == null)
                 {
                     var dialog = new DialogBox("Error", "Access to your device's location was denied.\nPlease allow access or manually enter\nan address.");
                     dialog.OnDialogClosed += (DialogBox.DialogResult result) =>
@@ -344,21 +330,6 @@ namespace MTATransit.Shared.Controls
             public DialogResult Result { get; set; }
             public Models.PointModel Model { get; set; }
             public Models.PointModel OldModel { get; set; }
-        }
-        public class EditorControls
-        {
-            public static TextBox NumberBox(string label, string name = "NumberBox")
-            {
-                // TODO: Use the real NumberBox from WinUI
-                var numBox = new TextBox()
-                {
-                    Name = name,
-                    PlaceholderText = label,
-                };
-                TextBoxRegex.SetValidationMode(numBox, TextBoxRegex.ValidationMode.Dynamic);
-                TextBoxRegex.SetValidationType(numBox, TextBoxRegex.ValidationType.Number);
-                return numBox;
-            }
         }
     }
 }

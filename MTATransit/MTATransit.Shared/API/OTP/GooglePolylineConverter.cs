@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTATransit.Shared.API.OTPMTA
+namespace MTATransit.Shared.API.OTP
 {
     /// <summary>
     /// Google Polyline Converter (Encoder and Decoder)

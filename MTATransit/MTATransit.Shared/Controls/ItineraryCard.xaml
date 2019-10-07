@@ -29,7 +29,8 @@
             ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Row="1"
             Orientation="Horizontal" Background="{ThemeResource SystemChromeMediumColor}">
             <TextBlock x:Name="LegText" FontFamily="{StaticResource DINFontFamily}"
-                FontSize="18" Padding="5,2,0,2" />
+                FontSize="18" Padding="5,2,0,2"
+                Text="{x:Bind Itin.ToShortLegString()}"/>
         </StackPanel>
 
         <Grid x:Name="MapGrid" Background="{ThemeResource SystemBaseLowColor}" Grid.RowSpan="2" Grid.Row="2">

@@ -44,13 +44,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Stop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\NextBus\Vehicle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\GooglePolylineConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\IOTPMTAApi.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\Itinerary.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\Leg.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\Plan.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\PlanResponse.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)API\OTPMTA\Step.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTP\GooglePolylineConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTP\IOTPMTAApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTP\Itinerary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTP\Leg.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTP\Plan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTP\PlanResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\OTP\Step.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Agency.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Direction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\IRestBusApi.cs" />
@@ -59,11 +59,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Stop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)API\RestBus\Vehicle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\Yelp\Address.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\Yelp\Business.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\Yelp\BusinessSearchReponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\Yelp\IYelpApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)API\Yelp\Point.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\DialogBox.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DiscoverBusinessCard.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ItineraryCard.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\NavigationPointCard.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\NewPointDialog.xaml.cs">
@@ -74,6 +80,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\ItineraryModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\PointModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Glyphs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\DialogPage.xaml.cs">
       <DependentUpon>$fileinputname$.xaml</DependentUpon>
     </Compile>
@@ -90,6 +97,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Controls\DialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DiscoverBusinessCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,6 +162,10 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Tiles\Large.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Tiles\Medium.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Tiles\Small.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Tiles\Wide.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Bike - Heavy.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Bike.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Bus - Heavy.png" />
@@ -226,6 +241,9 @@
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\MTATransit\MTATransit\MTATransit.Shared\Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Controls\DiscoverBusinessCard.xaml.cs">
+      <DependentUpon>DiscoverBusinessCard.xaml</DependentUpon>
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Pages\DiscoverHomePage.xaml.cs">
       <DependentUpon>DiscoverHomePage.xaml</DependentUpon>

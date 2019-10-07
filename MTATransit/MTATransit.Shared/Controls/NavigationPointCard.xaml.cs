@@ -118,5 +118,24 @@ namespace MTATransit.Shared.Controls
 
             var resultGraphics = await MainMapView.IdentifyGraphicsOverlayAsync(MapGraphics, e.Position, 10, false);
         }
+
+        public delegate void EditRequestedHandler(Models.PointModel p);
+        public event EditRequestedHandler EditRequested;
+        private void EditButton_Click(object sender, RoutedEventArgs args)
+        {
+            EditRequested?.Invoke(Point);
+        }
+
+        public delegate void DeleteRequestedHandler(Models.PointModel p);
+        public event DeleteRequestedHandler DeleteRequested;
+        private void DeleteButton_Click(object sender, RoutedEventArgs args)
+        {
+            DeleteRequested?.Invoke(Point);
+        }
+
+        private void ShowFlyout(object sender, RoutedEventArgs args)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
     }
 }

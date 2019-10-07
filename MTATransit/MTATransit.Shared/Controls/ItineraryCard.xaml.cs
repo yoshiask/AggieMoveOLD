@@ -4,7 +4,7 @@ using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Symbology;
 using Esri.ArcGISRuntime.UI;
 using Esri.ArcGISRuntime.UI.Controls;
-using MTATransit.Shared.API.OTPMTA;
+using MTATransit.Shared.API.OTP;
 using MTATransit.Shared.API.RestBus;
 using System;
 using System.Collections.Generic;
@@ -44,7 +44,7 @@ namespace MTATransit.Shared.Controls
             LoadMap();
 
             // TODO: Find a way to add the arrows using Binding
-            for (int i = 0; i < Itin.Legs.Count; i++)
+            /*for (int i = 0; i < Itin.Legs.Count; i++)
             {
                 string text = "";
 
@@ -54,7 +54,7 @@ namespace MTATransit.Shared.Controls
                     text += " > ";
 
                 LegText.Text += text;
-            }
+            }*/
         }
 
         public async void LoadMap()
