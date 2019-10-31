@@ -10,12 +10,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Windows10FallCreatorsUpdate:NavigationView
-        x:Name="NavView" SelectionChanged="NavView_SelectionChanged"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200" FontFamily="{StaticResource DINFontFamily}">
         <Grid x:Name="MainGrid">
 
         </Grid>
-    </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

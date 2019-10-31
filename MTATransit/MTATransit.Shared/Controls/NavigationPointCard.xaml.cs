@@ -69,8 +69,8 @@ namespace MTATransit.Shared.Controls
                 MapGraphics.Graphics.Clear();
 
                 var stopPoint = CreateRouteStop(
-                    Convert.ToDecimal(args.Position.Coordinate.Point.Position.Longitude),
                     Convert.ToDecimal(args.Position.Coordinate.Point.Position.Latitude),
+                    Convert.ToDecimal(args.Position.Coordinate.Point.Position.Longitude),
                     System.Drawing.Color.Red
                 );
                 MapGraphics.Graphics.Add(stopPoint);
@@ -80,9 +80,9 @@ namespace MTATransit.Shared.Controls
         public Graphic LoadMap(double lat, double lon)
         {
             MainMapView.Map = new Map(
-                BasemapType.ImageryWithLabelsVector,
-                lon,
+                BasemapType.ImageryWithLabels,
                 lat,
+                lon,
                 12
             );
 
@@ -101,8 +101,8 @@ namespace MTATransit.Shared.Controls
         private Graphic CreateRouteStop(decimal lat, decimal lon, System.Drawing.Color fill)
         {
             // Now draw a point where the stop is
-            var mapPoint = new MapPoint(Convert.ToDouble(lat),
-                Convert.ToDouble(lon), SpatialReferences.Wgs84);
+            var mapPoint = new MapPoint(Convert.ToDouble(lon),
+                Convert.ToDouble(lat), SpatialReferences.Wgs84);
             var pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle.Circle, fill, 20);
             pointSymbol.Outline = new SimpleLineSymbol(SimpleLineSymbolStyle.Solid, System.Drawing.Color.White, 5);
             return new Graphic(mapPoint, pointSymbol);

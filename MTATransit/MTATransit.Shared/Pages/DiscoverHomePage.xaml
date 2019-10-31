@@ -12,18 +12,9 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Windows10FallCreatorsUpdate:NavigationView
-        x:Name="NavView" SelectionChanged="NavView_SelectionChanged"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200" FontFamily="{StaticResource DINFontFamily}">
+    <Grid x:Name="MainGrid">
 
-        <Grid x:Name="MainGrid">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="9*"/>
-                <RowDefinition Height="80*"/>
-            </Grid.RowDefinitions>
-
-            <!-- New FlyingCommandBar-->
+        <!-- New FlyingCommandBar-->
             <ctk:DropShadowPanel Canvas.ZIndex="20"
                              Grid.Row="1"
                              BlurRadius="10.0"
@@ -51,16 +42,6 @@
                 </CommandBar>
             </ctk:DropShadowPanel>
             <!-- End of New FlyingCommandBar -->
-
-            <StackPanel Margin="12,20,12,0" Height="40" VerticalAlignment="Center" Orientation="Horizontal">
-                <TextBlock x:Name="PageIconBox" Text="&#xE707;" FontSize="30"
-                    FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontWeight="Bold"/>
-                <TextBlock x:Name="PageTitleBox" Text="Discover" FontSize="30"
-                    FontFamily="{StaticResource DINFontFamily}" Padding="2,0,0,0" FontWeight="Bold"/>
-                <TextBlock x:Name="PageSubheadBox" Text="hotspots in your area" FontSize="20"
-                    FontFamily="{StaticResource DINFontFamily}" Padding="2,0,0,0" FontWeight="Normal" VerticalAlignment="Bottom" Margin="5,0,0,6"/>
-            </StackPanel>
-            <ProgressBar x:Name="PageLoadingBar" Height="10" VerticalAlignment="Bottom" IsIndeterminate="True" Visibility="Collapsed" />
 
             <ScrollViewer Margin="10,10,10,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="1" >
                 <ItemsControl  x:Name="PointsControl" ItemsSource="{x:Bind Points}">
@@ -96,6 +77,4 @@
                 </ItemsControl>
             </ScrollViewer>
         </Grid>
-
-    </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

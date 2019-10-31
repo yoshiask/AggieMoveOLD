@@ -85,7 +85,13 @@
       <DependentUpon>$fileinputname$.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\DiscoverHomePage.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\ExplorePage.xaml.cs">
+      <DependentUpon>$fileinputname$.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\FatalErrorPage.xaml.cs">
+      <DependentUpon>$fileinputname$.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\FavoritesPage.xaml.cs">
       <DependentUpon>$fileinputname$.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\NavigateHomePage.xaml.cs" />
@@ -94,6 +100,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\StopDetailsView.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\SettingsPage.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\PageInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Controls\DialogBox.xaml">
@@ -128,7 +135,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\ExplorePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Pages\FatalErrorPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\FavoritesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -156,6 +171,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\DINRegular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\LA-Move-Icons.ttf" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LockScreenLogo.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Public Transit.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-200.png" />
@@ -251,5 +267,22 @@
     <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Pages\ExploreHomePage.xaml.cs">
       <DependentUpon>ExploreHomePage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Pages\ExplorePage.xaml.cs">
+      <DependentUpon>ExplorePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Pages\FavoritesPage.xaml.cs">
+      <DependentUpon>FavoritesPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Bike - Heavy.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Bus - Heavy.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Car - Heavy.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\ENC Bus - Heavy.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Heavy Rail - Heavy.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Light Rail - Heavy.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Scooter - Heavy.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Taxi - Heavy.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\TransitIcons\Walk - Heavy.svg" />
   </ItemGroup>
 </Project>

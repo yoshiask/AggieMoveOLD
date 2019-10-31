@@ -46,6 +46,14 @@
         </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="#F44336"/>
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.shareTarget">
+          <uap:ShareTarget Description="Transfer to LA Move">
+            <uap:DataFormat>WGS84</uap:DataFormat>
+            <uap:DataFormat>LocationJSON</uap:DataFormat>
+          </uap:ShareTarget>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
 

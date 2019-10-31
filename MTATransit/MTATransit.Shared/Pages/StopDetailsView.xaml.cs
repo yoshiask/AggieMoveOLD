@@ -30,8 +30,6 @@ namespace MTATransit.Shared.Pages
         public RouteDetailsView()
         {
             this.InitializeComponent();
-
-            Common.LoadNavView(this, NavView);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -217,14 +215,11 @@ namespace MTATransit.Shared.Pages
             RefreshCompletionDeferral.Complete();
         }
 
-        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            Common.NavView_SelectionChanged(this, sender, args);
-        }
-
         private void SetLoadingBar(bool loading)
         {
-            PageLoadingBar.Visibility = loading ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
+            string contents = loading ? "loadingStarted" : "loadingFinished";
+            var myMessage = new GalaSoft.MvvmLight.Messaging.NotificationMessage(contents);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(myMessage);
         }
     }
 }

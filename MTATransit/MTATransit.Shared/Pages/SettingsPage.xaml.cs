@@ -25,15 +25,13 @@ namespace MTATransit.Shared.Pages
         public SettingsPage()
         {
             this.InitializeComponent();
-
-            Common.LoadNavView(this, NavView);
-
-            NavView.SelectedItem = NavView.SettingsItem;
         }
 
-        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void SetLoadingBar(bool loading)
         {
-            Common.NavView_SelectionChanged(this, sender, args);
+            string contents = loading ? "loadingStarted" : "loadingFinished";
+            var myMessage = new GalaSoft.MvvmLight.Messaging.NotificationMessage(contents);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(myMessage);
         }
     }
 }

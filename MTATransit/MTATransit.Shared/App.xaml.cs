@@ -107,7 +107,7 @@ Thank you!"
                         );
                         dialog.OnDialogClosed += (Shared.Controls.DialogBox.DialogResult result) =>
                         {
-                            rootFrame.Navigate(typeof(Shared.Pages.NavigateHomePage), e.Arguments);
+                            rootFrame.Navigate(typeof(MainPage), e.Arguments);
                         };
                         rootFrame.Navigate(typeof(Shared.Pages.DialogPage), dialog);
 

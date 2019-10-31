@@ -8,6 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <FontFamily x:Key="DINFontFamily">/Assets/Fonts/DINRegular#DIN</FontFamily>
+            <FontFamily x:Key="LAMoveIconFont">/Assets/Fonts/LA-Move-Icons#LA-Move-Icons</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
     

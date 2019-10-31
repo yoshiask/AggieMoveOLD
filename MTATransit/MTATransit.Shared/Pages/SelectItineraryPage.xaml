@@ -13,66 +13,48 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Windows10FallCreatorsUpdate:NavigationView
-        x:Name="NavView" SelectionChanged="NavView_SelectionChanged"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        Windows10version1809:PaneDisplayMode="LeftCompact" IsPaneOpen="False" OpenPaneLength="200" FontFamily="{StaticResource DINFontFamily}">
+    <Grid x:Name="MainGrid">
 
-        <Grid x:Name="MainGrid">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="9*"/>
-                <RowDefinition Height="80*"/>
-            </Grid.RowDefinitions>
+        <ctk:DropShadowPanel Canvas.ZIndex="20"
+                            Grid.Row="1"
+                            BlurRadius="10.0"
+                            ShadowOpacity="0.30"
+                            Color="Black"
+                            OffsetX="0"
+                            OffsetY="2"
+                            Margin="24"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+            <CommandBar DefaultLabelPosition="Right"
+                    Style="{ThemeResource CommandBarRevealStyle}">
+                <CommandBar.PrimaryCommands>
+                    <AppBarButton Icon="Go"
+                            Label="Go"
+                            Click="NextButton_Click"
+                            Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                            Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}">
+                    </AppBarButton>
+                    <AppBarButton x:Name="BackButton" Icon="Back" Label="Edit Trip"
+                            Click="BackButton_Click"/>
+                </CommandBar.PrimaryCommands>
 
-            <ctk:DropShadowPanel Canvas.ZIndex="20"
-                             Grid.Row="1"
-                             BlurRadius="10.0"
-                             ShadowOpacity="0.30"
-                             Color="Black"
-                             OffsetX="0"
-                             OffsetY="2"
-                             Margin="24"
-                             HorizontalAlignment="Right"
-                             VerticalAlignment="Bottom">
-                <CommandBar DefaultLabelPosition="Right"
-                        Style="{ThemeResource CommandBarRevealStyle}">
-                    <CommandBar.PrimaryCommands>
-                        <AppBarButton Icon="Go"
-                                Label="Go"
-                                Click="NextButton_Click"
-                                Background="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}">
-                        </AppBarButton>
-                        <AppBarButton x:Name="BackButton" Icon="Back" Label="Edit Trip"
-                                Click="BackButton_Click"/>
-                    </CommandBar.PrimaryCommands>
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton x:Name="SortButton" Icon="Sort" Label="Sort" />
+                    <AppBarButton x:Name="OptionsButton" Icon="Setting" Label="Options" />
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+        </ctk:DropShadowPanel>
 
-                    <CommandBar.SecondaryCommands>
-                        <AppBarButton x:Name="SortButton" Icon="Sort" Label="Sort" />
-                        <AppBarButton x:Name="OptionsButton" Icon="Setting" Label="Options" />
-                    </CommandBar.SecondaryCommands>
-                </CommandBar>
-            </ctk:DropShadowPanel>
+        <ScrollViewer Margin="10,10,10,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="1">
+            <ItemsControl  x:Name="ItinerariesControl" ItemsSource="{x:Bind Itineraries}" >
 
-            <StackPanel Margin="12,20,12,0" Height="40" VerticalAlignment="Center" Orientation="Horizontal">
-                <TextBlock x:Name="PageIconBox" Text="&#xE8F0;" FontSize="30"
-                    FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontWeight="Bold"/>
-                <TextBlock x:Name="PageTitleBox" Text="Navigate" FontSize="30"
-                    FontFamily="{StaticResource DINFontFamily}" Padding="2,0,0,0" FontWeight="Bold"/>
-            </StackPanel>
-            <ProgressBar x:Name="PageLoadingBar" Height="10" VerticalAlignment="Top" IsIndeterminate="True" Visibility="Collapsed" Grid.Row="1" HorizontalAlignment="Stretch" />
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <lcontrols:ItineraryCard Margin="0,0,0,10"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
 
-            <ScrollViewer Margin="10,10,10,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="1">
-                <ItemsControl  x:Name="ItinerariesControl" ItemsSource="{x:Bind Itineraries}" >
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <lcontrols:ItineraryCard Margin="0,0,0,10"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </Grid>
-
-    </Windows10FallCreatorsUpdate:NavigationView>
 </Page>

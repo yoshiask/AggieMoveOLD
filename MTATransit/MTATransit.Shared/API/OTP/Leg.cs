@@ -102,12 +102,31 @@ namespace MTATransit.Shared.API.OTP
             if (Mode == "WALK")
             {
                 output += "Walk, ";
-                double miles = Common.NumberHelper.MetersToMiles(Distance);
-                output += System.Math.Round(miles, 2).ToString() + " mi";
+                output += ToDistanceString();
             }
             else
                 output += Route;
             return output;
+        }
+
+        public string ToDistanceString()
+        {
+            return System.Math.Round(Common.NumberHelper.MetersToMiles(Distance), 2).ToString() + " mi";
+        }
+
+        public string ToShortDisplayString()
+        {
+            switch (Mode)
+            {
+                case "WALK":
+                    return ToDistanceString();
+
+                case "BIKE":
+                    return ToDistanceString();
+
+                default:
+                    return RouteShortName;
+            }
         }
     }
 

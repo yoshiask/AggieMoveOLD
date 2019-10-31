@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -22,15 +13,18 @@ namespace MTATransit.Shared.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NavigateHomePage : Page
+    public sealed partial class FavoritesPage : Page
     {
-        public ObservableCollection<Models.PointModel> Points { get; set; } = new ObservableCollection<Models.PointModel>();
+        public ObservableCollection<Models.PointModel> SavedPoints { get; set; } = new ObservableCollection<Models.PointModel>();
+        public ObservableCollection<API.OTP.PlanRequestParameters> SavedRoutes { get; set; } = new ObservableCollection<API.OTP.PlanRequestParameters>();
 
-        public NavigateHomePage()
+        public FavoritesPage()
         {
             this.InitializeComponent();
+            
 
             Common.RoamingSettings.SetUpRoamingSettings();
+            LoadLocations();
         }
 
         #region Swipe Events
@@ -62,41 +56,28 @@ namespace MTATransit.Shared.Pages
         #endregion
 
         #region CommandBar Events
-        private async void AddPointButton_Click(object sender, RoutedEventArgs e)
+        private void AddPointButton_Click(object sender, RoutedEventArgs e)
         {
-            if ((await Common.RoamingSettings.GetLocation("Home")) == null)
-                Common.RoamingSettings.SetLocation("Home",
-                    (await Common.SpatialHelper.GetCurrentLocation()).Longitude,
-                    (await Common.SpatialHelper.GetCurrentLocation()).Latitude
-                );
             NewPoint();
-        }
-
-        private void NextButton_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(
-                typeof(SelectItineraryPage), Points.ToList(),
-                new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo()
-                {
-                    Effect = Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionEffect.FromRight
-                });
         }
         #endregion
 
-        #region Points Functions
+        #region SavedPoint Functions
         private void AddPoint(Models.PointModel model)
         {
-            Points.Add(model);
+            SavedPoints.Add(model);
         }
         private void RemovePoint(Models.PointModel model)
         {
-            Points.Remove(model);
+            SavedPoints.Remove(model);
+            Common.RoamingSettings.DeleteLocation(model.Title);
         }
         private void ReplacePoint(Models.PointModel oldModel, Models.PointModel model)
         {
-            int i = Points.IndexOf(oldModel);
-            Points.Remove(oldModel);
-            Points.Insert(i, model);
+            int i = SavedPoints.IndexOf(oldModel);
+            SavedPoints.Remove(oldModel);
+            SavedPoints.Insert(i, model);
+            Common.RoamingSettings.ReplaceLocation(oldModel.Title, model.Title, model.Longitude, model.Latitude);
         }
 
         private void NewPoint()
@@ -119,7 +100,8 @@ namespace MTATransit.Shared.Pages
                 ControlBar.Visibility = Visibility.Visible;
                 if (result.Result == Controls.NewPointDialog.DialogResult.Primary)
                 {
-                    Points.Add(result.Model);
+                    SavedPoints.Add(result.Model);
+                    Common.RoamingSettings.SetLocation(result.Model.Title, result.Model.Longitude, result.Model.Latitude);
                 }
             };
             MainGrid.Children.Add(pointDialog);
@@ -163,19 +145,32 @@ namespace MTATransit.Shared.Pages
         }
         #endregion
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private async void LoadLocations()
         {
-            if (e.Parameter is List<Models.PointModel>)
+            SetLoadingBar(true);
+            var locations = await Common.RoamingSettings.GetAllLocations();
+            foreach (KeyValuePair<string, API.ArcGIS.Location> pair in locations)
             {
-                var points = e.Parameter as List<Models.PointModel>;
-                if (points != null)
+                if (SavedPoints.FirstOrDefault((m) => { return m.Title == pair.Key; }) != default(Models.PointModel))
+                    continue;
+
+                var loc = pair.Value;
+                SavedPoints.Add(new Models.PointModel()
                 {
-                    Points = new ObservableCollection<Models.PointModel>(points);
-                    DataContext = new ObservableCollection<Models.PointModel>(points);
-                }
-                    
+                    Title = pair.Key,
+                    Address = loc.Longitude.ToString() + ", " + loc.Latitude.ToString(),
+                    Longitude = Convert.ToDecimal(loc.Longitude),
+                    Latitude = Convert.ToDecimal(loc.Latitude),
+                });
             }
-            base.OnNavigatedTo(e);
+            SetLoadingBar(false);
+        }
+
+        private void SetLoadingBar(bool loading)
+        {
+            string contents = loading ? "loadingStarted" : "loadingFinished";
+            var myMessage = new GalaSoft.MvvmLight.Messaging.NotificationMessage(contents);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(myMessage);
         }
     }
 }

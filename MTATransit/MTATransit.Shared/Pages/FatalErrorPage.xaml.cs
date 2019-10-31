@@ -34,9 +34,19 @@ namespace MTATransit.Shared.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Icon = ((FatalErrorArgs)e.Parameter).Icon;
-            SecondaryIcon = ((FatalErrorArgs)e.Parameter).SecondaryIcon;
-            Message = ((FatalErrorArgs)e.Parameter).Message;
+            var args = e.Parameter as FatalErrorArgs;
+            if (args != null)
+            {
+                Icon = args.Icon;
+                SecondaryIcon = args.SecondaryIcon;
+                Message = args.Message;
+            }
+            else
+            {
+                Icon = "\uE730";
+                SecondaryIcon = "";
+                Message = "A fatal error occurred";
+            }
 
             base.OnNavigatedTo(e);
         }

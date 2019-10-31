@@ -107,6 +107,9 @@
     <PackageReference Include="TweetinviAPI">
       <Version>4.0.2</Version>
     </PackageReference>
+    <PackageReference Include="Uno.GalaSoft.MvvmLight">
+      <Version>5.4.0-uno.134</Version>
+    </PackageReference>
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>5.1.0-build.200.gf9c311b069</Version>
     </PackageReference>

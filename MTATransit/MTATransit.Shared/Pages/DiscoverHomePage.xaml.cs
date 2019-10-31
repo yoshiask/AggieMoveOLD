@@ -32,12 +32,12 @@ namespace MTATransit.Shared.Pages
         {
             this.InitializeComponent();
 
-            Common.LoadNavView(this, NavView);
             LoadBusinesses();
         }
 
         private async void LoadBusinesses()
         {
+            SetLoadingBar(true);
             // Try to get current location, use instead of selected address
             var loc = await Common.SpatialHelper.GetCurrentLocation();
             if (loc == null)
@@ -56,6 +56,7 @@ namespace MTATransit.Shared.Pages
             {
                 Points.Add(b);
             }
+            SetLoadingBar(false);
         }
 
         #region Swipe Events
@@ -80,12 +81,9 @@ namespace MTATransit.Shared.Pages
 
         private void SetLoadingBar(bool loading)
         {
-            PageLoadingBar.Visibility = loading ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
-        }
-
-        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            Common.NavView_SelectionChanged(this, sender, args);
+            string contents = loading ? "loadingStarted" : "loadingFinished";
+            var myMessage = new GalaSoft.MvvmLight.Messaging.NotificationMessage(contents);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(myMessage);
         }
     }
 }

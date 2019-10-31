@@ -2,20 +2,17 @@
 using Refit;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
-using NextBus.NET;
 using Windows.UI.Xaml;
 using System.Threading.Tasks;
 using MTATransit.Shared.API.RestBus;
 using System.Diagnostics;
-using System.Linq;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.UI.Xaml.Data;
-using System.Globalization;
 using Windows.Devices.Geolocation;
-using Tweetinvi;
+using Windows.Storage;
+using Newtonsoft.Json;
 
 namespace MTATransit.Shared
 {
@@ -56,6 +53,7 @@ namespace MTATransit.Shared
         #endregion
 
         public static FontFamily DINFont = new FontFamily("/Assets/Fonts/DINRegular#DIN");
+        public static FontFamily LAMoveIconFont = new FontFamily("/Assets/Fonts/LA-Move-Icons#LA-Move-Icons");
 
         /// <summary>
         /// Creates Color from HEX code
@@ -107,90 +105,13 @@ namespace MTATransit.Shared
                 return ElementTheme.Light;
         }
 
-        public static Dictionary<string, Tuple<Type, NavigationViewItem>> Pages = new Dictionary<string, Tuple<Type, NavigationViewItem>>
+        public static Windows.UI.Color ConvertColor(System.Drawing.Color draw)
         {
-            {
-                "Navigate",
-                new Tuple<Type, NavigationViewItem>(
-                    typeof(Pages.NavigateHomePage),
-                    new NavigationViewItem()
-                    {
-                        Icon = new SymbolIcon(Symbol.Directions),
-                        Content = "Navigate",
-                        Tag = "Navigate to your destination",
-                        FontFamily = DINFont
-                    }
-                )
-            },
-
-            {
-                "Discover",
-                new Tuple<Type, NavigationViewItem>(
-                    typeof(Pages.DiscoverHomePage),
-                    new NavigationViewItem()
-                    {
-                        Icon = new SymbolIcon(Symbol.Map),
-                        Content = "Discover",
-                        Tag = "Discover hotspots in your area",
-                        FontFamily = DINFont
-                    }
-                )
-            },
-
-            {
-                "Explore",
-                new Tuple<Type, NavigationViewItem>(
-                    typeof(MainPage),
-                    new NavigationViewItem()
-                    {
-                        Icon = new SymbolIcon(Symbol.Street),
-                        Content = "Explore",
-                        Tag = "Explore your transit options",
-                        FontFamily = DINFont,
-                    }
-                )
-            },
-        };
-
-        public static void NavView_SelectionChanged(Page page, NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            Frame frame = Window.Current.Content as Frame;
-
-            if (args.IsSettingsSelected)
-            {
-                if (page.GetType() != typeof(Pages.SettingsPage))
-                    frame.Navigate(typeof(Pages.SettingsPage));
-                return;
-            }
-
-            var item = (NavigationViewItem)args.SelectedItem;
-
-            Type newPage = Common.Pages[item.Content as string].Item1;
-
-            if (page.GetType() == newPage)
-                return;
-
-            if (newPage.BaseType == typeof(Page))
-                frame.Navigate(newPage);
+            return Windows.UI.Color.FromArgb(draw.A, draw.R, draw.G, draw.B);
         }
-
-        public static void LoadNavView(Page page, NavigationView NavView)
+        public static System.Drawing.Color ConvertColor(Windows.UI.Color ui)
         {
-            foreach (Tuple<Type, NavigationViewItem> info in Common.Pages.Values)
-            {
-                var menuItem = new NavigationViewItem
-                {
-                    Icon = info.Item2.Icon,
-                    Content = info.Item2.Content,
-                    Tag = info.Item2.Tag
-                };
-
-                NavView.MenuItems.Add(menuItem);
-
-                // If the menu item we're adding goes to this page, then select it
-                if (info.Item1 == page.GetType())
-                    NavView.SelectedItem = menuItem;
-            }
+            return System.Drawing.Color.FromArgb(ui.A, ui.R, ui.G, ui.B);
         }
 
         public static class SpatialHelper
@@ -222,11 +143,15 @@ namespace MTATransit.Shared
 
             private static Models.PointModel CurrentLocationCache { get; set; }
             private static DateTime? CurrentLocationLastUpdated { get; set; }
+            public static Models.PointModel GetCachedLocation()
+            {
+                return CurrentLocationCache;
+            }
             public async static Task<Models.PointModel> GetCurrentLocation(bool acceptCache = true, uint accuracy = 1)
             {
-                if (CurrentLocationCache == null || 
-                    !CurrentLocationLastUpdated.HasValue
-                    || DateTime.Now.Subtract(CurrentLocationLastUpdated.Value).TotalMinutes > 5)
+                if (CurrentLocationCache == null || !CurrentLocationLastUpdated.HasValue
+                    || DateTime.Now.Subtract(CurrentLocationLastUpdated.Value).TotalMinutes > 5
+                    || !acceptCache)
                 {
                     // Cache needs to be updated
                     var accessStatus = await Geolocator.RequestAccessAsync();
@@ -237,8 +162,8 @@ namespace MTATransit.Shared
                         Geoposition pos = await geolocator.GetGeopositionAsync();
                         CurrentLocationCache.Title = "Your Location";
                         CurrentLocationCache.IsCurrentLocation = true;
-                        CurrentLocationCache.Latitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Longitude);
-                        CurrentLocationCache.Longitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Latitude);
+                        CurrentLocationCache.Latitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Latitude);
+                        CurrentLocationCache.Longitude = Convert.ToDecimal(pos.Coordinate.Point.Position.Longitude);
                         CurrentLocationCache.Geolocator = geolocator;
                         CurrentLocationCache.Address = $"{CurrentLocationCache.Longitude}, {CurrentLocationCache.Latitude}";
 
@@ -330,9 +255,188 @@ namespace MTATransit.Shared
             }
         }
 
+        public static class RoamingSettings
+        {
+            #region Files
+            private static readonly StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
+            private static readonly ApplicationDataContainer roamingSettings = ApplicationData.Current.RoamingSettings;
+
+            private const string SavedLocationsPath = "savedLocations.json";
+            private const string SavedRoutesPath = "savedRoutes.json";
+            #endregion
+
+            public static async void SetUpRoamingSettings()
+            {
+                if (!await roamingFolder.FileExistsAsync(SavedLocationsPath))
+                {
+                    StorageFile locationsFile = await roamingFolder.CreateFileAsync(SavedLocationsPath,
+                    CreationCollisionOption.OpenIfExists);
+                    await FileIO.WriteTextAsync(locationsFile,
+                        JsonConvert.SerializeObject(new Dictionary<string, Location>())
+                    );
+                }
+
+                if (!await roamingFolder.FileExistsAsync(SavedRoutesPath))
+                {
+
+                    StorageFile routesFile = await roamingFolder.CreateFileAsync(SavedRoutesPath,
+                    CreationCollisionOption.OpenIfExists);
+                    await FileIO.WriteTextAsync(routesFile,
+                        JsonConvert.SerializeObject(new Dictionary<string, API.OTP.PlanRequestParameters>())
+                    );
+                }
+            }
+
+            public static async void SetLocation(string name, decimal lon, decimal lat)
+            {
+                // Get the file and deserialize it
+                StorageFile locationsFile = await roamingFolder.GetFileAsync(SavedLocationsPath);
+                var savedLocations = JsonConvert.DeserializeObject<Dictionary<string, Location>>(await FileIO.ReadTextAsync(locationsFile));
+
+                var location = new Location()
+                {
+                    Latitude = Convert.ToDouble(lat),
+                    Longitude = Convert.ToDouble(lon)
+                };
+                if (savedLocations.ContainsKey(name))
+                    savedLocations[name] = location;
+                else
+                    savedLocations.Add(name, location);
+
+                // Serialized the edited file
+                await FileIO.WriteTextAsync(locationsFile,
+                    JsonConvert.SerializeObject(savedLocations)
+                );
+            }
+            public static async void SetRoute(string name, API.OTP.PlanRequestParameters planRequest)
+            {
+                // Get the file and deserialize it
+                StorageFile routesFile = await roamingFolder.GetFileAsync(SavedRoutesPath);
+                var savedRoutes = JsonConvert.DeserializeObject<Dictionary<string, API.OTP.PlanRequestParameters>>(await FileIO.ReadTextAsync(routesFile));
+
+                if (savedRoutes.ContainsKey(name))
+                    savedRoutes[name] = planRequest;
+                else
+                    savedRoutes.Add(name, planRequest);
+
+                // Serialized the edited file
+                await FileIO.WriteTextAsync(routesFile,
+                    JsonConvert.SerializeObject(savedRoutes)
+                );
+            }
+
+            public static async Task<Location> GetLocation(string name)
+            {
+                var savedLocations = await GetAllLocations();
+
+                if (savedLocations.ContainsKey(name))
+                    return savedLocations[name];
+                else
+                    return null;
+            }
+            public static async Task<Models.PointModel> GetLocationAsPoint(string name)
+            {
+                var loc = await GetLocation(name);
+                return new Models.PointModel() {
+                    Title = name,
+                    Latitude = Convert.ToDecimal(loc.Latitude),
+                    Longitude = Convert.ToDecimal(loc.Longitude)
+                };
+            }
+            public static async Task<API.OTP.PlanRequestParameters> GetRoute(string name)
+            {
+                var savedRoutes = await GetAllRoutes();
+
+                if (savedRoutes.ContainsKey(name))
+                    return savedRoutes[name];
+                else
+                    return null;
+            }
+
+            public static async void DeleteLocation(string name)
+            {
+                // Get the file and deserialize it
+                StorageFile locationsFile = await roamingFolder.GetFileAsync(SavedLocationsPath);
+                var savedLocations = JsonConvert.DeserializeObject<Dictionary<string, Location>>(await FileIO.ReadTextAsync(locationsFile));
+                savedLocations.Remove(name);
+
+                // Serialized the edited file
+                await FileIO.WriteTextAsync(locationsFile,
+                    JsonConvert.SerializeObject(savedLocations)
+                );
+            }
+            public static async void DeleteRoute(string name)
+            {
+                // Get the file and deserialize it
+                StorageFile routesFile = await roamingFolder.GetFileAsync(SavedRoutesPath);
+                var savedRoutes = JsonConvert.DeserializeObject<Dictionary<string, API.OTP.PlanRequestParameters>>(await FileIO.ReadTextAsync(routesFile));
+                savedRoutes.Remove("name");
+
+                // Serialized the edited file
+                await FileIO.WriteTextAsync(routesFile,
+                    JsonConvert.SerializeObject(savedRoutes)
+                );
+            }
+
+            public static async void ReplaceLocation(string oldName, string newName, decimal lon, decimal lat)
+            {
+                // Get the file and deserialize it
+                StorageFile locationsFile = await roamingFolder.GetFileAsync(SavedLocationsPath);
+                var savedLocations = JsonConvert.DeserializeObject<Dictionary<string, Location>>(await FileIO.ReadTextAsync(locationsFile));
+
+                savedLocations.Remove(oldName);
+
+                var location = new Location()
+                {
+                    Latitude = Convert.ToDouble(lat),
+                    Longitude = Convert.ToDouble(lon)
+                };
+                if (savedLocations.ContainsKey(newName))
+                    savedLocations[newName] = location;
+                else
+                    savedLocations.Add(newName, location);
+
+                // Serialized the edited file
+                await FileIO.WriteTextAsync(locationsFile,
+                    JsonConvert.SerializeObject(savedLocations)
+                );
+            }
+            public static async void ReplaceRoute(string oldName, string newName, API.OTP.PlanRequestParameters planRequest)
+            {
+                // Get the file and deserialize it
+                StorageFile routesFile = await roamingFolder.GetFileAsync(SavedRoutesPath);
+                var savedRoutes = JsonConvert.DeserializeObject<Dictionary<string, API.OTP.PlanRequestParameters>>(await FileIO.ReadTextAsync(routesFile));
+
+                savedRoutes.Remove(oldName);
+
+                if (savedRoutes.ContainsKey(newName))
+                    savedRoutes[newName] = planRequest;
+                else
+                    savedRoutes.Add(newName, planRequest);
+
+                // Serialized the edited file
+                await FileIO.WriteTextAsync(routesFile,
+                    JsonConvert.SerializeObject(savedRoutes)
+                );
+            }
+
+            public static async Task<Dictionary<string, Location>> GetAllLocations()
+            {
+                // Get the file and deserialize it
+                StorageFile locationsFile = await roamingFolder.GetFileAsync(SavedLocationsPath);
+                return JsonConvert.DeserializeObject<Dictionary<string, Location>>(await FileIO.ReadTextAsync(locationsFile));
+            }
+            public static async Task<Dictionary<string, API.OTP.PlanRequestParameters>> GetAllRoutes()
+            {
+                // Get the file and deserialize it
+                StorageFile routesFile = await roamingFolder.GetFileAsync(SavedRoutesPath);
+                return JsonConvert.DeserializeObject<Dictionary<string, API.OTP.PlanRequestParameters>>(await FileIO.ReadTextAsync(routesFile));
+            }
+        }
+
         public static void WatchForAlerts()
         {
-            var stream = Stream.CreateFilteredStream();
+            var stream = Tweetinvi.Stream.CreateFilteredStream();
             stream.AddTrack("tweetinvi");
             stream.MatchingTweetReceived += (sender, args) =>
             {

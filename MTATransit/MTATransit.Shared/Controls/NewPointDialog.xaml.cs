@@ -156,7 +156,16 @@ namespace MTATransit.Shared.Controls
                 model.DepartureTime = arr.ToUniversalTime().ToUnixTimeSeconds();
             }
 
-            if (CurrentLocationButton.IsChecked.Value)
+            if (AddressBox.Text.StartsWith(StarChar))
+            {
+                var loc = await Common.RoamingSettings.GetLocation(AddressBox.Text.Substring(2));
+
+                model.Title = AddressBox.Text;
+                model.Address = loc.Longitude + ", " + loc.Latitude;
+                model.Longitude = Convert.ToDecimal(loc.Longitude);
+                model.Latitude = Convert.ToDecimal(loc.Latitude);
+            }
+            else if (CurrentLocationButton.IsChecked.Value)
             {
                 // Try to get current location, use instead of selected address
                 model = await Common.SpatialHelper.GetCurrentLocation();
@@ -220,29 +229,49 @@ namespace MTATransit.Shared.Controls
         }
 
         #region AddressBox
+        private const string StarChar = "⭐";
+        private async void AddressBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var s = sender as AutoSuggestBox;
+            var savedLocations = await Common.RoamingSettings.GetAllLocations();
+
+            var suggs = new List<string>();
+            foreach (string name in savedLocations.Keys)
+            {
+                suggs.Add(StarChar + " " + name);
+            }
+            s.ItemsSource = suggs;
+        }
+
         private async void AddressBox_TextChanged(AutoSuggestBox s, AutoSuggestBoxTextChangedEventArgs a)
         {
             if (a.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
                 try
                 {
-                    AddressSearchQuery = s.Text;
-                    var suggs = await Common.ArcGISApi.GetSuggestions(s.Text);
-                    if (suggs != null && suggs.Items != null && suggs.Items.Count > 0)
+                    var savedLocations = await Common.RoamingSettings.GetAllLocations();
+                    var SuggestList = new List<string>();
+                    foreach (string name in savedLocations.Keys)
                     {
-                        List<string> SuggestList = new List<string>();
+                        SuggestList.Add("⭐ " + name);
+                    }
+
+                    AddressSearchQuery = s.Text;
+                    var arcSuggs = await Common.ArcGISApi.GetSuggestions(s.Text);
+                    if (arcSuggs != null && arcSuggs.Items != null && arcSuggs.Items.Count > 0)
+                    {
                         Suggestions.Clear();
-                        Suggestions = suggs.Items;
-                        foreach (API.ArcGIS.Suggestion sugg in suggs.Items)
+                        Suggestions = arcSuggs.Items;
+                        foreach (API.ArcGIS.Suggestion sugg in arcSuggs.Items)
                         {
                             SuggestList.Add(sugg.Text);
                         }
-                        s.ItemsSource = SuggestList;
                     }
-                    else
-                    {
+
+                    if (SuggestList.Count <= 0)
                         s.ItemsSource = new string[] { NoResultsString };
-                    }
+                    else
+                        s.ItemsSource = SuggestList;
                 }
                 catch (System.Net.Http.HttpRequestException ex)
                 {
@@ -311,7 +340,11 @@ namespace MTATransit.Shared.Controls
 
         private async Task<API.ArcGIS.Suggestion> GetDefaultSuggestion(string query)
         {
-            var suggs = await Common.ArcGISApi.GetSuggestions(query);
+            API.ArcGIS.Suggestions suggs;
+            var location = Common.SpatialHelper.GetCachedLocation();
+            suggs = location == null ?
+                await Common.ArcGISApi.GetSuggestions(query) :
+                await Common.ArcGISApi.GetSuggestions(query, location.Longitude, location.Latitude);
             if (suggs != null && suggs.Items != null && suggs.Items.Count > 0)
                 // A search has automatically been done, take the first result as if the user selected it
                 return suggs.Items.FirstOrDefault();

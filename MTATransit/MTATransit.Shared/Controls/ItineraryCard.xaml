@@ -28,9 +28,26 @@
         <StackPanel x:Name="LegsStack" VerticalAlignment="Stretch"
             ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Row="1"
             Orientation="Horizontal" Background="{ThemeResource SystemChromeMediumColor}">
-            <TextBlock x:Name="LegText" FontFamily="{StaticResource DINFontFamily}"
-                FontSize="18" Padding="5,2,0,2"
-                Text="{x:Bind Itin.ToShortLegString()}"/>
+
+            <StackPanel x:Name="BusPanel" Orientation="Horizontal" Padding="0,0,5,0">
+                <Border Width="27.333" HorizontalAlignment="Left" Background="#FFFC7112">
+                    <FontIcon Glyph="&#xe908;" FontFamily="LA-Move-Icons" Foreground="White" FontSize="24"/>
+                </Border>
+                <TextBlock Text="190" FontFamily="{StaticResource DINFontFamily}" FontSize="18" Padding="5,2,0,2"/>
+                <TextBlock Text="&gt;" FontFamily="{StaticResource DINFontFamily}" FontSize="18" Padding="5,2,0,2" FontWeight="Bold"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Padding="0,0,5,0">
+                <Border Width="27.333" HorizontalAlignment="Left" Background="#334995">
+                    <FontIcon Glyph="&#xe904;" FontFamily="LA-Move-Icons" Foreground="White" FontSize="24"/>
+                </Border>
+                <TextBlock Text="0.3 mi" FontFamily="{StaticResource DINFontFamily}" FontSize="18" Padding="5,2,0,2"/>
+            </StackPanel>
+
+            <!--TextBlock x:Name="LegText" FontFamily="{StaticResource DINFontFamily}"
+                FontSize="18" Padding="5,2,0,2" TextAlignment="Right" HorizontalAlignment="Right" 
+                Text="{x:Bind Itin.ToShortLegString()}"/!-->
+
         </StackPanel>
 
         <Grid x:Name="MapGrid" Background="{ThemeResource SystemBaseLowColor}" Grid.RowSpan="2" Grid.Row="2">

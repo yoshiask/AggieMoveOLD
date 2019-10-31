@@ -31,8 +31,6 @@ namespace MTATransit.Shared.Pages
         public SelectItineraryPage()
         {
             this.InitializeComponent();
-
-            Common.LoadNavView(this, NavView);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -59,8 +57,8 @@ namespace MTATransit.Shared.Pages
             // TODO: This is only temporary, as the app should definitely support
             // more than just two points.
 
-            string startCoord = points[0].Longitude.ToString() + "," + points[0].Latitude.ToString();
-            string endCoord = points[1].Longitude.ToString() + "," + points[1].Latitude.ToString();
+            string startCoord = points[0].Latitude.ToString() + "," + points[0].Longitude.ToString();
+            string endCoord = points[1].Latitude.ToString() + "," + points[1].Longitude.ToString();
 
             var request = new PlanRequestParameters()
             {
@@ -116,7 +114,12 @@ namespace MTATransit.Shared.Pages
 
         private void BackButton_Click(object sender, RoutedEventArgs args)
         {
-            Frame.Navigate(typeof(NavigateHomePage), Points);
+            Frame.Navigate(typeof(NavigateHomePage), Points,
+                new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo()
+                {
+                    Effect = Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionEffect.FromLeft
+                }
+            );
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs args)
@@ -130,11 +133,6 @@ namespace MTATransit.Shared.Pages
             Grid.SetRowSpan(dialog, 2);
         }
 
-        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            Common.NavView_SelectionChanged(this, sender, args);
-        }
-
         public class ItineraryPageNavigationArgs
         {
             public IList<Models.PointModel> Points;
@@ -142,7 +140,9 @@ namespace MTATransit.Shared.Pages
 
         private void SetLoadingBar(bool loading)
         {
-            PageLoadingBar.Visibility = loading ? Visibility.Visible : Visibility.Collapsed;
+            string contents = loading ? "loadingStarted" : "loadingFinished";
+            var myMessage = new GalaSoft.MvvmLight.Messaging.NotificationMessage(contents);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(myMessage);
         }
     }
 }

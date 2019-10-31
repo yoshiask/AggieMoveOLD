@@ -29,12 +29,12 @@
             <TextBlock x:Name="AddressBlock" VerticalAlignment="Top" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Point.Address}" FontWeight="Normal" FontSize="12" Padding="5,2,0,0" Foreground="{ThemeResource SystemBaseMediumColor}" FontStretch="Normal"/>
         </StackPanel>
 
-        <StackPanel VerticalAlignment="Top" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+        <StackPanel Visibility="{x:Bind Point.HasArrivalTime}" VerticalAlignment="Top" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <TextBlock x:Name="ArriveByHeader" VerticalAlignment="Top" FontFamily="{StaticResource DINFontFamily}" Text="Arrive By:" FontWeight="Normal" FontSize="18" Padding="5,2,0,0" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
             <TextBlock x:Name="ArriveByText" VerticalAlignment="Bottom" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Point.ArrivalTimeString}" FontWeight="Bold" FontSize="18" Padding="5,2,0,2" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
         </StackPanel>
 
-        <StackPanel VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+        <StackPanel Visibility="{x:Bind Point.HasDepartureTime}" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <TextBlock x:Name="LeaveByHeader" VerticalAlignment="Top" FontFamily="{StaticResource DINFontFamily}" Text="Leave By:" FontWeight="Normal" FontSize="18" Padding="5,2,0,0" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
             <TextBlock x:Name="LeaveByText" VerticalAlignment="Bottom" FontFamily="{StaticResource DINFontFamily}" Text="{x:Bind Point.DepartureTimeString}" FontWeight="Bold" FontSize="18" Padding="5,2,0,2" Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"/>
         </StackPanel>
@@ -52,8 +52,16 @@
 
             <FlyoutBase.AttachedFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="Edit" Click="EditButton_Click" />
-                    <MenuFlyoutItem Text="Delete" Click="DeleteButton_Click" />
+                    <MenuFlyoutItem Text="Edit" Click="EditButton_Click">
+                        <MenuFlyoutItem.Icon>
+                            <SymbolIcon Symbol="Edit"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Delete" Click="DeleteButton_Click">
+                        <MenuFlyoutItem.Icon>
+                            <SymbolIcon Symbol="Delete"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
                 </MenuFlyout>
             </FlyoutBase.AttachedFlyout>
         </Button>

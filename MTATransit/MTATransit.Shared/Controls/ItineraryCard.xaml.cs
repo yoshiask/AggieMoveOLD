@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,6 +33,7 @@ namespace MTATransit.Shared.Controls
                 return this.DataContext as Models.ItineraryModel;
             }
         }
+        public Border icon = Models.Glyphs.TransitIcon.DefaultTransitIconsOTP["WALK"].GetIcon(true);
 
         public ItineraryCard()
         {
@@ -42,19 +44,39 @@ namespace MTATransit.Shared.Controls
         private void ItineraryCard_Loaded(object sender, RoutedEventArgs e)
         {
             LoadMap();
+            LegsStack.Children.Clear();
 
-            // TODO: Find a way to add the arrows using Binding
-            /*for (int i = 0; i < Itin.Legs.Count; i++)
+            for (int i = 0; i < Itin.Legs.Count; i++)
             {
-                string text = "";
+                var legStack = new StackPanel()
+                {
+                    Orientation = Orientation.Horizontal,
+                    Padding = new Thickness(0, 0, 5, 0)
+                };
 
                 var l = Itin.Legs[i];
-                text += l.ToLegString();
-                if (i != Itin.Legs.Count - 1)
-                    text += " > ";
+                legStack.Children.Add(
+                    Models.Glyphs.TransitIcon.DefaultTransitIconsOTP[l.Mode].GetIcon(true)
+                );
+                legStack.Children.Add(new TextBlock()
+                {
+                    Text = l.ToShortDisplayString(),
+                    FontFamily = Common.DINFont,
+                    FontSize = 18,
+                    Padding = new Thickness(5, 2, 0, 2)
+                });
 
-                LegText.Text += text;
-            }*/
+                if (i != Itin.Legs.Count - 1)
+                    legStack.Children.Add(new TextBlock()
+                    {
+                        Text = ">",
+                        FontFamily = Common.DINFont,
+                        FontWeight = Windows.UI.Text.FontWeights.Bold,
+                        FontSize = 18,
+                        Padding = new Thickness(5, 2, 0, 2)
+                    });
+                LegsStack.Children.Add(legStack);
+            }
         }
 
         public async void LoadMap()
@@ -68,19 +90,27 @@ namespace MTATransit.Shared.Controls
             foreach (Leg leg in Itin.Legs)
             {
                 var geometry = GooglePolylineConverter.Decode(leg.Geometry.Points);
+                List<MapPoint> legPoints = new List<MapPoint>();
                 foreach (API.ArcGIS.Location location in geometry)
                 {
-                    Points.Add(new MapPoint(location.Longitude, location.Latitude));
+                    MapPoint point = new MapPoint(location.Longitude, location.Latitude);
+                    legPoints.Add(point);
+                    Points.Add(point);
                 }
+
+                //  use a polyline builder to create the new polyline from a collection of points
+                var legPath = new PolylineBuilder(legPoints, SpatialReferences.Wgs84).ToGeometry();
+                // create a simple line symbol to display the polyline
+                var legLineSymbol = new SimpleLineSymbol(
+                    SimpleLineSymbolStyle.Solid,
+                    Common.ConvertColor(Common.ColorFromHex(Models.Glyphs.TransitIcon.DefaultTransitIconsOTP[leg.Mode].DefaultBackColor)),
+                    4.0
+                );
+                MapGraphics.Graphics.Add(new Graphic(legPath, legLineSymbol));
             }
 
             //  use a polyline builder to create the new polyline from a collection of points
             Polyline Path = new PolylineBuilder(Points, SpatialReferences.Wgs84).ToGeometry();
-            Debug.WriteLine(Path.Extent);
-            // create a simple line symbol to display the polyline
-            var lineSymbol = new SimpleLineSymbol(SimpleLineSymbolStyle.Solid, System.Drawing.Color.FromArgb(255, 11, 95, 96), 4.0);
-
-            MapGraphics.Graphics.Add(new Graphic(Path, lineSymbol));
             await MainMapView.SetViewpointGeometryAsync(Path, 20);
 
             // Have to add points after adding the path, 
@@ -88,7 +118,7 @@ namespace MTATransit.Shared.Controls
             foreach (Leg leg in Itin.Legs)
             {
                 MapGraphics.Graphics.Add(CreateRouteStop(
-                    Convert.ToDecimal(Points[0].Y), Convert.ToDecimal(Points[0].X),
+                    Convert.ToDecimal(Points.First().Y), Convert.ToDecimal(Points.First().X),
                     System.Drawing.Color.DarkRed
                 ));
                 MapGraphics.Graphics.Add(CreateRouteStop(
