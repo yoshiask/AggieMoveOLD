@@ -334,7 +334,7 @@ namespace MTATransit.Shared.Pages
                 Point.Longitude = Convert.ToDecimal(geocode.Location.Longitude);
             }
 
-            foreach (LocationPrediction pre in await Common.RestBusApi.GetPredictions(Point.Longitude, Point.Latitude))
+            foreach (LocationPrediction pre in await Common.RestBusApi.GetPredictions(Point.Latitude, Point.Longitude))
             {
                 Debug.WriteLine(pre.Stop.Title);
                 LocationPredictions.Add(pre);

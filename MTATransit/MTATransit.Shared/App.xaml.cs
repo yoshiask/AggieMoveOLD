@@ -109,6 +109,7 @@ Thank you!"
                         {
                             rootFrame.Navigate(typeof(MainPage), e.Arguments);
                         };
+
                         rootFrame.Navigate(typeof(Shared.Pages.DialogPage), dialog);
 
                         // When the navigation stack isn't restored navigate to the first page,

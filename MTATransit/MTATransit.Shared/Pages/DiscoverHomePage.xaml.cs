@@ -51,11 +51,25 @@ namespace MTATransit.Shared.Pages
                 return;
             }
 
-            var response = await Common.YelpApi.BusinessSearch(loc.Latitude, loc.Longitude, "food");
-            foreach (Business b in response.Businesses)
+            try
             {
-                Points.Add(b);
+                var response = await Common.YelpApi.BusinessSearch(loc.Latitude, loc.Longitude, "food");
+                foreach (Business b in response.Businesses)
+                {
+                    Points.Add(b);
+                }
             }
+            catch
+            {
+                var dialog = new DialogBox("Error", "Unable to connect to Yelp.");
+                dialog.OnDialogClosed += (DialogBox.DialogResult result) =>
+                {
+                    MainGrid.Children.Remove(dialog);
+                };
+                MainGrid.Children.Add(dialog);
+                return;
+            }
+
             SetLoadingBar(false);
         }
 

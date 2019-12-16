@@ -34,6 +34,12 @@
                             Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
                             Click="AddPointButton_Click">
                     </AppBarButton>
+                    <AppBarButton x:Name="DetectRouteButton" Label="Detect Bus"
+                            Click="DetectRouteButton_Click">
+                        <AppBarButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph=""/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
                     <AppBarButton x:Name="NextButton" Icon="Forward" Label="Next"
                             Click="NextButton_Click"/>
                 </CommandBar.PrimaryCommands>

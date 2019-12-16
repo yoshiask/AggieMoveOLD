@@ -1,0 +1,50 @@
+﻿<Page
+    x:Class="MTATransit.Shared.Pages.DetectRoutePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MTATransit.Shared.Pages.DetectRoute"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ctk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="MainGrid">
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10,0,10,0" >
+            <TextBlock x:Name="StatusBlock" Text="Loading..." TextAlignment="Center" FontSize="40" FontFamily="{StaticResource DINFontFamily}" Margin="0,0,0,10"/>
+            <ProgressBar x:Name="StatusProgBar" Height="10"/>
+        </StackPanel>
+        
+
+        <ctk:DropShadowPanel Canvas.ZIndex="20"
+                            Grid.Row="1"
+                            BlurRadius="10.0"
+                            ShadowOpacity="0.30"
+                            Color="Black"
+                            OffsetX="0"
+                            OffsetY="2"
+                            Margin="24"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+            <CommandBar x:Name="ControlBar" DefaultLabelPosition="Right"
+                    Style="{ThemeResource CommandBarRevealStyle}">
+                <CommandBar.PrimaryCommands>
+                    <AppBarButton x:Name="RetryButton" Icon="Refresh"
+                            Label="Retry"
+                            Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                            Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
+                            Click="RetryButton_Click">
+                    </AppBarButton>
+                    <AppBarButton x:Name="BackButton" Icon="Back" Label="Cancel"
+                            Click="BackButton_Click"/>
+                </CommandBar.PrimaryCommands>
+
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton x:Name="OptionsButton" Icon="Setting" Label="Options"/>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+        </ctk:DropShadowPanel>
+        
+    </Grid>
+</Page>

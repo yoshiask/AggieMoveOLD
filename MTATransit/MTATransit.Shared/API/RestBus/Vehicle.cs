@@ -41,5 +41,10 @@ namespace MTATransit.Shared.API.RestBus
 
         [JsonProperty(PropertyName = "leadingVehicleId")]
         public string LeadingVehicleId { get; set; }
+
+        public override string ToString()
+        {
+            return $"[{RouteId}] {Id}";
+        }
     }
 }

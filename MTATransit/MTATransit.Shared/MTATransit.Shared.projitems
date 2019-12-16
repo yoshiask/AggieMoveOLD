@@ -81,6 +81,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\ItineraryModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\PointModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Glyphs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\DetectRoute\DetectRoutePage.xaml.cs">
+      <DependentUpon>$fileinputname$.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\DialogPage.xaml.cs">
       <DependentUpon>$fileinputname$.xaml</DependentUpon>
     </Compile>
@@ -124,6 +127,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\DetectRoute\DetectRoutePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -260,6 +267,9 @@
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Controls\DiscoverBusinessCard.xaml.cs">
       <DependentUpon>DiscoverBusinessCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Pages\DetectRoute\DetectRoutePage.xaml.cs">
+      <DependentUpon>DetectRoutePage.xaml</DependentUpon>
     </Compile>
     <Compile Update="C:\Users\jjask\source\repos\yoshiask\MTATransit\MTATransit\MTATransit.Shared\Pages\DiscoverHomePage.xaml.cs">
       <DependentUpon>DiscoverHomePage.xaml</DependentUpon>

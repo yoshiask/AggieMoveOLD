@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MTATransit.Shared.API.RestBus;
+using MTATransit.Shared.Controls;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -31,6 +33,13 @@ namespace MTATransit.Shared.Pages
             this.InitializeComponent();
 
             Common.RoamingSettings.SetUpRoamingSettings();
+        }
+
+        private void SetLoadingBar(bool loading)
+        {
+            string contents = loading ? "loadingStarted" : "loadingFinished";
+            var myMessage = new GalaSoft.MvvmLight.Messaging.NotificationMessage(contents);
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Send(myMessage);
         }
 
         #region Swipe Events
@@ -81,6 +90,16 @@ namespace MTATransit.Shared.Pages
                     Effect = Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionEffect.FromRight
                 });
         }
+
+        private void DetectRouteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(
+                typeof(DetectRoutePage), Points.ToList(),
+                new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo()
+                {
+                    Effect = Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionEffect.FromRight
+                });
+        }
         #endregion
 
         #region Points Functions
@@ -119,7 +138,7 @@ namespace MTATransit.Shared.Pages
                 ControlBar.Visibility = Visibility.Visible;
                 if (result.Result == Controls.NewPointDialog.DialogResult.Primary)
                 {
-                    Points.Add(result.Model);
+                    AddPoint(result.Model);
                 }
             };
             MainGrid.Children.Add(pointDialog);

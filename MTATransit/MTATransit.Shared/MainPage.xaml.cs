@@ -90,10 +90,6 @@ namespace MTATransit
             PageInfo pageInfo = Pages[sender.MenuItems.IndexOf(args.SelectedItem)];
             if (pageInfo.PageType.BaseType == typeof(Page))
                 MainFrame.Navigate(pageInfo.PageType, null, new Windows.UI.Xaml.Media.Animation.EntranceNavigationTransitionInfo());
-
-            PageTitleBox.Text = pageInfo.Title;
-            PageIconBox.Symbol = pageInfo.Icon;
-            PageSubheadBox.Text = pageInfo.Subhead;
         }
 
         private void LoadNavView(Page page, NavigationView NavView)
@@ -131,14 +127,19 @@ namespace MTATransit
         {
             NavView.IsBackEnabled = MainFrame.CanGoBack;
 
+            var pageInfo = Pages.Find((info) => info.PageType == e.SourcePageType);
             // Hide the header if the page is not top-level
-            if (Pages.Find((info) => info.PageType == e.SourcePageType) == null)
+            if (pageInfo == null)
             {
                 PageHeader.Visibility = Visibility.Collapsed;
             }
             else
             {
                 PageHeader.Visibility = Visibility.Visible;
+                // Set the header to the correct info
+                PageTitleBox.Text = pageInfo.Title;
+                PageIconBox.Symbol = pageInfo.Icon;
+                PageSubheadBox.Text = pageInfo.Subhead;
             }
         }
 
