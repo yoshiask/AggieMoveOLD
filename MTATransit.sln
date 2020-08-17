@@ -16,6 +16,7 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		MTATransit\MTATransit.Shared\MTATransit.Shared.projitems*{3f0ed2b0-3492-46f7-8485-0ab9ed9c6462}*SharedItemsImports = 4
+		MTATransit\MTATransit.Shared\MTATransit.Shared.projitems*{4cdff757-4001-4431-bd73-c118422d7c32}*SharedItemsImports = 5
 		MTATransit\MTATransit.Shared\MTATransit.Shared.projitems*{60290a8c-bbce-44a2-8b01-7abfddd9710c}*SharedItemsImports = 4
 		MTATransit\MTATransit.Shared\MTATransit.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
 		MTATransit\MTATransit.Shared\MTATransit.Shared.projitems*{dfb1a4d9-9ed7-47f0-b103-e35ff9d97842}*SharedItemsImports = 4
