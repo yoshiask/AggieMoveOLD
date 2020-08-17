@@ -8,7 +8,7 @@
 
   <Identity
     Name="52374YoshiAskharoun.AggieMove"
-    Publisher="CN=CD3113F3-18EB-4B8D-9D8A-C6D373E7A464"
+    Publisher="CN=jjask"
     Version="1.0.3.0" />
 
   <mp:PhoneIdentity PhoneProductId="d342aa20-cf1c-4e05-b759-01a2da89ea58" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
@@ -36,7 +36,7 @@
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         BackgroundColor="#F44336"
-        Description="Helping you get exactly where you need to be">
+        Description="A transit app with bus routes and schedules for Aggies at Texas A&amp;M University (College Station)">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" ShortName="LA Move" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="wide310x150Logo"/>
@@ -46,14 +46,6 @@
         </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="#F44336"/>
       </uap:VisualElements>
-      <Extensions>
-        <uap:Extension Category="windows.shareTarget">
-          <uap:ShareTarget Description="Transfer to LA Move">
-            <uap:DataFormat>WGS84</uap:DataFormat>
-            <uap:DataFormat>LocationJSON</uap:DataFormat>
-          </uap:ShareTarget>
-        </uap:Extension>
-      </Extensions>
     </Application>
   </Applications>
 

@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MTATransit.Shared", "MTATransit\MTATransit.Shared\MTATransit.Shared.shproj", "{6279C845-92F8-4333-AB99-3D213163593C}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AggieMove.Shared", "MTATransit\MTATransit.Shared\AggieMove.Shared.shproj", "{6279C845-92F8-4333-AB99-3D213163593C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTATransit.Droid", "MTATransit\MTATransit.Droid\MTATransit.Droid.csproj", "{DFB1A4D9-9ED7-47F0-B103-E35FF9D97842}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggieMove.Droid", "MTATransit\MTATransit.Droid\AggieMove.Droid.csproj", "{DFB1A4D9-9ED7-47F0-B103-E35FF9D97842}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTATransit.iOS", "MTATransit\MTATransit.iOS\MTATransit.iOS.csproj", "{60290A8C-BBCE-44A2-8B01-7ABFDDD9710C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggieMove.iOS", "MTATransit\MTATransit.iOS\AggieMove.iOS.csproj", "{60290A8C-BBCE-44A2-8B01-7ABFDDD9710C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTATransit.UWP", "MTATransit\MTATransit.UWP\MTATransit.UWP.csproj", "{3F0ED2B0-3492-46F7-8485-0AB9ED9C6462}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggieMove.UWP", "MTATransit\MTATransit.UWP\AggieMove.UWP.csproj", "{3F0ED2B0-3492-46F7-8485-0AB9ED9C6462}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTATransit.Wasm", "MTATransit\MTATransit.Wasm\MTATransit.Wasm.csproj", "{4CDFF757-4001-4431-BD73-C118422D7C32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AggieMove.Wasm", "MTATransit\MTATransit.Wasm\AggieMove.Wasm.csproj", "{4CDFF757-4001-4431-BD73-C118422D7C32}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
