@@ -32,6 +32,7 @@
   <ItemGroup>
     <PackageReference Include="Esri.ArcGISRuntime" Version="100.6.0" />
     <PackageReference Include="Esri.ArcGISRuntime.Xamarin.Forms" Version="100.6.0" />
+    <PackageReference Include="ExCSS-Core" Version="4.0.5" />
     <PackageReference Include="NextBus.NET" Version="0.0.3" />
     <PackageReference Include="Refit" Version="4.5.6" />
     <PackageReference Include="TweetinviAPI" Version="4.0.2" />
@@ -39,6 +40,9 @@
     <PackageReference Include="Uno.UI" Version="1.46.0-dev.1991" />
     <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.0.0-dev.137" />
     <DotNetCliToolReference Include="Uno.Wasm.Bootstrap.Cli" Version="1.0.0-dev.137" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\TamuBusFeed\TamuBusFeed.csproj" />
   </ItemGroup>
   <Import Project="..\MTATransit.Shared\MTATransit.Shared.projitems" Label="Shared" Condition="Exists('..\MTATransit.Shared\MTATransit.Shared.projitems')" />
 </Project>

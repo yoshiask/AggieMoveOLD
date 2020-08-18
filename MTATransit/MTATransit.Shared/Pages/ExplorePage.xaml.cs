@@ -69,7 +69,14 @@ namespace MTATransit.Shared.Pages
             try
             {
                 SetLoadingBar(true);
-                Agencies = await Common.RestBusApi.GetAgencies();
+                Agencies = new List<Agency>()
+                {
+                    new Agency()
+					{
+                        Title = "Aggie Spirit",
+                        Id = "TAMU"
+					}
+                };
                 if (Agencies == null)
                     return;
 
@@ -91,12 +98,27 @@ namespace MTATransit.Shared.Pages
         public async void LoadRoutes(Agency ag)
         {
             SetLoadingBar(true);
-            var api = Common.RestBusApi;
             RoutesBox.Items.Clear();
             Routes.Clear();
 
             // Now load the available routes
-            Routes = await api.GetAgencyRoutes(ag.Id);
+            Routes = (await TamuBusFeed.TamuBusFeedApi.GetRoutes()).Select(
+                (TamuBusFeed.Models.Route r) =>
+            {
+                string colorStr = r.Color;
+                if (Int32.TryParse(r.Color, out int _))
+				{
+                    colorStr = "#" + r.Color;
+				}
+                return new Route()
+                {
+                    ShortTitle = r.ShortName,
+                    Title = r.Name,
+                    Id = r.Key,
+                    // TODO: Actually parse the provided color
+                    Color = "#00ffffff"
+                };
+            }).ToList();
             if (Routes == null)
                 return;
 
@@ -108,26 +130,8 @@ namespace MTATransit.Shared.Pages
                     {
                         Name = rt.Id,
                         Content = rt.Title,
+                        Background = Common.BrushFromHex(rt.Color)
                     });
-                }
-
-                // Now get the routeConfig for colors
-                for (int i = 0; i < RoutesBox.Items.Count; ++i)
-                {
-                    var item = RoutesBox.Items[i] as ComboBoxItem;
-
-                    var info = await api.GetRoute(ag.Id, item.Name);
-                    if (info != null)
-                    {
-                        int ind = Routes.FindIndex(r => r.Id == info.Id);
-                        if (ind < 0)
-                            ind = i;
-                        Routes[ind] = info;
-
-                        item.Background = Common.BrushFromHex(info.Color);
-                        item.Foreground = Common.BrushFromHex(info.TextColor);
-                        item.RequestedTheme = ElementTheme.Light;
-                    }
                 }
             }
             catch (Exception ex)
