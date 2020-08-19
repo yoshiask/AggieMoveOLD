@@ -115,11 +115,11 @@ namespace AggieMove
             }
             if (path.StartsWith("/"))
                 path = path.Remove(0, 1);
-            var queryParams = System.Web.HttpUtility.ParseQueryString(ptcl.Query.Replace("\r", String.Empty).Replace("\n", String.Empty));
+            //var queryParams = System.Web.HttpUtility.ParseQueryString(ptcl.Query.Replace("\r", String.Empty).Replace("\n", String.Empty));
 
             PageInfo pageInfo = MainPage.Pages.Find(p => p.Path == path.Split('/', StringSplitOptions.RemoveEmptyEntries)[0]);
             destination = pageInfo != null ? pageInfo.PageType : typeof(ExploreView);
-            return new Tuple<Type, object>(destination, queryParams);
+            return new Tuple<Type, object>(destination, null);
         }
         public static Tuple<Type, object> ParseProtocol(string url)
         {

@@ -12,7 +12,7 @@
 
         <NavigationView.PaneHeader>
             <Viewbox x:Name="HeaderLogo" HorizontalAlignment="Left">
-                <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Name="svg148" Width="200" Height="50">
+                <!--<Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Name="svg148" Width="200" Height="50">
                     <Canvas Name="g127">
                         <Canvas.RenderTransform>
                             <MatrixTransform Matrix="5.86249 0 0 1.16415 -38.6541 -2.92959"/>
@@ -106,7 +106,7 @@
                         <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path142" Fill="{ThemeResource DefaultTextForegroundThemeBrush}" StrokeMiterLimit="2" StrokeLineJoin="Round" Data="M104.47 12.196L181.882 12.196L181.882 11.154L104.47 11.154L104.47 12.196Z"/>
                     </Canvas>
                     <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path146" Fill="{ThemeResource DefaultTextForegroundThemeBrush}" StrokeMiterLimit="2" StrokeLineJoin="Round" Data="M132.876 27.392L181.882 27.392L181.882 26.35L132.876 26.35L132.876 27.392Z"/>
-                </Canvas>
+                </Canvas>-->
             </Viewbox>
         </NavigationView.PaneHeader>
 
