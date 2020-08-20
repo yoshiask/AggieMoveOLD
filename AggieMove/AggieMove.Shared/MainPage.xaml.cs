@@ -22,9 +22,194 @@ namespace AggieMove
 	/// </summary>
 	public sealed partial class MainPage : Page
 	{
-		public MainPage()
-		{
-			this.InitializeComponent();
+        public MainPage()
+        {
+            this.InitializeComponent();
+
+			MainFrame.Navigated += MainFrame_Navigated;
+			//NavigationManager.PageFrame = MainFrame;
+
+			SizeChanged += MainPage_SizeChanged;
+
+			//foreach (PageInfo page in Pages)
+			//{
+			//	MainNav.MenuItems.Add(new NavigationViewItem()
+			//	{
+			//		Content = page.Title,
+			//		Icon = page.Icon,
+			//		Visibility = page.Visibility,
+			//	});
+			//}
+			//MainNav.SelectedItem = MainNav.MenuItems[0];
 		}
-	}
+
+        private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.NewSize.Width > 640)
+            {
+                VisualStateManager.GoToState(this, "Normal", false);
+                Window.Current.SetTitleBar(null);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Compact", false);
+                //Window.Current.SetTitleBar(TitlebarBorder);
+            }
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            //if (e.Parameter is Tuple<Type, object> launchInfo && launchInfo.Item1 != null)
+            //    NavigationManager.Navigate(launchInfo.Item1, launchInfo.Item2);
+
+            base.OnNavigatedTo(e);
+        }
+
+        private void MainFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            MainNav.IsBackEnabled = MainFrame.CanGoBack;
+            try
+            {
+                // Update the NavView when the frame navigates on its own.
+                // This is in a try-catch block so that I don't have to do a dozen
+                // null checks.
+                var page = Pages.Find((info) => info.PageType == e.SourcePageType);
+                if (page == null)
+                {
+                    MainNav.SelectedItem = null;
+                    return;
+                }
+                MainNav.SelectedItem = MainNav.MenuItems.ToList().Find((obj) => (obj as NavigationViewItem).Content.ToString() == page.Title);
+            }
+            catch
+            {
+                MainNav.SelectedItem = null;
+            }
+        }
+
+        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.IsSettingsSelected)
+            {
+                //NavigationManager.NavigateToSettings();
+                return;
+            }
+
+            if (!(args.SelectedItem is NavigationViewItem navItem))
+            {
+                //NavigationManager.NavigateToExplore();
+                return;
+            }
+
+            PageInfo pageInfo = Pages.Find((info) => info.Title == navItem.Content.ToString());
+            if (pageInfo == null)
+            {
+                //NavigationManager.NavigateToExplore();
+                return;
+            }
+
+            if (pageInfo != null && pageInfo.PageType.BaseType == typeof(Page))
+                MainFrame.Navigate(pageInfo.PageType);
+        }
+
+        public static List<PageInfo> Pages = new List<PageInfo>
+        {
+            //new PageInfo()
+            //{
+            //    PageType = typeof(NavigateView),
+            //    Icon = new SymbolIcon(Symbol.Directions),
+            //    Title = "Navigate",
+            //    Subhead = "to your destination",
+            //    Tooltip = "Navigate to your destination"
+            //},
+
+            //new PageInfo()
+            //{
+            //    PageType = typeof(DiscoverView,
+            //    Icon = new SymbolIcon(Symbol.Map),
+            //    Title = "Discover",
+            //    Subhead = "hotspots in your area",
+            //    Tooltip = "Discover hotspots in your area",
+            //},
+
+            new PageInfo()
+            {
+                PageType = typeof(Views.ExploreView),
+                Icon = new SymbolIcon(Symbol.Street),
+                Title = "Explore",
+                Subhead = "your transit options",
+                Tooltip = "Explore your transit options"
+            },
+
+            //new PageInfo()
+            //{
+            //    PageType = typeof(FavoritesView),
+            //    Icon = new SymbolIcon(Symbol.OutlineStar),
+            //    Title = "Favorites",
+            //    Subhead = "View and manage your favorites",
+            //    Tooltip = "View and manage your favorites",
+            //},
+        };
+    }
+
+    public class PageInfo
+    {
+        public PageInfo() { }
+
+        public PageInfo(string title, string subhead, IconElement icon)
+        {
+            Title = title;
+            Subhead = subhead;
+            Icon = icon;
+        }
+
+        public PageInfo(NavigationViewItem navItem)
+        {
+            Title = (navItem.Content == null) ? "" : navItem.Content.ToString();
+            Icon = (navItem.Icon == null) ? new SymbolIcon(Symbol.Document) : navItem.Icon;
+            Visibility = navItem.Visibility;
+
+            var tooltip = ToolTipService.GetToolTip(navItem);
+            Tooltip = (tooltip == null) ? "" : tooltip.ToString();
+        }
+
+        public string Title { get; set; }
+        public string Subhead { get; set; }
+        public IconElement Icon { get; set; }
+        public Type PageType { get; set; }
+        public string Path { get; set; }
+        public string Tooltip { get; set; }
+        public Visibility Visibility { get; set; } = Visibility.Visible;
+
+        // Derived properties
+        public NavigationViewItem NavViewItem
+        {
+            get
+            {
+                var item = new NavigationViewItem()
+                {
+                    Icon = Icon,
+                    Content = Title,
+                    Visibility = Visibility
+                };
+                ToolTipService.SetToolTip(item, new ToolTip() { Content = Tooltip });
+
+                return item;
+            }
+        }
+        public string Protocol
+        {
+            get
+            {
+                return "uwpcommunity://" + Path;
+            }
+        }
+        public Uri IconAsset
+        {
+            get
+            {
+                return new Uri("ms-appx:///Assets/Icons/" + Path + ".png");
+            }
+        }
+    }
 }
