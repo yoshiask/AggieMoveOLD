@@ -27,7 +27,7 @@ namespace AggieMove
             this.InitializeComponent();
 
 			MainFrame.Navigated += MainFrame_Navigated;
-			//NavigationManager.PageFrame = MainFrame;
+			NavigationManager.PageFrame = MainFrame;
 
 			SizeChanged += MainPage_SizeChanged;
 
@@ -59,10 +59,10 @@ namespace AggieMove
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //if (e.Parameter is Tuple<Type, object> launchInfo && launchInfo.Item1 != null)
-            //    NavigationManager.Navigate(launchInfo.Item1, launchInfo.Item2);
+			if (e.Parameter is Tuple<Type, object> launchInfo && launchInfo.Item1 != null)
+				NavigationManager.Navigate(launchInfo.Item1, launchInfo.Item2);
 
-            base.OnNavigatedTo(e);
+			base.OnNavigatedTo(e);
         }
 
         private void MainFrame_Navigated(object sender, NavigationEventArgs e)
@@ -91,20 +91,20 @@ namespace AggieMove
         {
             if (args.IsSettingsSelected)
             {
-                //NavigationManager.NavigateToSettings();
+                NavigationManager.NavigateToSettings();
                 return;
             }
 
             if (!(args.SelectedItem is NavigationViewItem navItem))
             {
-                //NavigationManager.NavigateToExplore();
+                NavigationManager.NavigateToExplore();
                 return;
             }
 
             PageInfo pageInfo = Pages.Find((info) => info.Title == navItem.Content.ToString());
             if (pageInfo == null)
             {
-                //NavigationManager.NavigateToExplore();
+                NavigationManager.NavigateToExplore();
                 return;
             }
 
@@ -150,66 +150,5 @@ namespace AggieMove
             //    Tooltip = "View and manage your favorites",
             //},
         };
-    }
-
-    public class PageInfo
-    {
-        public PageInfo() { }
-
-        public PageInfo(string title, string subhead, IconElement icon)
-        {
-            Title = title;
-            Subhead = subhead;
-            Icon = icon;
-        }
-
-        public PageInfo(NavigationViewItem navItem)
-        {
-            Title = (navItem.Content == null) ? "" : navItem.Content.ToString();
-            Icon = (navItem.Icon == null) ? new SymbolIcon(Symbol.Document) : navItem.Icon;
-            Visibility = navItem.Visibility;
-
-            var tooltip = ToolTipService.GetToolTip(navItem);
-            Tooltip = (tooltip == null) ? "" : tooltip.ToString();
-        }
-
-        public string Title { get; set; }
-        public string Subhead { get; set; }
-        public IconElement Icon { get; set; }
-        public Type PageType { get; set; }
-        public string Path { get; set; }
-        public string Tooltip { get; set; }
-        public Visibility Visibility { get; set; } = Visibility.Visible;
-
-        // Derived properties
-        public NavigationViewItem NavViewItem
-        {
-            get
-            {
-                var item = new NavigationViewItem()
-                {
-                    Icon = Icon,
-                    Content = Title,
-                    Visibility = Visibility
-                };
-                ToolTipService.SetToolTip(item, new ToolTip() { Content = Tooltip });
-
-                return item;
-            }
-        }
-        public string Protocol
-        {
-            get
-            {
-                return "uwpcommunity://" + Path;
-            }
-        }
-        public Uri IconAsset
-        {
-            get
-            {
-                return new Uri("ms-appx:///Assets/Icons/" + Path + ".png");
-            }
-        }
     }
 }

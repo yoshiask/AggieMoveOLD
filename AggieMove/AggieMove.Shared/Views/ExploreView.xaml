@@ -9,6 +9,37 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <Grid Grid.Row="0">
+            <AutoSuggestBox x:Name="AddressBox"
+                            QueryIcon="Find" PlaceholderText="Address"
+                            VerticalAlignment="Center" Margin="0,0,33,0"
+                            IsEnabled="{x:Bind CurrentLocationButton.IsChecked.Value.Equals(x:False), Mode=OneWay}"/>
+            <ToggleButton x:Name="CurrentLocationButton" Content="&#xE707;"
+                          VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="33"
+                          FontFamily="Segoe MDL2 Assets" FontWeight="Normal" />
+        </Grid>
+
+        <Grid x:Name="MapGrid" Background="{ThemeResource SystemBaseLowColor}" Grid.Row="1">
+            <!--<ArcGIS:MapView x:Name="MainMapView" Grid.Row="2" MinHeight="120">
+                <ArcGIS:MapView.GraphicsOverlays>
+                    <ArcGISUI:GraphicsOverlay x:Name="MapGraphics"/>
+                </ArcGIS:MapView.GraphicsOverlays>
+            </ArcGIS:MapView>-->
+        </Grid>
+
+        <ItemsControl Grid.Row="2">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </Grid>
+
 </Page>

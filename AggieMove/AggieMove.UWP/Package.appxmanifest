@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="4ed5ec5e-06ac-49bb-98d0-08d7611c565b"
-    Publisher="CN=jjask"
-    Version="1.0.0.0" />
+    Name="52374YoshiAskharoun.AggieMove"
+    Publisher="CN=CD3113F3-18EB-4B8D-9D8A-C6D373E7A464"
+    Version="0.0.1.0" />
 
-  <mp:PhoneIdentity PhoneProductId="191685ef-7712-42fb-b8dd-b97745560d2d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="8548f490-d8a7-494b-a5a2-05ecf205add1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>AggieMove</DisplayName>
-    <PublisherDisplayName>AggieMove</PublisherDisplayName>
+    <DisplayName>Aggie Move</DisplayName>
+    <PublisherDisplayName>Joshua Askharoun</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,10 +32,10 @@
       Executable="AggieMove.exe"
       EntryPoint="AggieMove.App">
       <uap:VisualElements
-        DisplayName="AggieMove"
+        DisplayName="Aggie Move"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="AggieMove"
+        Description="A transit app for Aggies at Texas A&amp;M University"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
@@ -45,5 +45,6 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <DeviceCapability Name="location"/>
   </Capabilities>
 </Package>
