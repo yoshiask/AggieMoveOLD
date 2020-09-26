@@ -155,7 +155,12 @@
       <Visible>false</Visible>
     </ImageAsset>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\TamuBusFeed\TamuBusFeed.csproj">
+      <Project>{d32099ad-9478-430c-818b-afa72f75fb55}</Project>
+      <Name>TamuBusFeed</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\AggieMove.Shared\AggieMove.Shared.projitems" Label="Shared" Condition="Exists('..\AggieMove.Shared\AggieMove.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
